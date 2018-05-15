@@ -74,6 +74,12 @@ class UserProfile extends Component {
                                 <Button color="primary" round onClick={this._logout}>Logout</Button>
                             }
                         />
+
+                        <ProfileCard 
+                            footer={
+                                <Button color="primary" round>Add User</Button>
+                            }
+                        />
                     </ItemGrid>
                 </Grid>
             </div>

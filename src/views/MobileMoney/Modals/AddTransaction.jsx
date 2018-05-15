@@ -1,29 +1,57 @@
 import React, { Component } from 'react';
 import { withStyles, Grid, Button, Modal } from 'material-ui';
 
-import { RegularCard, ItemGrid, CustomInput } from 'components';
+import { RegularCard, ItemGrid, CustomInput, CustomSelect } from 'components';
 
-class AddItem extends Component {
+class AddTransaction extends Component {
     state = {
         name: '',
-        unit_price: null,
+        type: 'cash in',
+        phone: '',
+        amount: '',
+        commission: '',
     }
 
-    _setItemName = event => {
+    _setName = event => {
         this.setState({ name: event.target.value });
     };
 
-    _setUnitPrice = event => {
-        this.setState({ unit_price: event.target.value });
+    _setType = event => {
+        this.setState({ type: event.target.value });
     };
 
-    _addSale = () => {
-        const { name, unit_price } = this.state;
-        this.props.addItemFunc({name, unit_price});
+    _setPhone = event => {
+        this.setState({ phone: event.target.value });
+    }
+
+    _setAmount = event => {
+        this.setState({ amount: event.target.value });
+    };
+
+    _setCommission = event => {
+        this.setState({ commission: event.target.value });
+    };
+
+    _clear = () => {
+        this.setState({
+            name: '',
+            type: 'cash in',
+            phone: '',
+            amount: '',
+            commission: '',
+        });
+    };
+
+    _addMobileMoney = () => {
+        const { name, type, phone, amount, commission } = this.state;
+
+        if (name && type && Number(phone) && Number(amount) && Number(commission)) {
+            this.props.addMobileMoney({name, type, phone, amount, commission}, this.props.refresh, this._clear);
+        }
     };
 
     getModalStyle() {
-        const top = 30;
+        const top = 50;
         const left = 50;
 
         return {
@@ -38,8 +66,8 @@ class AddItem extends Component {
 
         return (
             <Modal
-                aria-labelledby="Add Sale"
-                aria-describedby="Modal for adding sales"
+                aria-labelledby="Add Mobile Money"
+                aria-describedby="Modal for adding mobile money"
                 open={open}
                 onClose={close}
             >
@@ -48,31 +76,67 @@ class AddItem extends Component {
                         <ItemGrid xs={12} sm={12} md={12}>
                             
                             <RegularCard
-                                cardTitle="ADD SALE"
-                                cardSubtitle="Fill the form below to add sale to the system"
+                                cardTitle="ADD MOBILE MONEY"
+                                cardSubtitle="Fill the form below to add mobile money to the system"
                                 content={
                                     <div>
                                         <Grid container>
                                             <ItemGrid xs={12} sm={12} md={12}>
                                                 <CustomInput
-                                                    labelText="Item name"
-                                                    id="item-name"
+                                                    labelText="Name"
+                                                    id="name"
                                                     formControlProps={{ fullWidth: true }}
                                                     type="text"
-                                                    onChange={ this._setItemName }
+                                                    onChange={ this._setName }
                                                     defaultValue={ this.state.name }
                                                 />
                                             </ItemGrid>
                                         </Grid>
                                         <Grid container>
                                             <ItemGrid xs={12} sm={12} md={12}>
-                                                <CustomInput
-                                                    labelText="Unit price"
-                                                    id="unit-price"
+                                                <CustomSelect
+                                                    labelText="Type"
+                                                    id="type"
                                                     formControlProps={{ fullWidth: true }}
-                                                    type="text"
-                                                    onChange={ this._setUnitPrice }
-                                                    defaultValue={ this.state.unit_price }
+                                                    onChange={ this._setType }
+                                                    value={ this.state.type }
+                                                    items={["cash in", "cash out"]}
+                                                />
+                                            </ItemGrid>
+                                        </Grid>
+                                        <Grid container>
+                                            <ItemGrid xs={12} sm={12} md={12}>
+                                                <CustomInput
+                                                    labelText="Phone"
+                                                    id="phone"
+                                                    formControlProps={{ fullWidth: true }}
+                                                    type="number"
+                                                    onChange={ this._setPhone }
+                                                    defaultValue={ this.state.phone }
+                                                />
+                                            </ItemGrid>
+                                        </Grid>
+                                        <Grid container>
+                                            <ItemGrid xs={12} sm={12} md={12}>
+                                                <CustomInput
+                                                    labelText="Amount"
+                                                    id="amount"
+                                                    formControlProps={{ fullWidth: true }}
+                                                    type="number"
+                                                    onChange={ this._setAmount }
+                                                    defaultValue={ this.state.amount }
+                                                />
+                                            </ItemGrid>
+                                        </Grid>
+                                        <Grid container>
+                                            <ItemGrid xs={12} sm={12} md={12}>
+                                                <CustomInput
+                                                    labelText="Commission"
+                                                    id="commission"
+                                                    formControlProps={{ fullWidth: true }}
+                                                    type="number"
+                                                    onChange={ this._setCommission }
+                                                    defaultValue={ this.state.commission }
                                                 />
                                             </ItemGrid>
                                         </Grid>
@@ -83,8 +147,7 @@ class AddItem extends Component {
                                     <Button 
                                         variant="raised" 
                                         style={{ backgroundColor: 'purple', color: 'white' }} 
-                                        onClick={this._addItem}
-                                    >Add</Button>
+                                        onClick={this._addMobileMoney}>Add</Button>
                                 }
                             />
                         </ItemGrid>
@@ -104,7 +167,7 @@ const styles = theme => ({
     },
 });
 
-const AddModalWrapped = withStyles(styles)(AddItem);
+const AddModalWrapped = withStyles(styles)(AddTransaction);
 
 export default AddModalWrapped;
 

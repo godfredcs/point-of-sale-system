@@ -1,40 +1,29 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React from 'react';
 import { withStyles, Table, TableHead, TableRow, TableBody, TableCell, Button } from 'material-ui';
 import PropTypes from 'prop-types';
 import Moment from 'moment';
 
 import { tableStyle } from 'variables/styles';
 
-import { renderToEdit } from '../../actions';
-
-class ItemsTable extends Component {
+class CustomTable extends React.Component {
     _renderDate(value) {
         let date = Moment(value);
 
         return date.isValid() ? date.format('ddd Do MMMM, YYYY hh:mm:ss:A') : value;
     }
 
-    _renderEdit(prop) {
-        this.props.renderToEdit(prop);
-        this.props.editItem();
-    }
-
     _renderTableData = () => {
         let number = 0;
-        const { tableData, classes } = this.props;
+        const { classes, tableData, updateSale } = this.props;
 
         return tableData.map((prop, key) => {
             return (
                 <TableRow key={key}>
                     <TableCell className={classes.tableCell}>
-                        { ++number }
+                            { ++number }
                     </TableCell>
                     <TableCell className={classes.tableCell}>
-                        { prop.name }
-                    </TableCell>
-                    <TableCell className={classes.tableCell}>
-                        { prop.unit_price }
+                        { `GHS ${prop.amount}` }
                     </TableCell>
                     <TableCell className={classes.tableCell}>
                         { this._renderDate(prop.created_at) }
@@ -43,48 +32,46 @@ class ItemsTable extends Component {
                         { this._renderDate(prop.updated_at) }
                     </TableCell>
                     <TableCell className={classes.tableCell}>
-                        <Button style={ styles.updateButton } onClick={this._renderEdit.bind(this, prop)}>Edit</Button>
+                        <Button style={ styles.updateButton } onClick={ updateSale }>Update</Button>
                         <Button style={ styles.deleteButton }>Delete</Button>
                     </TableCell>
                 </TableRow>
-            )
+            );
         })
-    }
+    };
 
-    render(){
+    render() {
         const { classes, tableHead, tableData, tableHeaderColor } = this.props;
         return (
             <div className={classes.tableResponsive}>
                 <Table className={classes.table}>
                     {
                         tableHead !== undefined 
-                        ? (
-                            <TableHead className={classes[tableHeaderColor+"TableHeader"]}>
-                                <TableRow>
-                                    {
-                                        tableHead.map((prop, key) => {
-                                            return (
-                                                <TableCell
-                                                    className={classes.tableCell + " " + classes.tableHeadCell}
-                                                    key={key}>
-                                                    {prop}
-                                                </TableCell>
-                                            );
-                                        })
-                                    }
-                                </TableRow>
-                            </TableHead>
-                        )
-                        : null
+                            ? (
+                                <TableHead className={classes[tableHeaderColor+"TableHeader"]}>
+                                    <TableRow>
+                                        {
+                                            tableHead.map((prop, key) => {
+                                                return (
+                                                    <TableCell
+                                                        className={classes.tableCell + " " + classes.tableHeadCell}
+                                                        key={key}>
+                                                        {prop}
+                                                    </TableCell>
+                                                );
+                                            })
+                                        }
+                                    </TableRow>
+                                </TableHead>
+                            )
+                            : null
                     }
+
                     {
-                        tableData.length
-                        ? (
+                        tableData &&
                             <TableBody>
                                 { this._renderTableData() }
                             </TableBody>
-                        )
-                        : null
                     }
                 </Table>
             </div>
@@ -92,15 +79,15 @@ class ItemsTable extends Component {
     }
 }
 
-ItemsTable.defaultProps = {
-    tableHeaderColor: 'gray',
+CustomTable.defaultProps = {
+    tableHeaderColor: 'gray'
 }
 
-ItemsTable.propTypes = {
+CustomTable.propTypes = {
     classes: PropTypes.object.isRequired,
     tableHeaderColor: PropTypes.oneOf(['warning','primary','danger','success','info','rose','gray']),
-    tableHead: PropTypes.arrayOf(PropTypes.string), 
-    /*tableData: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)) */
+    tableHead: PropTypes.arrayOf(PropTypes.string),
+    /* tableData: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)) */
 };
 
 const styles = {
@@ -114,6 +101,4 @@ const styles = {
     }
 };
 
-const WrappedItemsTable = withStyles(tableStyle)(ItemsTable);
-
-export default connect(null, { renderToEdit })(WrappedItemsTable);
+export default withStyles(tableStyle)(CustomTable);

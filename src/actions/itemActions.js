@@ -48,11 +48,11 @@ export const showDeleteItemModal = value => {
 };
 
 // Action creator for adding item --<
-export const addItem = ({ name, unit_price }, refreshItemsList, clear) => async dispatch => {
+export const addItem = ({ name, unit_price, whole_price }, refreshItemsList, clear) => async dispatch => {
     dispatch({ type: SHOW_ITEM_LOADER });
 
     try {
-        const item = await Item.add({ name, unit_price });
+        const item = await Item.add({ name, unit_price, whole_price });
 
         if (item) {
             dispatch({ type: ITEM_ADD_SUCCESS });

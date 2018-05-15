@@ -6,33 +6,40 @@ import moment from 'moment';
 
 import 'react-datepicker/dist/react-datepicker.css';
 
-import { getSalesByDate, addSale } from '../../actions';
+import { 
+    getAllMobileMoneys, getMobileMoneyByDate, addMobileMoney, 
+    showAddMobileMoneyModal, showEditMobileMoneyModal,
+} from '../../actions';
 
-import { RegularCard, SalesTable, ItemGrid } from 'components';
+import { RegularCard, MobileMoneyTable, ItemGrid } from 'components';
 
 import AddTransactionModal from './Modals/AddTransaction';
+import EditTransactionModal from './Modals/EditTransaction';
 
 
 class MobileMoney extends Component {
      state = {
-        openAddSaleModal: false,
-        openUpdateSaleModal: false,
-        openDeleteSaleModal: false,
-        from: moment(),
-        to: moment(),
+        from: moment(), // current date
+        to: moment(), // current date
     };
+
+    componentWillMount() {
+        // Get all mobile money transactions when this component mounts
+        this.props.getAllMobileMoneys();
+    }
     
     render() {
         return (
             <Grid container>
                 <ItemGrid xs={12} sm={12} md={12}>
                     <RegularCard
-                        cardTitle="Sales"
-                        cardSubtitle="List of sale entries in the system"
+                        padIt
+                        cardTitle="Mobile Money"
+                        cardSubtitle="List of mobile money entries in the system"
                         button={
                             <Button 
-                                style={ styles.addSaleButton } 
-                                onClick={() => this.setState({ openAddSaleModal: true })}>ADD TRANSACTION</Button>
+                                style={ styles.addTransactionButton } 
+                                onClick={() => this.props.showAddMobileMoneyModal(true)}>ADD TRANSACTION</Button>
                         }
                         date_picker={
                             <div style={ styles.datepickers }>
@@ -56,20 +63,30 @@ class MobileMoney extends Component {
                                 </div>
                             </div>
                         }
-                        /* content={
-                            <SalesTable
+                        content={
+                            <MobileMoneyTable
                                 tableHeaderColor="primary"
                                 tableHead={['No.', 'Name', 'Type', 'Phone', 'Amount', 'Commission', 'Date Added', 'Date Updated', '']}
-                                tableData={this.props.sales}
-                                updateSale={() => this.setState({ openUpdateSaleModal: true })}
+                                tableData={this.props.mobile_moneys}
+                                editMobileMoney={() => this.props.showEditMobileMoneyModal(true)}
+                                deleteTransaction={() => console.log('we are trying to delete the transaction')}
                             />
-                        } */
+                        }
                     />
                 </ItemGrid>
                 
                 <AddTransactionModal
-                    open={this.state.openAddSaleModal}
-                    close={() => this.setState({ openAddSaleModal: false })}
+                    open={this.props.openAddMobileMoneyModal}
+                    close={() => this.props.showAddMobileMoneyModal(false)}
+                    addMobileMoney={this.props.addMobileMoney}
+                    refresh={this.props.getAllMobileMoneys}
+                />
+
+                <EditTransactionModal
+                    open={this.props.openEditMobileMoneyModal}
+                    close={() => this.props.showEditMobileMoneyModal(false)}
+                    editMobileMoney={this.props.editMobileMoney}
+                    refresh={this.props.getAllMobileMoneys}
                 />
             </Grid>
         );
@@ -77,7 +94,7 @@ class MobileMoney extends Component {
 }
 
 const styles = {
-    addSaleButton: {
+    addTransactionButton: {
         color: '#FFF',
         backgroundColor: 'purple',
     },
@@ -88,4 +105,19 @@ const styles = {
     }
 };
 
-export default MobileMoney;
+const mapStateToProps = state => {
+    const { 
+        mobile_moneys, 
+        openAddMobileMoneyModal, openEditMobileMoneyModal, 
+    } = state.mobileMoneys;
+
+    return { 
+        mobile_moneys, 
+        openAddMobileMoneyModal, openEditMobileMoneyModal,
+    };
+};
+
+export default connect(mapStateToProps, {
+    getAllMobileMoneys, getMobileMoneyByDate, addMobileMoney, 
+    showAddMobileMoneyModal, showEditMobileMoneyModal,
+})(MobileMoney);

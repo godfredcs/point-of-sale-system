@@ -36,7 +36,13 @@ class CustomInput extends React.Component {
 					defaultValue={defaultValue}
 					type={type}
 				/>
-				{error ? <Clear className={classes.feedback + " " + classes.labelRootError}/>:success ? <Check className={classes.feedback + " " + classes.labelRootSuccess}/>:null}
+				{
+					error 
+						? <Clear className={classes.feedback + " " + classes.labelRootError}/>
+						: success 
+							? <Check className={classes.feedback + " " + classes.labelRootSuccess}/>
+							: null
+				}
 			</FormControl>
 		);
 	}

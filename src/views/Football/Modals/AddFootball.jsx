@@ -3,30 +3,30 @@ import { withStyles, Grid, Button, Modal } from 'material-ui';
 
 import { RegularCard, ItemGrid, CustomInput } from 'components';
 
-class AddItem extends Component {
+class AddFootball extends Component {
     state = {
         name: '',
-        unit_price: '',
-        whole_price: '',
+        unit_charge: '',
+        number_of_people: '',
     };
 
-    _setItemName = event => {
+    _setMatchName = event => {
         this.setState({ name: event.target.value });
     };
 
-    _setUnitPrice = event => {
-        this.setState({ unit_price: event.target.value });
+    _setUnitCharge = event => {
+        this.setState({ unit_charge: event.target.value });
     };
 
-    _setWholePrice = event => {
-        this.setState({ whole_price: event.target.value });
-    }
+    _setNumberOfPeople = event => {
+        this.setState({ number_of_people: event.target.value });
+    };
 
-    _addItem = () => {
-        const { name, unit_price, whole_price } = this.state;
+    _addFootball = () => {
+        const { name, unit_charge, number_of_people } = this.state;
 
-        if (name && Number(unit_price) && Number(whole_price)) {
-            this.props.addItemFunc({name, unit_price, whole_price}, this.props.refresh, this.setState({ name: '', unit_price: '', whole_price: ''}));
+        if (name && Number(unit_charge) && Number(number_of_people)) {
+            this.props.addFootball({name, unit_charge, number_of_people}, this.props.refresh, this.setState({ name: '', unit_charge: '', number_of_people: '' }));
         }
     };
 
@@ -46,8 +46,8 @@ class AddItem extends Component {
 
         return (
             <Modal
-                aria-labelledby="Add Item"
-                aria-describedby="Modal for adding items"
+                aria-labelledby="Add Football"
+                aria-describedby="Modal for adding football"
                 open={open}
                 onClose={close}
             >
@@ -55,18 +55,18 @@ class AddItem extends Component {
                     <Grid container>
                         <ItemGrid xs={12} sm={12} md={12}>
                             <RegularCard
-                                cardTitle="ADD ITEM"
-                                cardSubtitle="Fill the form below to add item to the system"
+                                cardTitle="ADD FOOTBALL"
+                                cardSubtitle="Fill the form below to add football to the system"
                                 content={
                                     <div>
                                         <Grid container>
                                             <ItemGrid xs={12} sm={12} md={12}>
                                                 <CustomInput
-                                                    labelText="Item name"
-                                                    id="item-name"
+                                                    labelText="Match name"
+                                                    id="match-name"
                                                     formControlProps={{ fullWidth: true }}
                                                     type="text"
-                                                    onChange={ this._setItemName }
+                                                    onChange={ this._setMatchName }
                                                     defaultValue={ this.state.name }
                                                 />
                                             </ItemGrid>
@@ -74,24 +74,24 @@ class AddItem extends Component {
                                         <Grid container>
                                             <ItemGrid xs={12} sm={12} md={12}>
                                                 <CustomInput
-                                                    labelText="Unit price"
-                                                    id="unit-price"
+                                                    labelText="Unit charge"
+                                                    id="unit-charge"
                                                     formControlProps={{ fullWidth: true }}
-                                                    type="text"
-                                                    onChange={ this._setUnitPrice }
-                                                    defaultValue={ this.state.unit_price }
+                                                    type="number"
+                                                    onChange={ this._setUnitCharge }
+                                                    defaultValue={ this.state.unit_charge }
                                                 />
                                             </ItemGrid>
                                         </Grid>
                                         <Grid container>
                                             <ItemGrid xs={12} sm={12} md={12}>
                                                 <CustomInput
-                                                    labelText="Whole price"
-                                                    id="whole-price"
+                                                    labelText="Number of People"
+                                                    id="number-of-people"
                                                     formControlProps={{ fullWidth: true }}
-                                                    type="text"
-                                                    onChange={ this._setWholePrice }
-                                                    defaultValue={ this.state.whole_price }
+                                                    type="number"
+                                                    onChange={ this._setNumberOfPeople }
+                                                    defaultValue={ this.state.number_of_people }
                                                 />
                                             </ItemGrid>
                                         </Grid>
@@ -102,7 +102,7 @@ class AddItem extends Component {
                                     <Button 
                                         variant="raised" 
                                         style={{ backgroundColor: 'purple', color: 'white' }} 
-                                        onClick={this._addItem}>Add</Button>
+                                        onClick={this._addFootball}>Add</Button>
                                 }
                             />
                         </ItemGrid>
@@ -122,7 +122,7 @@ const styles = theme => ({
     },
 });
 
-const AddModalWrapped = withStyles(styles)(AddItem);
+const AddModalWrapped = withStyles(styles)(AddFootball);
 
 export default AddModalWrapped;
 

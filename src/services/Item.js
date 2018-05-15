@@ -15,5 +15,10 @@ export default {
         return axios.put(`items/${id}`, item)
                     .then(response => Promise.resolve(response.data))
                     .catch(error => Promise.reject(error.response.data));
+    },
+    delete(id) {
+        return axios.delete(`items/${id}`)
+                    .then(response => Promise.resolve(response.data))
+                    .catch(error => Promise.reject(error.response.data));
     }
 };

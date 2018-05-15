@@ -6,10 +6,10 @@ import { regularCardStyle } from 'variables/styles';
 
 class RegularCard extends React.Component {
     render() {
-        const { classes, headerColor, plainCard, cardTitle, cardSubtitle, content, button, date_picker, footer } = this.props;
+        const { classes, headerColor, plainCard, cardTitle, cardSubtitle, content, button, date_picker, footer, padIt } = this.props;
 
         return (
-            <Card className={classes.card + (plainCard ? " " + classes.cardPlain:"")}>
+            <Card style={{ paddingBottom: padIt ? 120 : 0 }} className={classes.card + (plainCard ? " " + classes.cardPlain:"")}>
                 <CardHeader
                     classes={{
                         root: classes.cardHeader + " " + classes[headerColor+"CardHeader"] + (plainCard ? " " + classes.cardPlainHeader:""),
@@ -36,9 +36,15 @@ class RegularCard extends React.Component {
                 <CardContent>
                     {content}
                 </CardContent>
-                { footer !== undefined ? (<CardActions className={classes.cardActions}>
-                    {footer}
-                </CardActions>):null}
+                { 
+                    footer !== undefined 
+                        ? (
+                            <CardActions className={classes.cardActions}>
+                                {footer}
+                            </CardActions>
+                        )
+                        : null
+                }
             </Card>
         );
     }

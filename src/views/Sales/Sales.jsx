@@ -47,6 +47,7 @@ class Sales extends Component {
             <Grid container>
                 <ItemGrid xs={12} sm={12} md={12}>
                     <RegularCard
+                        padIt
                         cardTitle="Sales"
                         cardSubtitle="List of sale entries in the system"
                         button={

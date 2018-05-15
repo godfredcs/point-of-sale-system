@@ -35,6 +35,7 @@ class Items extends Component {
                 <Grid container>
                     <ItemGrid xs={12} sm={12} md={12}>
                         <RegularCard
+                            padIt
                             cardTitle="Items"
                             cardSubtitle="This is a list of all items in the system"
                             button={
@@ -45,7 +46,7 @@ class Items extends Component {
                             content={
                                 <ItemsTable
                                     tableHeaderColor="primary"
-                                    tableHead={['No.','Name','Unit Price','Date Added','Date Updated', '']}
+                                    tableHead={['No.','Name','Unit Price', 'Whole Price', 'Date Added','Date Updated', '']}
                                     tableData={this.props.items}
                                     editItem={this._showEditItemModal}
                                 />
