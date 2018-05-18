@@ -70,6 +70,7 @@ import MobileMoneyTable from './Table/MobileMoney.jsx';
 import JackpotTable from './Table/Jackpot.jsx';
 import FootballTable from './Table/Football.jsx';
 import CreditTransferTable from './Table/CreditTransfer.jsx';
+import UserProfileTable from './Table/UserProfile';
 
 // ##############################
 // // // Tasks
@@ -112,7 +113,7 @@ export {
     //Snackbar
     Snackbar, SnackbarContent,
     // Table
-    Table, ItemsTable, SalesTable, MobileMoneyTable, JackpotTable, FootballTable, CreditTransferTable,
+    Table, ItemsTable, SalesTable, MobileMoneyTable, JackpotTable, FootballTable, CreditTransferTable, UserProfileTable,
     // Tasks
     Tasks,
     // Typography

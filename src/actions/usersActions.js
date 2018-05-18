@@ -1,7 +1,7 @@
 import { 
     EMAIL_CHANGED, PASSWORD_CHANGED, 
     LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT_SUCCESS,
-    SHOW_LOADER, REMOVE_LOADER,
+    SHOW_LOADER, REMOVE_LOADER, GET_USERS_SUCCESS,
 } from './types';
 import User from '../services/User';
 
@@ -42,6 +42,19 @@ export const login = ({ email, password }, _clearCredentials) => async dispatch 
         localStorage.removeItem('api_token');
         dispatch({ type: LOGIN_FAIL });
         dispatch({ type: REMOVE_LOADER });
+        console.log(error);
+    }
+};
+
+export const getUsers = () => async dispatch => {
+    try {
+        const users = await User.getUsers();
+
+        if (users) {
+            dispatch({ type: GET_USERS_SUCCESS, payload: users });
+            console.log('heheehehehee', users);
+        }
+    } catch (error) {
         console.log(error);
     }
 };

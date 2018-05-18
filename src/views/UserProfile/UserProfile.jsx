@@ -2,16 +2,25 @@ import React, { Component } from 'react';
 import { Grid } from 'material-ui';
 import { connect } from 'react-redux';
 
-import { ProfileCard, RegularCard, Button, CustomInput, ItemGrid } from 'components';
-import { logout } from '../../actions';
+import { ProfileCard, RegularCard, Button, CustomInput, ItemGrid, UserProfileTable } from 'components';
+import { getUsers, logout } from '../../actions';
 
 import avatar from 'assets/img/faces/marc.jpg';
 
 class UserProfile extends Component {
+
+    componentDidMount() {
+        if (this.isSuperAdmin()) {
+            this.props.getUsers();
+        }
+    }
+
+    // Log the user out.
     _logout = () => {
-        this.props.logout(); // Action creator for logging out.
+        this.props.logout();
     };
 
+    // Render subtitle according to role.
     renderSubtitle = () => {
         if (this.props.user.role) {
             switch(this.props.user.role.name) {
@@ -29,6 +38,7 @@ class UserProfile extends Component {
         }
     };
 
+    // Check if the user is super admin.
     isSuperAdmin = () => {
         return this.props.user.role.name === 'super_admin';
     };
@@ -105,6 +115,22 @@ class UserProfile extends Component {
                         />
                     </ItemGrid>
                 </Grid>
+                <Grid>
+                    <ItemGrid xs={12} sm={12} md={12}>
+                        <RegularCard
+                            cardTitle="Users"
+                            cardSubtitle="List of users added to the system"
+                            content={
+                                <UserProfileTable 
+                                    tableHeaderColor="primary"
+                                    tableHead={['No.','Firstname','Lastname', 'Email', 'Role', 'Date Added','Date Updated', '']}
+                                    tableData={this.props.users}
+                                    editItem={this._showEditItemModal}
+                                />
+                            }
+                        />
+                    </ItemGrid>
+                </Grid>
             </div>
         );
     }
@@ -116,13 +142,13 @@ const styles = {
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: '#FFf',
-        marginBottom: 20,
+        marginBottom: 30,
     },
 };
 
 const mapStateToProps = state => {
-    const { user } = state.users;
-    return { user };
+    const { users, user } = state.users;
+    return { users, user };
 };
 
-export default connect(mapStateToProps, { logout })(UserProfile);
+export default connect(mapStateToProps, { getUsers, logout })(UserProfile);
