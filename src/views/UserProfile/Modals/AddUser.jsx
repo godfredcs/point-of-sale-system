@@ -9,7 +9,7 @@ class AddItem extends Component {
         lastname: '',
         email: '',
         password: 'testing',
-        role_id: 1,
+        role_id: 2,
     };
 
     _setFirstname = event => {
@@ -28,11 +28,16 @@ class AddItem extends Component {
         this.setState({ password: event.target.value });
     };
 
-    _addUser = () => {
-        const { name, unit_price, whole_price } = this.state;
+    resetInput = () => {
+        this.setState({ firstname: '', lastname: '', email: '', password: 'testing'});
+        this.props.close();
+    };
 
-        if (name && Number(unit_price) && Number(whole_price)) {
-            this.props.addItemFunc({name, unit_price, whole_price}, this.props.refresh, this.setState({ name: '', unit_price: '', whole_price: ''}));
+    _addUser = () => {
+        const { firstname, lastname, email, password, role_id } = this.state;
+
+        if (firstname && lastname && email && password && role_id) {
+            this.props.addUser({ firstname, lastname, email, password, role_id }, this.props.refresh, this.resetInput);
         }
     };
 
@@ -120,7 +125,7 @@ class AddItem extends Component {
                                     <Button 
                                         variant="raised" 
                                         style={{ backgroundColor: 'purple', color: 'white' }} 
-                                        onClick={this._addItem}>Add</Button>
+                                        onClick={this._addUser}>Add</Button>
                                 }
                             />
                         </ItemGrid>

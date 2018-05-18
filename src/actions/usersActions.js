@@ -22,6 +22,22 @@ export const passwordChanged = value => {
     };
 };
 
+// Action creator for creating a new user.
+export const addUser = (data, refresh, resetInput) => async dispatch => {
+
+    try {
+        const user = await User.register(data);
+        if (user) {
+
+            refresh && refresh();
+
+            resetInput && resetInput();
+        }
+    } catch (error) {
+        console.log(error);
+    }
+};
+
 // Action creator for logging a user in.
 export const login = ({ email, password }, _clearCredentials) => async dispatch => {
     dispatch({ type: SHOW_LOADER });

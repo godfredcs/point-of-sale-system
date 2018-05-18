@@ -8,7 +8,7 @@ import {
 
 import AddUserModal from './Modals/AddUser';
 
-import { getUsers, openAddUserModal, logout } from '../../actions';
+import { getUsers, addUser, openAddUserModal, logout } from '../../actions';
 
 import avatar from 'assets/img/faces/marc.jpg';
 
@@ -147,7 +147,7 @@ class UserProfile extends Component {
                 <AddUserModal 
                     open={this.props.open_add_user_modal}
                     close={() => this.props.openAddUserModal(false)}
-                    addUserFunc={this.props.addUser}
+                    addUser={this.props.addUser}
                     refresh={this.props.getUsers}
                 />
             </div>
@@ -170,4 +170,4 @@ const mapStateToProps = state => {
     return { users, user, open_add_user_modal };
 };
 
-export default connect(mapStateToProps, { getUsers, openAddUserModal, logout })(UserProfile);
+export default connect(mapStateToProps, { getUsers, addUser, openAddUserModal, logout })(UserProfile);
