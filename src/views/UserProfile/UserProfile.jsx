@@ -2,17 +2,20 @@ import React, { Component } from 'react';
 import { Grid } from 'material-ui';
 import { connect } from 'react-redux';
 
-import { ProfileCard, RegularCard, Button, CustomInput, ItemGrid, UserProfileTable } from 'components';
-import { getUsers, logout } from '../../actions';
+import {
+    ProfileCard, RegularCard, Button, CustomInput, ItemGrid, UserProfileTable
+} from 'components';
+
+import AddUserModal from './Modals/AddUser';
+
+import { getUsers, openAddUserModal, logout } from '../../actions';
 
 import avatar from 'assets/img/faces/marc.jpg';
 
 class UserProfile extends Component {
 
     componentDidMount() {
-        if (this.isSuperAdmin()) {
-            this.props.getUsers();
-        }
+        this.getUsers();
     }
 
     // Log the user out.
@@ -41,6 +44,13 @@ class UserProfile extends Component {
     // Check if the user is super admin.
     isSuperAdmin = () => {
         return this.props.user.role.name === 'super_admin';
+    };
+
+    // Get all users in the system.
+    getUsers = () => {
+        if (this.isSuperAdmin()) {
+            this.props.getUsers();
+        }
     };
 
     render() {
@@ -100,7 +110,9 @@ class UserProfile extends Component {
                         {
                             this.isSuperAdmin
                                 ? <div style={ styles.centerItems }>
-                                    <Button color="primary" round>Add User</Button>
+                                    <Button color="primary" round onClick={() => this.props.openAddUserModal(true)}>
+                                        Add User
+                                    </Button>
                                 </div>
                                 : null
                         }
@@ -131,6 +143,13 @@ class UserProfile extends Component {
                         />
                     </ItemGrid>
                 </Grid>
+
+                <AddUserModal 
+                    open={this.props.open_add_user_modal}
+                    close={() => this.props.openAddUserModal(false)}
+                    addUserFunc={this.props.addUser}
+                    refresh={this.props.getUsers}
+                />
             </div>
         );
     }
@@ -147,8 +166,8 @@ const styles = {
 };
 
 const mapStateToProps = state => {
-    const { users, user } = state.users;
-    return { users, user };
+    const { users, user, open_add_user_modal } = state.users;
+    return { users, user, open_add_user_modal };
 };
 
-export default connect(mapStateToProps, { getUsers, logout })(UserProfile);
+export default connect(mapStateToProps, { getUsers, openAddUserModal, logout })(UserProfile);

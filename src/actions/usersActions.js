@@ -2,9 +2,11 @@ import {
     EMAIL_CHANGED, PASSWORD_CHANGED, 
     LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT_SUCCESS,
     SHOW_LOADER, REMOVE_LOADER, GET_USERS_SUCCESS,
+    OPEN_ADD_USER_MODAL, OPEN_EDIT_USER_MODAL, OPEN_DELETE_USER_MODAL,
 } from './types';
 import User from '../services/User';
 
+// Action creator for taking a user's email.
 export const emailChanged = value => {
     return {
         type: EMAIL_CHANGED,
@@ -12,6 +14,7 @@ export const emailChanged = value => {
     };
 };
 
+// Action creator for taking a user's password.
 export const passwordChanged = value => {
     return {
         type: PASSWORD_CHANGED,
@@ -19,6 +22,7 @@ export const passwordChanged = value => {
     };
 };
 
+// Action creator for logging a user in.
 export const login = ({ email, password }, _clearCredentials) => async dispatch => {
     dispatch({ type: SHOW_LOADER });
 
@@ -46,6 +50,7 @@ export const login = ({ email, password }, _clearCredentials) => async dispatch 
     }
 };
 
+// Action creator for getting all users.
 export const getUsers = () => async dispatch => {
     try {
         const users = await User.getUsers();
@@ -59,6 +64,31 @@ export const getUsers = () => async dispatch => {
     }
 };
 
+// Action creator for opening the Add User modal.
+export const openAddUserModal = value => {
+    return {
+        type: OPEN_ADD_USER_MODAL,
+        payload: value,
+    };
+};
+
+// Action creator for opening the Edit User modal.
+export const openEditUserModal = value => {
+    return {
+        type: OPEN_EDIT_USER_MODAL,
+        payload: value,
+    };
+};
+
+// Action creator for opening the Delete User modal.
+export const openDeleteUserModal = value => {
+    return {
+        type: OPEN_DELETE_USER_MODAL,
+        payload: value,
+    };
+};
+
+// Action creator for logging out the user.
 export const logout = () => {
     localStorage.removeItem('api_token');
     return { type: LOGOUT_SUCCESS };  
