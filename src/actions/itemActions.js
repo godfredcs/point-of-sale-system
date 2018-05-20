@@ -79,11 +79,11 @@ export const renderToEdit = item => {
     };
 };
 
-export const editItem = (id, { name, unit_price}, refreshItemsList) => async dispatch => {
+export const editItem = (id, data, refreshItemsList) => async dispatch => {
     dispatch({ type: SHOW_ITEM_LOADER });
 
     try {
-        const item = await Item.update(id, { name, unit_price });
+        const item = await Item.update(id, data);
 
         if (item) {
             dispatch({ type: ITEM_EDIT_SUCCESS });

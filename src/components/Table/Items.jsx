@@ -37,6 +37,9 @@ class ItemsTable extends Component {
                         { prop.unit_price }
                     </TableCell>
                     <TableCell className={classes.tableCell}>
+                        { prop.whole_price }
+                    </TableCell>
+                    <TableCell className={classes.tableCell}>
                         { this._renderDate(prop.created_at) }
                     </TableCell>
                     <TableCell className={classes.tableCell}>

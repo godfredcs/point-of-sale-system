@@ -11,10 +11,11 @@ class EditItem extends Component {
         id: '',
         name: '',
         unit_price: '',
+        whole_price: '',
     };
 
     getModalStyle() {
-        const top = 30;
+        const top = 50;
         const left = 50;
 
         return {
@@ -32,14 +33,19 @@ class EditItem extends Component {
         this.setState({ unit_price: event.target.value });
     };
 
+    _setWholePrice = event => {
+        this.setState({ whole_price: event.target.value });
+    };
+
     _editItem = () => {
         const 
             id = this.props.edit_item.id,
             name = this.state.name || this.props.edit_item.name,
-            unit_price = this.state.unit_price || this.props.edit_item.unit_price;
+            unit_price = this.state.unit_price || this.props.edit_item.unit_price,
+            whole_price = this.state.whole_price || this.props.edit_item.whole_price;
 
-        if (name && Number(unit_price)) {
-            this.props.editItem(id, {name, unit_price}, this.props.refresh);
+        if (name && Number(unit_price) && Number(whole_price)) {
+            this.props.editItem(id, {name, unit_price, whole_price}, this.props.refresh);
         }
     };
     
@@ -81,6 +87,18 @@ class EditItem extends Component {
                                                     type="text"
                                                     onChange={ this._setUnitPrice }
                                                     defaultValue={ edit_item.unit_price }
+                                                />
+                                            </ItemGrid>
+                                        </Grid>
+                                        <Grid container>
+                                            <ItemGrid xs={12} sm={12} md={12}>
+                                                <CustomInput
+                                                    labelText="Whole price"
+                                                    id="whole-price"
+                                                    formControlProps={{ fullWidth: true }}
+                                                    type="text"
+                                                    onChange={ this._setWholePrice }
+                                                    defaultValue={ edit_item.whole_price }
                                                 />
                                             </ItemGrid>
                                         </Grid>

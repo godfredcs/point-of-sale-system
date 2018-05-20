@@ -6,7 +6,7 @@ import moment from 'moment';
 
 import 'react-datepicker/dist/react-datepicker.css';
 
-import { getSalesByDate, addSale } from '../../actions';
+import { getSalesByDate, addSale, getAllItems } from '../../actions';
 
 import { RegularCard, SalesTable, ItemGrid } from 'components';
 
@@ -24,6 +24,10 @@ class Sales extends Component {
 
     componentWillMount() {
         this.props.getSalesByDate(this.state.from, this.state.from);
+    }
+
+    componentDidMount() {
+        this.props.getAllItems();
     }
 
     _handleFromChange = date => {
@@ -80,7 +84,7 @@ class Sales extends Component {
                         content={
                             <SalesTable
                                 tableHeaderColor="primary"
-                                tableHead={['No.', 'Name', 'Unit Price', 'Quantity', 'Amount', 'Date Added', 'Date Updated', '']}
+                                tableHead={['No.', 'Name', 'Unit Price', 'Qty.', 'Whole Price', 'Qty.', 'Amount', 'Date Added', 'Date Updated', '']}
                                 tableData={this.props.sales}
                                 updateSale={() => this.setState({ openUpdateSaleModal: true })}
                             />
@@ -91,6 +95,7 @@ class Sales extends Component {
                 <AddSaleModal 
                     open={this.state.openAddSaleModal}
                     close={() => this.setState({ openAddSaleModal: false })}
+                    items={this.props.items}
                 />
             </Grid>
         );
@@ -111,7 +116,11 @@ const styles = {
 
 const mapStateToProps = state => {
     const { sales } = state.sales;
-    return { sales };
+    const { items } = state.items;
+
+    return { sales, items };
 }
 
-export default connect(mapStateToProps, { getSalesByDate, addSale })(Sales);
+export default connect(mapStateToProps, {
+    getSalesByDate, addSale, getAllItems 
+})(Sales);

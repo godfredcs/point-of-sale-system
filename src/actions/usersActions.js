@@ -66,6 +66,14 @@ export const login = ({ email, password }, _clearCredentials) => async dispatch 
     }
 };
 
+export const updateUser = (id, data) => async dispatch => {
+    try {
+        const user = await User.update(id, data);
+    } catch (error) {
+        console.log(error);
+    }
+};
+
 // Action creator for getting all users.
 export const getUsers = () => async dispatch => {
     try {

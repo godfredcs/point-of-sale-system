@@ -9,7 +9,7 @@ class CustomInput extends React.Component {
 	render() {
 		const { 
 			classes, formControlProps, labelText, id, labelProps, inputProps, error, success, 
-			onChange, defaultValue, type="text" 
+			onChange, value, defaultValue, type="text", disabled
 		} = this.props;
 
 		return (
@@ -33,8 +33,10 @@ class CustomInput extends React.Component {
 					id={id}
 					{...inputProps}
 					onChange={onChange}
+					value={value}
 					defaultValue={defaultValue}
 					type={type}
+					disabled={disabled}
 				/>
 				{
 					error 

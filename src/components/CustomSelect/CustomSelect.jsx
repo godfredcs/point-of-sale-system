@@ -36,9 +36,13 @@ class CustomInput extends Component {
                     value={value}
                 >
                     {
-                        items.map(item => (
-                            <MenuItem value={item} key={item}>{ item }</MenuItem>
-                        ))
+                        typeof items[0] === "object"
+                            ? items.map((item, index) => (
+                                <MenuItem value={index} key={item.id}>{ item.name }</MenuItem>
+                            ))
+                            : items.map(item => (
+                                <MenuItem value={item} key={item}>{ item }</MenuItem>
+                            ))
                     }
                 </Select>
 				{
