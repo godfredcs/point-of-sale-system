@@ -14,9 +14,8 @@ export const getAllSales = () => async dispatch => {
 };
 
 export const getSalesByDate = (from, to) => async dispatch => {
-    console.log({from, to})
     try {
-        let sales = await Sale.getByDate(from._d, to._d);
+        let sales = await Sale.getByDate(new Date(from), new Date(`${to}T23:59:59`));
 
         if (sales) {
             dispatch({ type: GET_ALL_SALES_SUCCESS, payload: sales });
@@ -26,12 +25,19 @@ export const getSalesByDate = (from, to) => async dispatch => {
     }
 };
 
-export const addSale = () => async dispatch => {
+export const addSale = (data, refreshSales, close) => async dispatch => {
     try {
-        let sale = await Sale.add();
+        console.log(data)
+        let sale = await Sale.add(data);
 
         if (sale) {
-            console.log(sale);
+            if (refreshSales) {
+                refreshSales();
+            }
+
+            if (close) {
+                close();
+            }
         }
     } catch (error) {
         console.log(error);

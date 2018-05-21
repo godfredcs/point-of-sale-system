@@ -7,6 +7,12 @@ export default {
                     .catch(error => Promise.reject(error.response.data));
     },
 
+    getByDate(from, to) {
+        return axios.get('jackpot/filter', { params: {from, to} })
+                    .then(response => Promise.resolve(response.data))
+                    .catch(error => Promise.reject(error.response.data));
+    },
+
     add(jackpot) {
         return axios.post('jackpot', jackpot)
                     .then(response => Promise.resolve(response.data))

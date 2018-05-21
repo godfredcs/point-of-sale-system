@@ -24,6 +24,12 @@ class UserProfile extends Component {
 
     componentDidMount() {
         this.getUsers();
+        
+        if (this.props.user) {
+            const { firstname, lastname } = this.props.user;
+
+            this.setState({ firstname, lastname });
+        }
     }
 
     // Log the user out.
@@ -130,7 +136,6 @@ class UserProfile extends Component {
                                                 labelText="Firstname"
                                                 id="firstname"
                                                 formControlProps={{ fullWidth: true }}
-                                                defaultValue={ user ? user.firstname : '' }
                                                 value={this.state.firstname}
                                                 onChange={event => this.setState({ firstname: event.target.value })}
                                             />
@@ -140,7 +145,6 @@ class UserProfile extends Component {
                                                 labelText="Lastname"
                                                 id="lastname"
                                                 formControlProps={{ fullWidth: true }}
-                                                defaultValue={ user ? user.lastname : '' }
                                                 value={this.state.lastname}
                                                 onChange={event => this.setState({ lastname: event.target.value })}
                                             />

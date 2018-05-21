@@ -6,6 +6,12 @@ export default {
                     .then(response => Promise.resolve(response.data))
                     .catch(error => Promise.reject(error.response.data));
     },
+
+    getByDate(from, to) {
+        return axios.get('mobile_money/filter', { params: { from, to } })
+                    .then(response => Promise.resolve(response.data))
+                    .catch(error => Promise.reject(error.response.data));
+    },
     
     add(data) {
         return axios.post('mobile_money', data)

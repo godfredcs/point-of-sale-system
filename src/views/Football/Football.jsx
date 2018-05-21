@@ -1,27 +1,52 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Grid, Button } from 'material-ui';
-import DatePicker from 'react-datepicker';
-import moment from 'moment';
 
-import 'react-datepicker/dist/react-datepicker.css';
+import { getFootballByDate, addFootball, showAddFootballModal } from '../../actions';
 
-import { getAllFootballs, addFootball, showAddFootballModal } from '../../actions';
-
-import { RegularCard, FootballTable, ItemGrid } from 'components';
+import { CustomDatepicker, RegularCard, FootballTable, ItemGrid } from 'components';
 
 import AddFootballModal from './Modals/AddFootball';
 
 
 class Football extends Component {
      state = {
-        from: moment(),
-        to: moment(),
+        from: '2018-05-21',
+        to: '2018-05-21',
     };
 
-    componentWillMount() {
-        this.props.getAllFootballs();
+    componentDidMount() {
+        this.setState({ from: this.dateNow(), to: this.dateNow() }, this._getFootball);
     }
+
+    from = event => {
+        this.setState({ from: event.target.value }, this._getFootball);
+    };
+
+    to = event => {
+        this.setState({ to: event.target.value }, this._getFootball);
+    };
+
+    _getFootball = () => {
+        this.props.getFootballByDate(this.state.from, this.state.to);
+    };
+
+    dateNow = () => {
+        let date = new Date(),
+            year = String(date.getFullYear()),
+            month = String(date.getMonth() + 1), // Month starts from 0 so add 1 to make up for the 0.
+            day = String(date.getDate());
+
+        if (month.length === 1) {
+            month = `0${month}`;
+        }
+
+        if (day.length === 1) {
+            day = `0${day}`;
+        }
+
+        return `${year}-${month}-${day}`;
+    };
     
     render() {
         return (
@@ -39,21 +64,17 @@ class Football extends Component {
                         date_picker={
                             <div style={ styles.datepickers }>
                                 <div style={{ paddingRight: 10 }}>
-                                    <span>From:</span>
-                                    <DatePicker
-                                        selected={this.state.from}
-                                        onChange={this._handleFromChange}
-                                        onSelect={this._handleFromSelect}
-                                        dateFormat="DD/MM/YYYY"
+                                    <CustomDatepicker
+                                        label="From"
+                                        value={this.state.from}
+                                        onChange={this.from}
                                     />
                                 </div>
                                 <div>
-                                    <span>To:</span>
-                                    <DatePicker
-                                        selected={this.state.to}
-                                        onChange={this._handleToChange}
-                                        onSelect={this._handleToSelect}
-                                        dateFormat="DD/MM/YYYY"
+                                    <CustomDatepicker
+                                        label="To"
+                                        value={this.state.to}
+                                        onChange={this.to}
                                     />
                                 </div>
                             </div>
@@ -73,7 +94,7 @@ class Football extends Component {
                     open={this.props.openAddFootballModal}
                     close={() => this.props.showAddFootballModal(false)}
                     addFootball={this.props.addFootball}
-                    refresh={this.props.getAllFootballs}
+                    refresh={this.props.getFootballByDate}
                 />
             </Grid>
         );
@@ -98,5 +119,5 @@ const mapStateToProps = state => {
 };
 
 export default connect(mapStateToProps, {
-    getAllFootballs, addFootball, showAddFootballModal,
+    getFootballByDate, addFootball, showAddFootballModal,
 })(Football);

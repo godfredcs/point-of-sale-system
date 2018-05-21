@@ -12,7 +12,6 @@ class AddItem extends Component {
 
     calculate = type => {
         if (!this.state.item_index && this.state.item_index !== 0) {
-            console.log("id is not set")
             return () => 0.00;
         }
 
@@ -27,16 +26,16 @@ class AddItem extends Component {
                     return Number(item.whole_price);
 
                 case "unit_amount":
-                    return Number(this.state.unit_quantity) * Number(item.unit_price);
+                    return (Number(this.state.unit_quantity) * Number(item.unit_price)).toFixed(2);
                 
                 case "whole_amount":
-                    return Number(this.state.whole_quantity) * Number(item.whole_price);
+                    return (Number(this.state.whole_quantity) * Number(item.whole_price)).toFixed(2);
 
                 case "total_amount":
                     let unit_price = Number(this.state.unit_quantity) * Number(item.unit_price);
                     let whole_price = Number(this.state.whole_quantity) * Number(item.whole_price);
 
-                    return unit_price + whole_price;
+                    return (unit_price + whole_price).toFixed(2);
 
                 default:
                     return 0.00;
@@ -44,13 +43,32 @@ class AddItem extends Component {
         }
     };
 
-
-
     // Function for adding sales to database.
     _addSale = () => {
-        const { name, unit_price } = this.state;
-        this.props.addItemFunc({name, unit_price});
+        const { item_index, unit_quantity, whole_quantity } = this.state;
+
+        if (!item_index && item_index !== 0) {
+            return;
+        }
+
+        if (!Number(unit_quantity) && !Number(whole_quantity)) {
+            return;
+        }
+
+        let item_id = this.props.items[item_index].id;
+
+        this.props.addSale({ item_id, unit_quantity, whole_quantity }, this.props.refreshSales, this.clear);
     };
+
+    clear = () => {
+        this.setState({
+            item_index: '',
+            unit_quantity: 0.00,
+            whole_quantity: 0.00,
+        });
+
+        this.props.close();
+    }
 
     getModalStyle() {
         const top = 50;
@@ -95,8 +113,9 @@ class AddItem extends Component {
                                             </ItemGrid>
                                         </Grid>
                                         <Grid container>
-                                            <ItemGrid xs={12} sm={12} md={4}>
+                                            <ItemGrid xs={12} sm={4} md={4}>
                                                 <CustomInput
+                                                    disabled={this.state.item_index === ""}
                                                     labelText="Unit quantity"
                                                     id="unit-quantity"
                                                     formControlProps={{ fullWidth: true }}
@@ -105,7 +124,7 @@ class AddItem extends Component {
                                                     defaultValue={ this.state.unit_quantity }
                                                 />
                                             </ItemGrid>
-                                            <ItemGrid xs={12} sm={12} md={4}>
+                                            <ItemGrid xs={12} sm={4} md={4}>
                                                 <CustomInput
                                                     disabled
                                                     labelText="Unit price"
@@ -115,7 +134,7 @@ class AddItem extends Component {
                                                     value={ this.calculate("unit_price")() }
                                                 />
                                             </ItemGrid>
-                                            <ItemGrid xs={12} sm={12} md={4}>
+                                            <ItemGrid xs={12} sm={4} md={4}>
                                                 <CustomInput
                                                     disabled
                                                     labelText="Unit amount"
@@ -127,8 +146,9 @@ class AddItem extends Component {
                                             </ItemGrid>
                                         </Grid>
                                         <Grid container>
-                                            <ItemGrid xs={12} sm={12} md={4}>
+                                            <ItemGrid xs={12} sm={4} md={4}>
                                                 <CustomInput
+                                                    disabled={this.state.item_index === ""}
                                                     labelText="Whole quantity"
                                                     id="whole-quantity"
                                                     formControlProps={{ fullWidth: true }}
@@ -137,7 +157,7 @@ class AddItem extends Component {
                                                     defaultValue={ this.state.whole_quantity }
                                                 />
                                             </ItemGrid>
-                                            <ItemGrid xs={12} sm={12} md={4}>
+                                            <ItemGrid xs={12} sm={4} md={4}>
                                                 <CustomInput
                                                     disabled
                                                     labelText="Whole price"
@@ -147,7 +167,7 @@ class AddItem extends Component {
                                                     value={ this.calculate("whole_price")() }
                                                 />
                                             </ItemGrid>
-                                            <ItemGrid xs={12} sm={12} md={4}>
+                                            <ItemGrid xs={12} sm={4} md={4}>
                                                 <CustomInput
                                                     disabled
                                                     labelText="Whole amount"
@@ -177,8 +197,7 @@ class AddItem extends Component {
                                     <Button 
                                         variant="raised" 
                                         style={{ backgroundColor: 'purple', color: 'white' }} 
-                                        //onClick={this._addItem}
-                                        onClick={()=>console.log(this.state)}
+                                        onClick={this._addSale}
                                     >Add</Button>
                                 }
                             />

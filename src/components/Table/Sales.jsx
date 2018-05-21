@@ -29,7 +29,13 @@ class CustomTable extends React.Component {
                         { prop.item.unit_price }
                     </TableCell>
                     <TableCell className={classes.tableCell}>
-                        { prop.quantity }
+                        { prop.unit_quantity }
+                    </TableCell>
+                    <TableCell className={classes.tableCell}>
+                        { prop.item.whole_price }
+                    </TableCell>
+                    <TableCell className={classes.tableCell}>
+                        { prop.whole_quantity }
                     </TableCell>
                     <TableCell className={classes.tableCell}>
                         { `GHS ${prop.amount}` }

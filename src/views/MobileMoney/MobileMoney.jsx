@@ -1,17 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Grid, Button } from 'material-ui';
-import DatePicker from 'react-datepicker';
-import moment from 'moment';
-
-import 'react-datepicker/dist/react-datepicker.css';
 
 import { 
-    getAllMobileMoneys, getMobileMoneyByDate, addMobileMoney, 
+    getMobileMoneyByDate, addMobileMoney, 
     showAddMobileMoneyModal, showEditMobileMoneyModal,
 } from '../../actions';
 
-import { RegularCard, MobileMoneyTable, ItemGrid } from 'components';
+import { CustomDatepicker, RegularCard, MobileMoneyTable, ItemGrid } from 'components';
 
 import AddTransactionModal from './Modals/AddTransaction';
 import EditTransactionModal from './Modals/EditTransaction';
@@ -19,14 +15,43 @@ import EditTransactionModal from './Modals/EditTransaction';
 
 class MobileMoney extends Component {
      state = {
-        from: moment(), // current date
-        to: moment(), // current date
+        from: '2018-05-21',
+        to: '2018-05-21',
     };
 
-    componentWillMount() {
-        // Get all mobile money transactions when this component mounts
-        this.props.getAllMobileMoneys();
+    componentDidMount() {
+        // Set the dates (from and to) and pull corresponding sales from server.
+        this.setState({ from: this.dateNow(), to: this.dateNow() }, this._getMobileMoneys);
     }
+
+    _getMobileMoneys = () => {
+        this.props.getMobileMoneyByDate(this.state.from, this.state.to);
+    }
+
+    from = event => {
+        this.setState({ from: event.target.value }, this._getMobileMoneys);
+    };
+
+    to = event => {
+        this.setState({ to: event.target.value }, this._getMobileMoneys);
+    };
+
+    dateNow = () => {
+        let date = new Date(),
+            year = String(date.getFullYear()),
+            month = String(date.getMonth() + 1), // Month starts from 0 so add 1 to make up for the 0.
+            day = String(date.getDate());
+
+        if (month.length === 1) {
+            month = `0${month}`;
+        }
+
+        if (day.length === 1) {
+            day = `0${day}`;
+        }
+
+        return `${year}-${month}-${day}`;
+    };
     
     render() {
         return (
@@ -44,21 +69,17 @@ class MobileMoney extends Component {
                         date_picker={
                             <div style={ styles.datepickers }>
                                 <div style={{ paddingRight: 10 }}>
-                                    <span>From:</span>
-                                    <DatePicker
-                                        selected={this.state.from}
-                                        onChange={this._handleFromChange}
-                                        onSelect={this._handleFromSelect}
-                                        dateFormat="DD/MM/YYYY"
+                                    <CustomDatepicker
+                                        label="From"
+                                        value={this.state.from}
+                                        onChange={this.from}
                                     />
                                 </div>
                                 <div>
-                                    <span>To:</span>
-                                    <DatePicker
-                                        selected={this.state.to}
-                                        onChange={this._handleToChange}
-                                        onSelect={this._handleToSelect}
-                                        dateFormat="DD/MM/YYYY"
+                                    <CustomDatepicker
+                                        label="To"
+                                        value={this.state.to}
+                                        onChange={this.to}
                                     />
                                 </div>
                             </div>
@@ -118,6 +139,6 @@ const mapStateToProps = state => {
 };
 
 export default connect(mapStateToProps, {
-    getAllMobileMoneys, getMobileMoneyByDate, addMobileMoney, 
+    getMobileMoneyByDate, addMobileMoney, 
     showAddMobileMoneyModal, showEditMobileMoneyModal,
 })(MobileMoney);

@@ -21,6 +21,21 @@ export const getAllMobileMoneys = () => async dispatch => {
     }
 };
 
+export const getMobileMoneyByDate = (from, to) => async dispatch => {
+    console.log({from, to})
+    try {
+        let mobile_moneys = await MobileMoney.getByDate(new Date(from), new Date(`${to}T23:59:59`));
+
+        if (mobile_moneys) {
+            dispatch({ type: GET_ALL_MOBILE_MONEYS_SUCCESS, payload: mobile_moneys });
+            console.log('this is the array of mobile moneys ', mobile_moneys);
+        }
+    } catch (error) {
+        dispatch({ type: GET_ALL_MOBILE_MONEYS_FAIL, payload: error });
+        console.log(error);
+    }
+};
+
 export const showAddMobileMoneyModal = value => {
     return {
         type: SHOW_ADD_MOBILE_MONEY_MODAL,

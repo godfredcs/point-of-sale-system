@@ -16,6 +16,12 @@ import Button from './CustomButtons/Button.jsx';
 import IconButton from './CustomButtons/IconButton.jsx';
 
 // ##############################
+// // // CustomDatepicker
+// #############################
+
+import CustomDatepicker from './CustomDatepicker/CustomDatepicker.jsx';
+
+// ##############################
 // // // CustomInput
 // #############################
 
@@ -98,6 +104,8 @@ export {
     ChartCard, ProfileCard, RegularCard, StatsCard, TasksCard,
     // CustomButtons
     Button, IconButton,
+    // CustomDatepicker
+    CustomDatepicker,
     // CustomInput
     CustomInput, 
     // CustomSelect

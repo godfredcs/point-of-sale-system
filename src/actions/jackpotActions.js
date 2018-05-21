@@ -20,6 +20,19 @@ export const getAllJackpots = () => async dispatch => {
     }
 };
 
+export const getJackpotByDate = (from, to) => async dispatch => {
+    try {
+        let jackpots = await Jackpot.getByDate(new Date(from), new Date(`${to}T23:59:59`));
+
+        if (jackpots) {
+            dispatch({ type: GET_ALL_JACKPOTS_SUCCESS, payload: jackpots });
+        }
+    } catch (error) {
+        dispatch({ type: GET_ALL_JACKPOTS_FAIL, payload: error });
+        console.log(error);
+    }
+};
+
 export const showAddJackpotModal = value => {
     return {
         type: SHOW_ADD_JACKPOT_MODAL,

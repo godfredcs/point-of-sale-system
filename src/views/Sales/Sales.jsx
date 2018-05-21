@@ -1,14 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Grid, Button } from 'material-ui';
-import DatePicker from 'react-datepicker';
-import moment from 'moment';
-
-import 'react-datepicker/dist/react-datepicker.css';
 
 import { getSalesByDate, addSale, getAllItems } from '../../actions';
 
-import { RegularCard, SalesTable, ItemGrid } from 'components';
+import { CustomDatepicker, RegularCard, SalesTable, ItemGrid } from 'components';
 
 import AddSaleModal from './Modals/AddSale';
 
@@ -18,33 +14,56 @@ class Sales extends Component {
         openAddSaleModal: false,
         openUpdateSaleModal: false,
         openDeleteSaleModal: false,
-        from: moment(),
-        to: moment(),
+        from: '2018-05-21',
+        to: '2018-05-21',
     };
 
-    componentWillMount() {
-        this.props.getSalesByDate(this.state.from, this.state.from);
-    }
-
     componentDidMount() {
-        this.props.getAllItems();
+        // Set the dates (from and to) and pull corresponding sales from server.
+        this.setState({ from: this.dateNow(), to: this.dateNow() }, this._getSales);
+
+        this.props.getAllItems(); // Get all items (Useful in adding sales).
     }
 
-    _handleFromChange = date => {
-        this.setState({ from: date });
-    }
+    _getSales = () => {
+        this.props.getSalesByDate(this.state.from, this.state.to);
+    };
 
-    _handleToChange = date => {
-        this.setState({ to: date });
-    }
+    from = event => {
+        this.setState({ from: event.target.value }, this._getSales);
+    };
 
-    _handleFromSelect = date => {
-        this.props.getSalesByDate(date, this.state.to);
-    }
+    to = event => {
+        this.setState({ to: event.target.value }, this._getSales);
+    };
 
-    _handleToSelect = date => {
-        this.props.getSalesByDate(this.state.from, date);
-    }
+    total = () => {
+        let total = 0;
+
+        for (let sale of this.props.sales) {
+            total += Number(sale.amount);
+        }
+
+        console.log('this is total', total);
+        return total;
+    };
+
+    dateNow = () => {
+        let date = new Date(),
+            year = String(date.getFullYear()),
+            month = String(date.getMonth() + 1), // Month starts from 0 so add 1 to make up for the 0.
+            day = String(date.getDate());
+
+        if (month.length === 1) {
+            month = `0${month}`;
+        }
+
+        if (day.length === 1) {
+            day = `0${day}`;
+        }
+
+        return `${year}-${month}-${day}`;
+    };
 
     render() {
         return (
@@ -59,24 +78,21 @@ class Sales extends Component {
                                 style={ styles.addSaleButton } 
                                 onClick={() => this.setState({ openAddSaleModal: true })}>ADD SALE</Button>
                         }
+                        total={ this.total() }
                         date_picker={
                             <div style={ styles.datepickers }>
                                 <div style={{ paddingRight: 10 }}>
-                                    <span>From:</span>
-                                    <DatePicker
-                                        selected={this.state.from}
-                                        onChange={this._handleFromChange}
-                                        onSelect={this._handleFromSelect}
-                                        dateFormat="DD/MM/YYYY"
+                                    <CustomDatepicker
+                                        label="From"
+                                        value={this.state.from}
+                                        onChange={this.from}
                                     />
                                 </div>
                                 <div>
-                                    <span>To:</span>
-                                    <DatePicker
-                                        selected={this.state.to}
-                                        onChange={this._handleToChange}
-                                        onSelect={this._handleToSelect}
-                                        dateFormat="DD/MM/YYYY"
+                                    <CustomDatepicker
+                                        label="To"
+                                        value={this.state.to}
+                                        onChange={this.to}
                                     />
                                 </div>
                             </div>
@@ -96,6 +112,8 @@ class Sales extends Component {
                     open={this.state.openAddSaleModal}
                     close={() => this.setState({ openAddSaleModal: false })}
                     items={this.props.items}
+                    addSale={this.props.addSale}
+                    refreshSales={this._getSales}
                 />
             </Grid>
         );
@@ -121,6 +139,4 @@ const mapStateToProps = state => {
     return { sales, items };
 }
 
-export default connect(mapStateToProps, {
-    getSalesByDate, addSale, getAllItems 
-})(Sales);
+export default connect(mapStateToProps, { getSalesByDate, addSale, getAllItems })(Sales);

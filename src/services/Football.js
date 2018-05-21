@@ -6,16 +6,25 @@ export default {
                     .then(response => Promise.resolve(response.data))
                     .catch(error => Promise.reject(error.response.data));
     },
+
+    getByDate(from, to) {
+        return axios.get('football/filter', { params: { from, to } })
+                    .then(response => Promise.resolve(response.data))
+                    .catch(error => Promise.reject(error.response.data));
+    },
+
     add(data) {
         return axios.post('football', data)
                     .then(response => Promise.resolve(response.data))
                     .catch(error => Promise.reject(error.response.data));
     },
+
     update(id, data) {
         return axios.put(`football/${id}`, data)
                     .then(response => Promise.resolve(response.data))
                     .catch(error => Promise.reject(error.response.data));
     },
+
     delete(id) {
         return axios.delete(`football/${id}`)
                     .then(response => Promise.resolve(response.data))
