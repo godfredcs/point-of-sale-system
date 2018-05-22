@@ -2,6 +2,7 @@ import {
     EMAIL_CHANGED, PASSWORD_CHANGED,
     GET_USERS_SUCCESS,
     LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT_SUCCESS,
+    USER_UPDATE_SUCCESS, USER_UPDATE_FAIL,
     OPEN_ADD_USER_MODAL, OPEN_EDIT_USER_MODAL, OPEN_DELETE_USER_MODAL,
 } from '../actions/types';
 
@@ -36,6 +37,12 @@ export default (state = INITIAL_STATE, action) => {
 
         case LOGOUT_SUCCESS:
             return { ...state, isLoggedIn: false, user: null };
+
+        case USER_UPDATE_SUCCESS:
+            return { ...state, user: action.payload };
+
+        case USER_UPDATE_FAIL:
+            return { ...state };
 
         case OPEN_ADD_USER_MODAL:
             return { ...state, open_add_user_modal: action.payload };

@@ -4,7 +4,7 @@ import { Grid, Button } from 'material-ui';
 
 import { getFootballByDate, addFootball, showAddFootballModal } from '../../actions';
 
-import { CustomDatepicker, RegularCard, FootballTable, ItemGrid } from 'components';
+import { CustomDatepicker, RegularCard, FootballTable, ItemGrid, CustomInput } from 'components';
 
 import AddFootballModal from './Modals/AddFootball';
 
@@ -25,6 +25,16 @@ class Football extends Component {
 
     to = event => {
         this.setState({ to: event.target.value }, this._getFootball);
+    };
+
+    total = () => {
+        let total = 0;
+
+        for (let football of this.props.footballs) {
+            total += Number(football.amount);
+        }
+
+        return total.toFixed(2);
     };
 
     _getFootball = () => {
@@ -60,6 +70,18 @@ class Football extends Component {
                             <Button 
                                 style={ styles.addTransactionButton } 
                                 onClick={() => this.props.showAddFootballModal(true)}>ADD FOOTBALL</Button>
+                        }
+                        total={
+                            <div>
+                                <CustomInput
+                                    disabled
+                                    labelText="Total Amount"
+                                    id="total-amount"
+                                    formControlProps={{ fullWidth: true }}
+                                    type="number"
+                                    value={this.total()}
+                                />
+                            </div>
                         }
                         date_picker={
                             <div style={ styles.datepickers }>
@@ -105,6 +127,7 @@ const styles = {
     addTransactionButton: {
         color: '#FFF',
         backgroundColor: 'purple',
+        marginLeft: 20,
     },
     datepickers: {
         display: 'flex',

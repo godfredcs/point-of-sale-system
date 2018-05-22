@@ -8,7 +8,7 @@ import {
 
 import AddUserModal from './Modals/AddUser';
 
-import { getUsers, addUser, updateUser, openAddUserModal, logout } from '../../actions';
+import { getUsers, addUser, updateUser, deleteUser, openAddUserModal, logout } from '../../actions';
 
 import avatar from 'assets/img/faces/marc.jpg';
 
@@ -100,10 +100,17 @@ class UserProfile extends Component {
 
         // Check if the object is not empty.
         if (Object.keys(update_details).length) {
-            update_details.email = this.props.user.email;
-
-            this.props.updateUser(this.props.user.id, update_details);
+            this.props.updateUser(this.props.user.id, update_details, this.resetPassword);
         }
+    };
+
+    resetPassword = () => {
+        this.setState({
+            willChangePassword: false,
+            old_password: '',
+            new_password: '',
+            confirm_new_password: ''
+        });
     };
 
     render() {
@@ -242,7 +249,8 @@ class UserProfile extends Component {
                                             tableHeaderColor="primary"
                                             tableHead={['No.','Firstname','Lastname', 'Email', 'Role', 'Date Added','Date Updated', '']}
                                             tableData={this.props.users}
-                                            editItem={this._showEditItemModal}
+                                            deleteUser={this.props.deleteUser}
+                                            refreshUsers={this.getUsers}
                                         />
                                     }
                                 />
@@ -282,4 +290,5 @@ const mapStateToProps = state => {
     return { users, user, open_add_user_modal };
 };
 
-export default connect(mapStateToProps, { getUsers, addUser, updateUser, openAddUserModal, logout })(UserProfile);
+export default connect(mapStateToProps, {
+    getUsers, addUser, updateUser, deleteUser, openAddUserModal, logout })(UserProfile);

@@ -4,7 +4,7 @@ import { Grid, Button } from 'material-ui';
 
 import { getSalesByDate, addSale, getAllItems } from '../../actions';
 
-import { CustomDatepicker, RegularCard, SalesTable, ItemGrid } from 'components';
+import { CustomDatepicker, CustomInput, RegularCard, SalesTable, ItemGrid } from 'components';
 
 import AddSaleModal from './Modals/AddSale';
 
@@ -44,8 +44,7 @@ class Sales extends Component {
             total += Number(sale.amount);
         }
 
-        console.log('this is total', total);
-        return total;
+        return total.toFixed(2);
     };
 
     dateNow = () => {
@@ -78,7 +77,18 @@ class Sales extends Component {
                                 style={ styles.addSaleButton } 
                                 onClick={() => this.setState({ openAddSaleModal: true })}>ADD SALE</Button>
                         }
-                        total={ this.total() }
+                        total={
+                            <div>
+                                <CustomInput
+                                    disabled
+                                    labelText="Total"
+                                    id="total"
+                                    formControlProps={{ fullWidth: true }}
+                                    type="number"
+                                    value={this.total()}
+                                />
+                            </div>
+                        }
                         date_picker={
                             <div style={ styles.datepickers }>
                                 <div style={{ paddingRight: 10 }}>
@@ -124,10 +134,11 @@ const styles = {
     addSaleButton: {
         color: '#FFF',
         backgroundColor: 'purple',
+        marginLeft: 20, 
     },
     datepickers: {
         display: 'flex',
-        alignItems: 'center',
+        alignItems: 'baseline',
         justifyContent: 'center',
     }
 };

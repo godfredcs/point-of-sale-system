@@ -10,6 +10,11 @@ export const LOGIN_FAIL = 'login_fail';
 
 export const LOGOUT_SUCCESS = 'logout_success';
 
+export const USER_UPDATE_SUCCESS = 'user_update_success';
+
+export const USER_UPDATE_FAIL = 'user_update_fail';
+
+
 export const OPEN_ADD_USER_MODAL = 'open_add_user_modal';
 
 export const OPEN_EDIT_USER_MODAL = 'open_edit_user_modal';

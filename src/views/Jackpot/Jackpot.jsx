@@ -7,7 +7,7 @@ import {
     showAddJackpotModal, showEditJackpotModal, 
 } from '../../actions';
 
-import { CustomDatepicker, RegularCard, JackpotTable, ItemGrid } from 'components';
+import { CustomDatepicker, RegularCard, JackpotTable, ItemGrid, CustomInput } from 'components';
 
 import AddJackpotModal from './Modals/AddJackpot';
 
@@ -22,16 +22,26 @@ class Jackpot extends Component {
         this.setState({ from: this.dateNow(), to: this.dateNow() }, this._getJackpots);
     }
 
-    _getJackpots = () => {
-        this.props.getJackpotByDate(this.state.from, this.state.to);
-    };
-
     from = event => {
         this.setState({ from: event.target.value }, this._getJackpots);
     };
 
     to = event => {
         this.setState({ to: event.target.value }, this._getJackpots);
+    };
+
+    total = () => {
+        let total = 0;
+
+        for (let jackpot of this.props.jackpots) {
+            total += Number(jackpot.amount);
+        }
+
+        return total.toFixed(2);
+    };
+
+    _getJackpots = () => {
+        this.props.getJackpotByDate(this.state.from, this.state.to);
     };
 
     dateNow = () => {
@@ -63,6 +73,18 @@ class Jackpot extends Component {
                             <Button 
                                 style={ styles.addTransactionButton } 
                                 onClick={() => this.props.showAddJackpotModal(true) }>ADD JACKPOT</Button>
+                        }
+                        total={
+                            <div>
+                                <CustomInput
+                                    disabled
+                                    labelText="Total Amount"
+                                    id="total-amount"
+                                    formControlProps={{ fullWidth: true }}
+                                    type="number"
+                                    value={this.total()}
+                                />
+                            </div>
                         }
                         date_picker={
                             <div style={ styles.datepickers }>
@@ -108,6 +130,7 @@ const styles = {
     addTransactionButton: {
         color: '#FFF',
         backgroundColor: 'purple',
+        marginLeft: 20,
     },
     datepickers: {
         display: 'flex',

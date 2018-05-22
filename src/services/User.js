@@ -24,4 +24,10 @@ export default {
                     .then(response => Promise.resolve(response.data))
                     .catch(error => Promise.reject(error.response.data));
     },
+
+    delete(id) {
+        return axios.delete(`users/${id}`)
+                    .then(response => Promise.resolve(response.data))
+                    .catch(error => Promise.reject(error.response.data));
+    },
 };

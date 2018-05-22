@@ -2,6 +2,7 @@ import {
     EMAIL_CHANGED, PASSWORD_CHANGED, 
     LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT_SUCCESS,
     SHOW_LOADER, REMOVE_LOADER, GET_USERS_SUCCESS,
+    USER_UPDATE_SUCCESS, USER_UPDATE_FAIL,
     OPEN_ADD_USER_MODAL, OPEN_EDIT_USER_MODAL, OPEN_DELETE_USER_MODAL,
 } from './types';
 import User from '../services/User';
@@ -22,9 +23,8 @@ export const passwordChanged = value => {
     };
 };
 
-// Action creator for creating a new user.
+// Action creator for creating a new user in the system.
 export const addUser = (data, refresh, resetInput) => async dispatch => {
-
     try {
         const user = await User.register(data);
         if (user) {
@@ -66,9 +66,36 @@ export const login = ({ email, password }, _clearCredentials) => async dispatch 
     }
 };
 
-export const updateUser = (id, data) => async dispatch => {
+// Action creator for updating user details.
+export const updateUser = (id, data, resetPassword) => async dispatch => {
     try {
         const user = await User.update(id, data);
+
+        if (user) {
+            dispatch({ type: USER_UPDATE_SUCCESS, payload: user });
+
+            if (resetPassword) {
+                resetPassword();
+            }
+        }
+    } catch (error) {
+        dispatch({ type: USER_UPDATE_FAIL, payload: parseError(error) });
+        console.log(error);
+    }
+};
+
+// Action creator for deleting a user from the system.
+export const deleteUser = (id, refresh) => async dispatch => {
+    try {
+        const result = await User.delete(id);
+
+        console.log("This is working")
+        if (result) {
+            console.log("Yes there's results")
+            if (refresh) {
+                refresh();
+            }
+        }
     } catch (error) {
         console.log(error);
     }
@@ -81,7 +108,6 @@ export const getUsers = () => async dispatch => {
 
         if (users) {
             dispatch({ type: GET_USERS_SUCCESS, payload: users });
-            console.log('heheehehehee', users);
         }
     } catch (error) {
         console.log(error);
@@ -116,4 +142,9 @@ export const openDeleteUserModal = value => {
 export const logout = () => {
     localStorage.removeItem('api_token');
     return { type: LOGOUT_SUCCESS };  
+};
+
+// Function for parsing error gotten from server.
+const parseError = error => {
+    return error;
 };

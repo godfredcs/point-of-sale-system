@@ -15,10 +15,11 @@ class ItemsTable extends Component {
         return date.isValid() ? date.format('ddd Do MMMM, YYYY hh:mm:ss:A') : value;
     }
 
-    _renderEdit(prop) {
-        this.props.renderToEdit(prop);
-        this.props.editItem();
-    }
+    deleteUser = id => {
+        if (window.confirm("Are you sure you want to delete this user?")) {
+            this.props.deleteUser(id, this.props.refreshUsers);
+        }
+    };
 
     _renderTableData = () => {
         let number = 0;
@@ -48,10 +49,15 @@ class ItemsTable extends Component {
                     <TableCell className={classes.tableCell}>
                         { this._renderDate(prop.updated_at) }
                     </TableCell>
-                    <TableCell className={classes.tableCell}>
-                        <Button style={ styles.updateButton } onClick={this._renderEdit.bind(this, prop)}>Edit</Button>
-                        <Button style={ styles.deleteButton }>Delete</Button>
-                    </TableCell>
+                    {
+                        prop.role.name !== "super_admin"
+                            ? <TableCell className={classes.tableCell}>
+                                <Button 
+                                    style={ styles.deleteButton }
+                                    onClick={ () => this.deleteUser(prop.id) }>Delete</Button>
+                            </TableCell>
+                            : null
+                    }
                 </TableRow>
             )
         })
@@ -64,33 +70,33 @@ class ItemsTable extends Component {
                 <Table className={classes.table}>
                     {
                         tableHead !== undefined 
-                        ? (
-                            <TableHead className={classes[tableHeaderColor+"TableHeader"]}>
-                                <TableRow>
-                                    {
-                                        tableHead.map((prop, key) => {
-                                            return (
-                                                <TableCell
-                                                    className={classes.tableCell + " " + classes.tableHeadCell}
-                                                    key={key}>
-                                                    {prop}
-                                                </TableCell>
-                                            );
-                                        })
-                                    }
-                                </TableRow>
-                            </TableHead>
-                        )
-                        : null
+                            ? (
+                                <TableHead className={classes[tableHeaderColor+"TableHeader"]}>
+                                    <TableRow>
+                                        {
+                                            tableHead.map((prop, key) => {
+                                                return (
+                                                    <TableCell
+                                                        className={classes.tableCell + " " + classes.tableHeadCell}
+                                                        key={key}>
+                                                        {prop}
+                                                    </TableCell>
+                                                );
+                                            })
+                                        }
+                                    </TableRow>
+                                </TableHead>
+                            )
+                            : null
                     }
                     {
                         tableData.length
-                        ? (
-                            <TableBody>
-                                { this._renderTableData() }
-                            </TableBody>
-                        )
-                        : null
+                            ? (
+                                <TableBody>
+                                    { this._renderTableData() }
+                                </TableBody>
+                            )
+                            : null
                     }
                 </Table>
             </div>

@@ -1,12 +1,12 @@
 import React from 'react';
-import { withStyles, Card, CardContent, CardHeader, CardActions, } from 'material-ui';
+import { withStyles, Card, CardContent, CardHeader, CardActions } from 'material-ui';
 import PropTypes from 'prop-types';
 
 import { regularCardStyle } from 'variables/styles';
 
 class RegularCard extends React.Component {
     render() {
-        const { classes, headerColor, plainCard, cardTitle, cardSubtitle, content, button, date_picker, footer, padIt } = this.props;
+        const { classes, headerColor, plainCard, cardTitle, cardSubtitle, content, total, button, date_picker, footer, padIt } = this.props;
 
         return (
             <Card style={{ paddingBottom: padIt ? 120 : 0 }} className={classes.card + (plainCard ? " " + classes.cardPlain:"")}>
@@ -20,19 +20,44 @@ class RegularCard extends React.Component {
                     subheader={cardSubtitle}
                 />
 
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: date_picker ? 'space-between' : 'flex-end', padding: '20px 15px 0px' }}>                 
-                    {
-                        date_picker
-                            ? date_picker
-                            : null
-                    }
+                {
+                    date_picker || button
+                        ? <div style={{
+                            display: 'flex',
+                            flexWrap: 'wrap',
+                            alignItems: 'baseline',
+                            margin: '20px 15px 0px',
+                            justifyContent: date_picker ? 'space-between' : 'flex-end'
+                        }}>                 
+                            <div>
+                                {
+                                    date_picker
+                                        ? date_picker
+                                        : null
+                                }
+                            </div>
 
-                    { 
-                        button 
-                            ? button 
-                            : null 
-                    }
-                </div>
+                            <div style={{ 
+                                display: 'flex',
+                                alignItems: 'baseline',
+                                justifyContent: total ? 'space-between' : 'flex-end',
+                                padding: '20px 15px 0px'
+                            }}>
+                                {
+                                    total
+                                        ? total
+                                        : null
+                                }
+                                { 
+                                    button 
+                                        ? button 
+                                        : null 
+                                }
+                            </div>
+                        </div>
+                        : null
+                }
+
                 <CardContent>
                     {content}
                 </CardContent>

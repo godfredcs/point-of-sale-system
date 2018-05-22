@@ -7,7 +7,7 @@ import {
     showAddMobileMoneyModal, showEditMobileMoneyModal,
 } from '../../actions';
 
-import { CustomDatepicker, RegularCard, MobileMoneyTable, ItemGrid } from 'components';
+import { CustomDatepicker, RegularCard, MobileMoneyTable, ItemGrid, CustomInput } from 'components';
 
 import AddTransactionModal from './Modals/AddTransaction';
 import EditTransactionModal from './Modals/EditTransaction';
@@ -24,16 +24,26 @@ class MobileMoney extends Component {
         this.setState({ from: this.dateNow(), to: this.dateNow() }, this._getMobileMoneys);
     }
 
-    _getMobileMoneys = () => {
-        this.props.getMobileMoneyByDate(this.state.from, this.state.to);
-    }
-
     from = event => {
         this.setState({ from: event.target.value }, this._getMobileMoneys);
     };
 
     to = event => {
         this.setState({ to: event.target.value }, this._getMobileMoneys);
+    };
+    
+    _getMobileMoneys = () => {
+        this.props.getMobileMoneyByDate(this.state.from, this.state.to);
+    }
+
+    total = () => {
+        let total = 0;
+
+        for (let mobile_money of this.props.mobile_moneys) {
+            total += Number(mobile_money.commission);
+        }
+
+        return total.toFixed(2);
     };
 
     dateNow = () => {
@@ -65,6 +75,18 @@ class MobileMoney extends Component {
                             <Button 
                                 style={ styles.addTransactionButton } 
                                 onClick={() => this.props.showAddMobileMoneyModal(true)}>ADD TRANSACTION</Button>
+                        }
+                        total={
+                            <div>
+                                <CustomInput
+                                    disabled
+                                    labelText="Total Commissions"
+                                    id="total-commissions"
+                                    formControlProps={{ fullWidth: true }}
+                                    type="number"
+                                    value={this.total()}
+                                />
+                            </div>
                         }
                         date_picker={
                             <div style={ styles.datepickers }>
@@ -118,6 +140,7 @@ const styles = {
     addTransactionButton: {
         color: '#FFF',
         backgroundColor: 'purple',
+        marginLeft: 20,
     },
     datepickers: {
         display: 'flex',
