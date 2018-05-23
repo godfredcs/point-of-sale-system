@@ -13,7 +13,6 @@ export const getAllFootballs = () => async dispatch => {
 
         if (footballs) {
             dispatch({ type: GET_ALL_FOOTBALLS_SUCCESS, payload: footballs });
-            console.log('this is the array of footballs ', footballs);
         }
     } catch (error) {
         dispatch({ type: GET_ALL_FOOTBALLS_FAIL, payload: error });

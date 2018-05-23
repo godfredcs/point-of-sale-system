@@ -23,6 +23,9 @@ class CustomTable extends React.Component {
                             { ++number }
                     </TableCell>
                     <TableCell className={classes.tableCell}>
+                        { prop.name }
+                    </TableCell>
+                    <TableCell className={classes.tableCell}>
                         { `GHS ${prop.amount}` }
                     </TableCell>
                     <TableCell className={classes.tableCell}>
@@ -32,7 +35,7 @@ class CustomTable extends React.Component {
                         { this._renderDate(prop.updated_at) }
                     </TableCell>
                     <TableCell className={classes.tableCell}>
-                        <Button style={ styles.updateButton } onClick={ updateSale }>Update</Button>
+                        <Button style={ styles.updateButton } onClick={ updateSale }>Edit</Button>
                         <Button style={ styles.deleteButton }>Delete</Button>
                     </TableCell>
                 </TableRow>
@@ -42,6 +45,7 @@ class CustomTable extends React.Component {
 
     render() {
         const { classes, tableHead, tableData, tableHeaderColor } = this.props;
+        
         return (
             <div className={classes.tableResponsive}>
                 <Table className={classes.table}>

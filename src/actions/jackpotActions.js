@@ -6,13 +6,13 @@ import {
 
 import Jackpot from '../services/Jackpot';
 
+// Action creator for getting all jackpot entries in the system.
 export const getAllJackpots = () => async dispatch => {
     try {
         let jackpots = await Jackpot.getAll();
 
         if (jackpots) {
             dispatch({ type: GET_ALL_JACKPOTS_SUCCESS, payload: jackpots });
-            console.log('this is the array of jackpots ', jackpots);
         }
     } catch (error) {
         dispatch({ type: GET_ALL_JACKPOTS_FAIL, payload: error });
@@ -20,6 +20,7 @@ export const getAllJackpots = () => async dispatch => {
     }
 };
 
+// Action creator for getting jackpot entries according to specified dates in the system.
 export const getJackpotByDate = (from, to) => async dispatch => {
     try {
         let jackpots = await Jackpot.getByDate(new Date(from), new Date(`${to}T23:59:59`));
@@ -54,25 +55,23 @@ export const showDeleteJackpotModal = value => {
     };
 };
 
+// Action creator for adding jackpot transaction to the system.
 export const addJackpot = (data, refresh, clear) => async dispatch => {
-    console.log('we in')
     try {
         let jackpot = await Jackpot.add(data);
 
         if (jackpot) {
             dispatch({ type: ADD_JACKPOT_SUCCESS });
-            console.log('jackpot added successfully', jackpot);
-        } else {
-            console.log('hit it well');
+            
+            if (refresh) {
+                refresh();
+            }
+    
+            if (clear) {
+                clear();
+            }
         }
 
-        if (refresh) {
-            refresh();
-        }
-
-        if (clear) {
-            clear();
-        }
     } catch (error) {
         dispatch({ type: ADD_JACKPOT_FAIL });
         console.log(error);

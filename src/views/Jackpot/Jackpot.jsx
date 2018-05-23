@@ -10,6 +10,8 @@ import {
 import { CustomDatepicker, RegularCard, JackpotTable, ItemGrid, CustomInput } from 'components';
 
 import AddJackpotModal from './Modals/AddJackpot';
+import EditJackpotModal from './Modals/EditJackpot';
+import DeleteJackpotModal from './Modals/DeleteJackpot';
 
 
 class Jackpot extends Component {
@@ -107,7 +109,7 @@ class Jackpot extends Component {
                         content={
                             <JackpotTable
                                 tableHeaderColor="primary"
-                                tableHead={['No.', 'Amount', 'Date Added', 'Date Updated', '']}
+                                tableHead={['No.', 'Name', 'Amount', 'Date Added', 'Date Updated', '']}
                                 tableData={this.props.jackpots}
                                 updateTransaction={() => this.setState({ openUpdateSaleModal: true })}
                             />
@@ -119,7 +121,21 @@ class Jackpot extends Component {
                     open={this.props.openAddJackpotModal}
                     close={() => this.props.showAddJackpotModal(false)}
                     addJackpot={this.props.addJackpot}
-                    refresh={this.props._getJackpots}
+                    refresh={this._getJackpots}
+                />
+
+                <EditJackpotModal
+                    open={this.props.openAddJackpotModal}
+                    close={() => this.props.showAddJackpotModal(false)}
+                    addJackpot={this.props.addJackpot}
+                    refresh={this._getJackpots}
+                />
+
+                <DeleteJackpotModal
+                    open={this.props.openAddJackpotModal}
+                    close={() => this.props.showAddJackpotModal(false)}
+                    addJackpot={this.props.addJackpot}
+                    refresh={this._getJackpots}
                 />
             </Grid>
         );

@@ -14,7 +14,7 @@ import { dailySalesChart, emailsSubscriptionChart, completedTasksChart } from 'v
 
 import { dashboardStyle } from 'variables/styles';
 
-import { getAllItems, getAllSales } from '../../actions';
+import { getAllItems, getAllSales, getAllFootballs, getAllJackpots, getAllMobileMoneys } from '../../actions';
 
 class Dashboard extends Component {
     state = { value: 0, };
@@ -22,7 +22,55 @@ class Dashboard extends Component {
     componentDidMount() {
         this.props.getAllItems();
         this.props.getAllSales();
+        this.props.getAllFootballs();
+        this.props.getAllJackpots();
+        this.props.getAllMobileMoneys();
     }
+
+    calculate = type => {
+        let total = 0;
+
+        switch(type) {
+            case 'sales':
+                return () => {
+                    for (let sale of this.props.sales) {
+                        total += Number(sale.amount);
+                    }
+
+                    return total.toFixed(2);
+                };
+
+            case 'footballs':
+                return () => {
+                    for (let football of this.props.footballs) {
+                        total += Number(football.amount);
+                    }
+
+                    return total.toFixed(2);
+                };
+
+            case 'jackpots':
+                return () => {
+                    for (let jackpot of this.props.jackpots) {
+                        total += Number(jackpot.amount);
+                    }
+
+                    return total.toFixed(2);
+                };
+
+            case 'mobile_moneys':
+                return () => {
+                    for (let mobile_money of this.props.mobile_moneys) {
+                        total += Number(mobile_money.commission);
+                    }
+
+                    return total.toFixed(2);
+                };            
+
+            default:
+                return () => total.toFixed(2);
+        }
+    };
 
     handleChange = (event, value) => {
         this.setState({ value });
@@ -36,49 +84,71 @@ class Dashboard extends Component {
         return (
             <div>
                 <Grid container>
-                    <ItemGrid xs={12} sm={6} md={3}>
+                    <ItemGrid xs={12} sm={6} md={4}>
                         <StatsCard
                             icon={ContentCopy}
                             iconColor="orange"
                             title="Items"
                             description={this.props.items.length}
                             statIcon={Warning}
-                            statText="All items in the system"
+                            statText="Number of items in the system"
                         />
                     </ItemGrid>
-                    <ItemGrid xs={12} sm={6} md={3}>
+                    <ItemGrid xs={12} sm={6} md={4}>
                         <StatsCard
                             icon={Store}
                             iconColor="green"
-                            title="Revenue"
-                            description="$34,245"
+                            title="Total Sales"
+                            description={this.calculate('sales')()}
                             statIcon={DateRange}
-                            statText="Last 24 Hours"
+                            statText="Sales in the system"
                         />
                     </ItemGrid>
-                    <ItemGrid xs={12} sm={6} md={3}>
+                    <ItemGrid xs={12} sm={6} md={4}>
                         <StatsCard
                             icon={InfoOutline}
                             iconColor="red"
-                            title="Sale entries"
-                            description={this.props.sales.length}
+                            title="Total Footballs"
+                            description={this.calculate('footballs')()}
                             statIcon={LocalOffer}
-                            statText="All entries made in sales"
-                        />
-                    </ItemGrid>
-                    <ItemGrid xs={12} sm={6} md={3}>
-                        <StatsCard
-                            icon={Accessibility}
-                            iconColor="blue"
-                            title="Followers"
-                            description="+245"
-                            statIcon={Update}
-                            statText="Just Updated"
+                            statText="All football entries"
                         />
                     </ItemGrid>
                 </Grid>
                 <Grid container>
-                    <ItemGrid xs={12} sm={12} md={4}>
+                    <ItemGrid xs={12} sm={6} md={4}>
+                        <StatsCard
+                            icon={Accessibility}
+                            iconColor="blue"
+                            title="Total Jackpots"
+                            description={this.calculate('jackpots')()}
+                            statIcon={Update}
+                            statText="All Jackpot entries"
+                        />
+                    </ItemGrid>
+                    <ItemGrid xs={12} sm={6} md={4}>
+                        <StatsCard
+                            icon={ContentCopy}
+                            iconColor="red"
+                            title="Total Mobile money"
+                            description={this.calculate('mobile_moneys')()}
+                            statIcon={Warning}
+                            statText="All mobile money commissions"
+                        />
+                    </ItemGrid>
+                    <ItemGrid xs={12} sm={6} md={4}>
+                        <StatsCard
+                            icon={Store}
+                            iconColor="blue"
+                            title="Total Credit Transfers"
+                            description={this.calculate('sales')()}
+                            statIcon={DateRange}
+                            statText="Sales in the system"
+                        />
+                    </ItemGrid>
+                </Grid>
+                <Grid container>
+                    <ItemGrid xs={12} sm={12} md={6}>
                         <ChartCard
                             chart={
                                 <ChartistGraph
@@ -102,28 +172,7 @@ class Dashboard extends Component {
                             statText="updated 4 minutes ago"
                         />
                     </ItemGrid>
-                    <ItemGrid xs={12} sm={12} md={4}>
-                        <ChartCard
-                            chart={
-                                <ChartistGraph
-                                    className="ct-chart"
-                                    data={emailsSubscriptionChart.data}
-                                    type="Bar"
-                                    options={emailsSubscriptionChart.options}
-                                    responsiveOptions={emailsSubscriptionChart.responsiveOptions}
-                                    listener={
-                                        emailsSubscriptionChart.animation
-                                    }
-                                />
-                            }
-                            chartColor="orange"
-                            title="Email Subscriptions"
-                            text="Last Campaign Performance"
-                            statIcon={AccessTime}
-                            statText="campaign sent 2 days ago"
-                        />
-                    </ItemGrid>
-                    <ItemGrid xs={12} sm={12} md={4}>
+                    <ItemGrid xs={12} sm={12} md={6}>
                         <ChartCard
                             chart={
                                 <ChartistGraph
@@ -144,30 +193,6 @@ class Dashboard extends Component {
                         />
                     </ItemGrid>
                 </Grid>
-                <Grid container>
-                    <ItemGrid xs={12} sm={12} md={6}>
-                        <TasksCard />
-                    </ItemGrid>
-                    <ItemGrid xs={12} sm={12} md={6}>
-                        <RegularCard
-                            headerColor="orange"
-                            cardTitle="Employees Stats"
-                            cardSubtitle="New employees on 15th September, 2016"
-                            content={
-                                <Table
-                                    tableHeaderColor="warning"
-                                    tableHead={['ID','Name','Salary','Country']}
-                                    tableData={[
-                                        [ '1' , "Dakota Rice" , "$36,738" , "Niger"] ,
-                                        [ '2' , "Minerva Hooper" , "$23,789" , "Curaçao" ] ,
-                                        [ '3' , "Sage Rodriguez" , "$56,142" , "Netherlands" ] ,
-                                        [ '4' , "Philip Chaney" , "$38,735" , "Korea, South" ] ,
-                                    ]}
-                                />
-                            }
-                        />
-                    </ItemGrid>
-                </Grid>
             </div>
         );
     }
@@ -182,8 +207,12 @@ const dashboardStyleWrapped = withStyles(dashboardStyle)(Dashboard);
 const mapStateToProps = state => {
     const { items } = state.items;
     const { sales } = state.sales;
+    const { footballs } = state.footballs;
+    const { jackpots } = state.jackpots;
+    const { mobile_moneys } = state.mobileMoneys;
 
-    return { items, sales };
+    return { items, sales, footballs, jackpots, mobile_moneys };
 };
 
-export default connect(mapStateToProps, { getAllItems, getAllSales })(dashboardStyleWrapped);
+export default connect(mapStateToProps, {
+    getAllItems, getAllSales, getAllFootballs, getAllJackpots, getAllMobileMoneys })(dashboardStyleWrapped);
