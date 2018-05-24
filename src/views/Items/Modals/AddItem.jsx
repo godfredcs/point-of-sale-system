@@ -25,9 +25,15 @@ class AddItem extends Component {
     _addItem = () => {
         const { name, unit_price, whole_price } = this.state;
 
-        if (name && Number(unit_price) && Number(whole_price)) {
-            this.props.addItemFunc({name, unit_price, whole_price}, this.props.refresh, this.setState({ name: '', unit_price: '', whole_price: ''}));
+        if (name && Number(unit_price) && (Number(whole_price) || Number(whole_price) === 0)) {
+            this.props.addItem({name, unit_price, whole_price}, this.props.refresh, this._resetInput, this.props.successNotification, this.props.errorNotification);
+        } else {
+            this.props.errorNotification();
         }
+    };
+
+    _resetInput = () => {
+        this.setState({ name: '', unit_price: '', whole_price: ''});
     };
 
     getModalStyle() {
@@ -99,7 +105,7 @@ class AddItem extends Component {
                                 }
                                 
                                 footer={
-                                    <Button 
+                                    <Button
                                         variant="raised" 
                                         style={{ backgroundColor: 'purple', color: 'white' }} 
                                         onClick={this._addItem}>Add</Button>

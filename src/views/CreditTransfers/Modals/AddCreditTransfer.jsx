@@ -3,32 +3,35 @@ import { withStyles, Grid, Button, Modal } from 'material-ui';
 
 import { RegularCard, ItemGrid, CustomInput } from 'components';
 
-class AddFootball extends Component {
+class AddCreditTransfer extends Component {
     state = {
-        name: '',
-        unit_charge: '',
-        number_of_people: '',
+        number: '',
+        amount: '',
     };
 
-    _setMatchName = event => {
-        this.setState({ name: event.target.value });
+    _setNumber = event => {
+        this.setState({ number: event.target.value });
     };
 
-    _setUnitCharge = event => {
-        this.setState({ unit_charge: event.target.value });
+    _setAmount = event => {
+        this.setState({ amount: event.target.value });
     };
 
-    _setNumberOfPeople = event => {
-        this.setState({ number_of_people: event.target.value });
-    };
+    _addCreditTransfer = () => {
+        const { number, amount } = this.state;
+        console.log(this.state)
 
-    _addFootball = () => {
-        const { name, unit_charge, number_of_people } = this.state;
-
-        if (name && Number(unit_charge) && Number(number_of_people)) {
-            this.props.addFootball({name, unit_charge, number_of_people}, this.props.refresh, this.setState({ name: '', unit_charge: '', number_of_people: '' }));
+        if ((number.length === 10) && Number(amount)) {
+            this.props.addCreditTransfer({ number, amount }, this.props.refresh, this._clear);
+        } else {
+            console.log('hmmm')
         }
     };
+
+    _clear = () => {
+        this.props.close();
+        this.setState({ number: '', amount: '' });
+    }
 
     getModalStyle() {
         const top = 50;
@@ -46,8 +49,8 @@ class AddFootball extends Component {
 
         return (
             <Modal
-                aria-labelledby="Add Football"
-                aria-describedby="Modal for adding football"
+                aria-labelledby="Add Credit Transfer"
+                aria-describedby="Modal for adding credit transfers"
                 open={open}
                 onClose={close}
             >
@@ -55,43 +58,31 @@ class AddFootball extends Component {
                     <Grid container>
                         <ItemGrid xs={12} sm={12} md={12}>
                             <RegularCard
-                                cardTitle="ADD FOOTBALL"
-                                cardSubtitle="Fill the form below to add football to the system"
+                                cardTitle="ADD CREDIT TRANSFER"
+                                cardSubtitle="Fill the form below to add credit transfer to the system"
                                 content={
                                     <div>
                                         <Grid container>
                                             <ItemGrid xs={12} sm={12} md={12}>
                                                 <CustomInput
-                                                    labelText="Match name"
-                                                    id="match-name"
+                                                    labelText="Number"
+                                                    id="number"
                                                     formControlProps={{ fullWidth: true }}
                                                     type="text"
-                                                    onChange={ this._setMatchName }
-                                                    defaultValue={ this.state.name }
+                                                    onChange={ this._setNumber }
+                                                    defaultValue={ this.state.number }
                                                 />
                                             </ItemGrid>
                                         </Grid>
                                         <Grid container>
                                             <ItemGrid xs={12} sm={12} md={12}>
                                                 <CustomInput
-                                                    labelText="Unit charge"
-                                                    id="unit-charge"
+                                                    labelText="Amount"
+                                                    id="amount"
                                                     formControlProps={{ fullWidth: true }}
                                                     type="number"
-                                                    onChange={ this._setUnitCharge }
-                                                    defaultValue={ this.state.unit_charge }
-                                                />
-                                            </ItemGrid>
-                                        </Grid>
-                                        <Grid container>
-                                            <ItemGrid xs={12} sm={12} md={12}>
-                                                <CustomInput
-                                                    labelText="Number of People"
-                                                    id="number-of-people"
-                                                    formControlProps={{ fullWidth: true }}
-                                                    type="number"
-                                                    onChange={ this._setNumberOfPeople }
-                                                    defaultValue={ this.state.number_of_people }
+                                                    onChange={ this._setAmount }
+                                                    defaultValue={ this.state.amount }
                                                 />
                                             </ItemGrid>
                                         </Grid>
@@ -102,7 +93,7 @@ class AddFootball extends Component {
                                     <Button 
                                         variant="raised" 
                                         style={{ backgroundColor: 'purple', color: 'white' }} 
-                                        onClick={this._addFootball}>Add</Button>
+                                        onClick={this._addCreditTransfer}>Add</Button>
                                 }
                             />
                         </ItemGrid>
@@ -122,7 +113,7 @@ const styles = theme => ({
     },
 });
 
-const AddModalWrapped = withStyles(styles)(AddFootball);
+const AddModalWrapped = withStyles(styles)(AddCreditTransfer);
 
 export default AddModalWrapped;
 

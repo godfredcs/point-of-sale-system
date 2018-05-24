@@ -13,7 +13,6 @@ export const getAllMobileMoneys = () => async dispatch => {
 
         if (mobile_moneys) {
             dispatch({ type: GET_ALL_MOBILE_MONEYS_SUCCESS, payload: mobile_moneys });
-            console.log('this is the array of mobile moneys ', mobile_moneys);
         }
     } catch (error) {
         dispatch({ type: GET_ALL_MOBILE_MONEYS_FAIL, payload: error });
@@ -28,7 +27,6 @@ export const getMobileMoneyByDate = (from, to) => async dispatch => {
 
         if (mobile_moneys) {
             dispatch({ type: GET_ALL_MOBILE_MONEYS_SUCCESS, payload: mobile_moneys });
-            console.log('this is the array of mobile moneys ', mobile_moneys);
         }
     } catch (error) {
         dispatch({ type: GET_ALL_MOBILE_MONEYS_FAIL, payload: error });
@@ -58,24 +56,18 @@ export const showDeleteMobileMoneyModal = value => {
 };
 
 export const addMobileMoney = (data, refresh, clear) => async dispatch => {
-    console.log('we in')
     try {
         let mobile_money = await MobileMoney.add(data);
 
         if (mobile_money) {
             dispatch({ type: ADD_MOBILE_MONEY_SUCCESS });
-            console.log('mobile money added successfully', mobile_money);
-        } else {
-            console.log('hit it well');
-        }
 
-        if (refresh) {
-            refresh();
-        }
 
-        if (clear) {
-            clear();
+            refresh && refresh();
+    
+            clear && clear();
         }
+        
     } catch (error) {
         dispatch({ type: ADD_MOBILE_MONEY_FAIL });
         console.log(error);

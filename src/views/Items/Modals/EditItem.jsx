@@ -44,8 +44,10 @@ class EditItem extends Component {
             unit_price = this.state.unit_price || this.props.edit_item.unit_price,
             whole_price = this.state.whole_price || this.props.edit_item.whole_price;
 
-        if (name && Number(unit_price) && Number(whole_price)) {
-            this.props.editItem(id, {name, unit_price, whole_price}, this.props.refresh);
+        if (id && name && Number(unit_price) && (Number(whole_price) || Number(whole_price) === 0)) {
+            this.props.editItem(id, {name, unit_price, whole_price}, this.props.refresh, this.props.successNotification, this.props.errorNotification);
+        } else {
+            this.props.errorNotification();
         }
     };
     

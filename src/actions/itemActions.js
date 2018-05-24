@@ -48,7 +48,7 @@ export const showDeleteItemModal = value => {
 };
 
 // Action creator for adding item --<
-export const addItem = ({ name, unit_price, whole_price }, refreshItemsList, clear) => async dispatch => {
+export const addItem = ({ name, unit_price, whole_price }, refreshItemsList, clear, successNotification, errorNotification) => async dispatch => {
     dispatch({ type: SHOW_ITEM_LOADER });
 
     try {
@@ -59,16 +59,18 @@ export const addItem = ({ name, unit_price, whole_price }, refreshItemsList, cle
             dispatch({ type: REMOVE_ITEM_LOADER });
         }
 
-        if (refreshItemsList) {
-            refreshItemsList();
-        }
+        refreshItemsList && refreshItemsList();
 
-        if (clear) {
-            clear();
-        }
+        clear && clear();
+
+        successNotification && successNotification();
+        
     } catch(error) {
-        console.log(error);
         dispatch({ type: REMOVE_ITEM_LOADER });
+        
+        clear && clear();
+
+        errorNotification && errorNotification();
     }
 };
 
@@ -79,7 +81,7 @@ export const renderToEdit = item => {
     };
 };
 
-export const editItem = (id, data, refreshItemsList) => async dispatch => {
+export const editItem = (id, data, refreshItemsList, successNotification, errorNotification) => async dispatch => {
     dispatch({ type: SHOW_ITEM_LOADER });
 
     try {
@@ -88,13 +90,15 @@ export const editItem = (id, data, refreshItemsList) => async dispatch => {
         if (item) {
             dispatch({ type: ITEM_EDIT_SUCCESS });
             dispatch({ type: REMOVE_ITEM_LOADER });
-        }
+            
+            successNotification && successNotification();
 
-        if (refreshItemsList) {
-            refreshItemsList();
+            refreshItemsList && refreshItemsList();
         }
     } catch(error) {
         dispatch({ type: REMOVE_ITEM_LOADER });
+
+        errorNotification && errorNotification();
     }
 };
 

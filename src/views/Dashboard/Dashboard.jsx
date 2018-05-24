@@ -8,13 +8,15 @@ import PropTypes from 'prop-types';
 // react plugin for creating charts
 import ChartistGraph from 'react-chartist';
 
-import { StatsCard, ChartCard, TasksCard, RegularCard, Table, ItemGrid } from 'components';
+import { StatsCard, ChartCard, ItemGrid } from 'components';
 
-import { dailySalesChart, emailsSubscriptionChart, completedTasksChart } from 'variables/charts';
+import { dailySalesChart, completedTasksChart } from 'variables/charts';
 
 import { dashboardStyle } from 'variables/styles';
 
-import { getAllItems, getAllSales, getAllFootballs, getAllJackpots, getAllMobileMoneys } from '../../actions';
+import {
+    getAllItems, getAllSales, getAllFootballs, getAllJackpots, getAllMobileMoneys, getAllCreditTransfers
+} from '../../actions';
 
 class Dashboard extends Component {
     state = { value: 0, };
@@ -25,6 +27,7 @@ class Dashboard extends Component {
         this.props.getAllFootballs();
         this.props.getAllJackpots();
         this.props.getAllMobileMoneys();
+        this.props.getAllCreditTransfers();
     }
 
     calculate = type => {
@@ -65,7 +68,16 @@ class Dashboard extends Component {
                     }
 
                     return total.toFixed(2);
-                };            
+                };
+
+            case 'credit_transfers':
+                return () => {
+                    for (let credit_transfer of this.props.credit_transfers) {
+                        total += Number(credit_transfer.amount);
+                    }
+
+                    return total.toFixed(2);
+                };   
 
             default:
                 return () => total.toFixed(2);
@@ -141,7 +153,7 @@ class Dashboard extends Component {
                             icon={Store}
                             iconColor="blue"
                             title="Total Credit Transfers"
-                            description={this.calculate('sales')()}
+                            description={this.calculate('credit_transfers')()}
                             statIcon={DateRange}
                             statText="Sales in the system"
                         />
@@ -210,9 +222,11 @@ const mapStateToProps = state => {
     const { footballs } = state.footballs;
     const { jackpots } = state.jackpots;
     const { mobile_moneys } = state.mobileMoneys;
+    const { credit_transfers } = state.creditTransfers;
 
-    return { items, sales, footballs, jackpots, mobile_moneys };
+    return { items, sales, footballs, jackpots, mobile_moneys, credit_transfers };
 };
 
 export default connect(mapStateToProps, {
-    getAllItems, getAllSales, getAllFootballs, getAllJackpots, getAllMobileMoneys })(dashboardStyleWrapped);
+    getAllItems, getAllSales, getAllFootballs, getAllJackpots, getAllMobileMoneys, getAllCreditTransfers
+})(dashboardStyleWrapped);
