@@ -1,26 +1,37 @@
 import React from 'react';
-import { withStyles, Table, TableHead, TableRow, TableBody, TableCell, Button } from 'material-ui';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { withStyles, Table, TableHead, TableRow, TableBody, TableCell, Button } from 'material-ui';
 import Moment from 'moment';
+
+import { renderCreditTransferToEdit } from '../../actions';
 
 import { tableStyle } from 'variables/styles';
 
-class CustomTable extends React.Component {
+class CreditTransferTable extends React.Component {
     _renderDate(value) {
         let date = Moment(value);
 
         return date.isValid() ? date.format('ddd Do MMMM, YYYY hh:mm:ss:A') : value;
     }
 
+    _renderEdit = prop => {
+        this.props.renderCreditTransferToEdit(prop);
+        this.props.editCreditTransfer();
+    };
+
     _renderTableData = () => {
         let number = 0;
-        const { classes, tableData, updateSale } = this.props;
+        const { classes, tableData, editCreditTransfer } = this.props;
 
         return tableData.map((prop, key) => {
             return (
                 <TableRow key={key}>
                     <TableCell className={classes.tableCell}>
                             { ++number }
+                    </TableCell>
+                    <TableCell className={classes.tableCell}>
+                        { prop.number }
                     </TableCell>
                     <TableCell className={classes.tableCell}>
                         { `GHS ${prop.amount}` }
@@ -32,8 +43,8 @@ class CustomTable extends React.Component {
                         { this._renderDate(prop.updated_at) }
                     </TableCell>
                     <TableCell className={classes.tableCell}>
-                        <Button style={ styles.updateButton } onClick={ updateSale }>Update</Button>
-                        <Button style={ styles.deleteButton }>Delete</Button>
+                        <Button style={ styles.updateButton } onClick={() => this._renderEdit(prop)}>edit</Button>
+                        {/*<Button style={ styles.deleteButton }>Delete</Button>*/}
                     </TableCell>
                 </TableRow>
             );
@@ -79,11 +90,11 @@ class CustomTable extends React.Component {
     }
 }
 
-CustomTable.defaultProps = {
+CreditTransferTable.defaultProps = {
     tableHeaderColor: 'gray'
 }
 
-CustomTable.propTypes = {
+CreditTransferTable.propTypes = {
     classes: PropTypes.object.isRequired,
     tableHeaderColor: PropTypes.oneOf(['warning','primary','danger','success','info','rose','gray']),
     tableHead: PropTypes.arrayOf(PropTypes.string),
@@ -101,4 +112,12 @@ const styles = {
     }
 };
 
-export default withStyles(tableStyle)(CustomTable);
+const mapStateToProps = state => {
+    const { credit_transfer_to_edit } = state.creditTransfers;
+
+    return { credit_transfer_to_edit };
+};
+
+const WrappedCreditTransferTable = withStyles(tableStyle)(CreditTransferTable)
+
+export default connect(mapStateToProps, { renderCreditTransferToEdit })(WrappedCreditTransferTable);

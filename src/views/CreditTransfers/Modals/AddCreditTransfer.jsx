@@ -19,12 +19,11 @@ class AddCreditTransfer extends Component {
 
     _addCreditTransfer = () => {
         const { number, amount } = this.state;
-        console.log(this.state)
 
         if ((number.length === 10) && Number(amount)) {
-            this.props.addCreditTransfer({ number, amount }, this.props.refresh, this._clear);
+            this.props.addCreditTransfer({ number, amount }, this.props.refresh, this._clear, this.props.successNotification, this.props.errorNotification);
         } else {
-            console.log('hmmm')
+            this.props.errorNotification && this.props.errorNotification();
         }
     };
 
@@ -71,6 +70,7 @@ class AddCreditTransfer extends Component {
                                                     type="text"
                                                     onChange={ this._setNumber }
                                                     defaultValue={ this.state.number }
+                                                    max={10}
                                                 />
                                             </ItemGrid>
                                         </Grid>

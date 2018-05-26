@@ -1,11 +1,18 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Grid } from 'material-ui';
-import { RegularCard, Button, CustomInput, ItemGrid } from 'components';
+import { AddAlert } from 'material-ui-icons';
+
+import { RegularCard, Button, CustomInput, ItemGrid, Snackbar } from 'components';
 
 import { emailChanged, passwordChanged, login } from '../../actions';
 
 class Authenticate extends Component {
+    state = {
+        tr: false,
+        tc: false,
+    };
+
     _onChangeEmail = event => {
         this.props.emailChanged(event.target.value);
     };
@@ -18,6 +25,7 @@ class Authenticate extends Component {
         const { email, password } = this.props;
 
         if (!email || !password || !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)) {
+            this.showNotification('tc')
             return;
         }
 
@@ -28,6 +36,25 @@ class Authenticate extends Component {
     _clearCredentials = () => {
         this.props.emailChanged('');
         this.props.passwordChanged('');
+    };
+
+    showNotification(place) {
+        var x = [];
+        x[place] = true;
+        this.setState(x);
+
+        setTimeout(function() {
+            x[place] = false;
+            this.setState(x);
+        }.bind(this), 3000);
+    }
+
+    notificationMessage = type => {
+        if (type === 'success') {
+            return 'Sale added successfully';
+        } else {
+            return 'Error Could not log user in';
+        }
     };
 
     render() {
@@ -46,9 +73,7 @@ class Authenticate extends Component {
                                             <CustomInput
                                                 labelText="Email address"
                                                 id="email-address"
-                                                formControlProps={{
-                                                    fullWidth: true
-                                                }}
+                                                formControlProps={{ fullWidth: true }}
                                                 type="email"
                                                 onChange={this._onChangeEmail}
                                                 defaultValue={this.props.email}
@@ -60,9 +85,7 @@ class Authenticate extends Component {
                                             <CustomInput
                                                 labelText="Password"
                                                 id="password"
-                                                formControlProps={{
-                                                    fullWidth: true
-                                                }}
+                                                formControlProps={{ fullWidth: true }}
                                                 type="password"
                                                 onChange={this._onChangePassword}
                                                 defaultValue={this.props.password}
@@ -78,6 +101,42 @@ class Authenticate extends Component {
                         />
                     </ItemGrid>
                 </Grid>
+
+                <Grid container justify='center'>
+                    <ItemGrid xs={12} sm={12} md={10} lg={8}>
+                        <Grid container>
+                            <ItemGrid xs={12} sm={12} md={4}>
+                                <Snackbar
+                                    place="tr"
+                                    color="success"
+                                    icon={AddAlert}
+                                    message={this.notificationMessage('success')}
+                                    open={this.state.tr}
+                                    closeNotification={() => this.setState({'tr': false})}
+                                    close
+                                />
+                            </ItemGrid>
+                        </Grid>
+                    </ItemGrid>
+                </Grid>
+
+                <Grid container justify='center'>
+                    <ItemGrid xs={12} sm={12} md={10} lg={8}>
+                        <Grid container>
+                            <ItemGrid xs={12} sm={12} md={4}>
+                                <Snackbar
+                                    place="tc"
+                                    color="danger"
+                                    icon={AddAlert}
+                                    message={this.notificationMessage('error')}
+                                    open={this.state.tc}
+                                    closeNotification={() => this.setState({'tc': false})}
+                                    close
+                                />
+                            </ItemGrid>
+                        </Grid>
+                    </ItemGrid>
+                </Grid>
             </div>
         );
     }
@@ -91,6 +150,7 @@ const styles = {
 
 const mapStateToProps = state => {
     const { email, password } = state.users;
+
     return { email, password }; 
 }
 

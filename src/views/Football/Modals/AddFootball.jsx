@@ -26,8 +26,15 @@ class AddFootball extends Component {
         const { name, unit_charge, number_of_people } = this.state;
 
         if (name && Number(unit_charge) && Number(number_of_people)) {
-            this.props.addFootball({name, unit_charge, number_of_people}, this.props.refresh, this.setState({ name: '', unit_charge: '', number_of_people: '' }));
+            this.props.addFootball({name, unit_charge, number_of_people}, this.props.refresh, this.clear, this.props.successNotification, this.props.errorNotification);
+        } else {
+            this.props.errorNotification();
         }
+    };
+
+    clear = () => {
+        this.setState({ name: '', unit_charge: '', number_of_people: '' });
+        this.props.close();
     };
 
     getModalStyle() {

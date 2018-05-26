@@ -36,7 +36,9 @@ class CustomTable extends React.Component {
                     </TableCell>
                     <TableCell className={classes.tableCell}>
                         <Button style={ styles.updateButton } onClick={ updateSale }>Edit</Button>
-                        <Button style={ styles.deleteButton }>Delete</Button>
+                        {
+                            // <Button style={ styles.deleteButton }>Delete</Button>
+                        }
                     </TableCell>
                 </TableRow>
             );

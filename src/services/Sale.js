@@ -17,5 +17,11 @@ export default {
         return axios.post('sales', sale)
                     .then(response => Promise.resolve(response.data))
                     .catch(error => Promise.reject(error.response.data));
+    },
+
+    update(id, data) {
+        return axios.put(`sales/${id}`, data)
+                    .then(response => Promise.resolve(response.data))
+                    .catch(error => Promise.reject(error.response.data));
     }
 };

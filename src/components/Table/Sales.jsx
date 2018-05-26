@@ -1,20 +1,28 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { withStyles, Table, TableHead, TableRow, TableBody, TableCell, Button } from 'material-ui';
 import PropTypes from 'prop-types';
 import Moment from 'moment';
 
+import { renderSaleToEdit } from '../../actions';
+
 import { tableStyle } from 'variables/styles';
 
-class CustomTable extends React.Component {
+class SaleTable extends React.Component {
     _renderDate(value) {
         let date = Moment(value);
 
         return date.isValid() ? date.format('ddd Do MMMM, YYYY hh:mm:ss:A') : value;
     }
 
+    _editSale = prop => {
+        this.props.renderSaleToEdit(prop);
+        this.props.editSale();
+    };
+
     _renderTableData = () => {
         let number = 0;
-        const { classes, tableData, updateSale } = this.props;
+        const { classes, tableData, editSale } = this.props;
 
         return tableData.map((prop, key) => {
             return (
@@ -47,8 +55,7 @@ class CustomTable extends React.Component {
                         { this._renderDate(prop.updated_at) }
                     </TableCell>
                     <TableCell className={classes.tableCell}>
-                        <Button style={ styles.updateButton } onClick={ updateSale }>Update</Button>
-                        <Button style={ styles.deleteButton }>Delete</Button>
+                        <Button style={ styles.updateButton } onClick={() => this._editSale(prop)}>Edit</Button>
                     </TableCell>
                 </TableRow>
             );
@@ -90,11 +97,11 @@ class CustomTable extends React.Component {
     }
 }
 
-CustomTable.defaultProps = {
+SaleTable.defaultProps = {
     tableHeaderColor: 'gray'
 }
 
-CustomTable.propTypes = {
+SaleTable.propTypes = {
     classes: PropTypes.object.isRequired,
     tableHeaderColor: PropTypes.oneOf(['warning','primary','danger','success','info','rose','gray']),
     tableHead: PropTypes.arrayOf(PropTypes.string),
@@ -112,4 +119,12 @@ const styles = {
     }
 };
 
-export default withStyles(tableStyle)(CustomTable);
+const mapStateToProps = state => {
+    const { sale_to_edit } = state.sales;
+
+    return { sale_to_edit };
+};
+
+const WrappedTable = withStyles(tableStyle)(SaleTable);
+
+export default connect(mapStateToProps, { renderSaleToEdit })(WrappedTable);

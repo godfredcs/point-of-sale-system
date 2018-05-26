@@ -1,23 +1,27 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Grid, Button } from 'material-ui';
+import { AddAlert } from 'material-ui-icons';
 
 import { 
-    getCreditTransferByDate, addCreditTransfer, 
+    getCreditTransferByDate, addCreditTransfer, editCreditTransfer,
 } from '../../actions';
 
-import { CustomDatepicker, RegularCard, CreditTransferTable, ItemGrid, CustomInput } from 'components';
+import { CustomDatepicker, RegularCard, CreditTransferTable, ItemGrid, CustomInput, Snackbar } from 'components';
 
 import AddCreditTransferModal from './Modals/AddCreditTransfer';
 import EditCreditTransferModal from './Modals/EditCreditTransfer';
-import DeleteCreditTransferModal from './Modals/DeleteCreditTransfer';
+//import DeleteCreditTransferModal from './Modals/DeleteCreditTransfer';
 
 
 class CreditTransfer extends Component {
     state = {
         openAddCreditTransferModal: false,
+        openEditCreditTransferModal: false,
         from: '2018-05-21',
         to: '2018-05-21',
+        tr: false,
+        tc: false,
     };
 
     componentDidMount() {
@@ -62,82 +66,152 @@ class CreditTransfer extends Component {
 
         return `${year}-${month}-${day}`;
     };
+
+    showNotification(place) {
+        var x = [];
+        x[place] = true;
+        this.setState(x);
+
+        setTimeout(function() {
+            x[place] = false;
+            this.setState(x);
+        }.bind(this), 3000);
+    }
+
+    notificationMessage = type => {
+        if (type === 'success') {
+            if (this.state.notificationGroup === 'add') {
+                return 'Credit transfer added successfully';
+            } else {
+                return 'Credit transfer edited successfully';
+            }
+        } else if (type === 'error') {
+            if (this.state.notificationGroup === 'edit') {
+                return 'Error Credit transfer could not be edited';
+            } else {
+                return 'Error Credit transfer could not be added';
+            }
+        }
+    };
     
     render() {
         return (
-            <Grid container>
-                <ItemGrid xs={12} sm={12} md={12}>
-                    <RegularCard
-                        padIt
-                        cardTitle="Credit Transfer"
-                        cardSubtitle="List of credit transfer entries in the system"
-                        button={
-                            <Button 
-                                style={ styles.addTransactionButton } 
-                                onClick={() => this.setState({ openAddCreditTransferModal: true })}>ADD CREDIT TRANSFER</Button>
-                        }
-                        total={
-                            <div>
-                                <CustomInput
-                                    disabled
-                                    labelText="Total Amount"
-                                    id="total-amount"
-                                    formControlProps={{ fullWidth: true }}
-                                    type="number"
-                                    value={this.total()}
-                                />
-                            </div>
-                        }
-                        date_picker={
-                            <div style={ styles.datepickers }>
-                                <div style={{ paddingRight: 10 }}>
-                                    <CustomDatepicker
-                                        label="From"
-                                        value={this.state.from}
-                                        onChange={this.from}
-                                    />
-                                </div>
+            <div>
+                <Grid container>
+                    <ItemGrid xs={12} sm={12} md={12}>
+                        <RegularCard
+                            padIt
+                            cardTitle="Credit Transfer"
+                            cardSubtitle="List of credit transfer entries in the system"
+                            button={
+                                <Button 
+                                    style={ styles.addTransactionButton } 
+                                    onClick={() => this.setState({ openAddCreditTransferModal: true })}>ADD CREDIT TRANSFER</Button>
+                            }
+                            total={
                                 <div>
-                                    <CustomDatepicker
-                                        label="To"
-                                        value={this.state.to}
-                                        onChange={this.to}
+                                    <CustomInput
+                                        disabled
+                                        labelText="Total Amount"
+                                        id="total-amount"
+                                        formControlProps={{ fullWidth: true }}
+                                        type="number"
+                                        value={this.total()}
                                     />
                                 </div>
-                            </div>
-                        }
-                        content={
-                            <CreditTransferTable
-                                tableHeaderColor="primary"
-                                tableHead={['No.', 'Name', 'Amount', 'Date Added', 'Date Updated', '']}
-                                tableData={this.props.credit_transfers}
-                                updateTransaction={() => this.setState({ openUpdateSaleModal: true })}
-                            />
-                        }
-                    />
-                </ItemGrid>
+                            }
+                            date_picker={
+                                <div style={ styles.datepickers }>
+                                    <div style={{ paddingRight: 10 }}>
+                                        <CustomDatepicker
+                                            label="From"
+                                            value={this.state.from}
+                                            onChange={this.from}
+                                        />
+                                    </div>
+                                    <div>
+                                        <CustomDatepicker
+                                            label="To"
+                                            value={this.state.to}
+                                            onChange={this.to}
+                                        />
+                                    </div>
+                                </div>
+                            }
+                            content={
+                                <CreditTransferTable
+                                    tableHeaderColor="primary"
+                                    tableHead={['No.', 'Number', 'Amount', 'Date Added', 'Date Updated', '']}
+                                    tableData={this.props.credit_transfers}
+                                    editCreditTransfer={() => { this.setState({ openEditCreditTransferModal: true }) }}
+                                />
+                            }
+                        />
+                    </ItemGrid>
                 
-                <AddCreditTransferModal
-                    open={this.state.openAddCreditTransferModal}
-                    close={() => this.setState({ openAddCreditTransferModal: false })}
-                    addCreditTransfer={this.props.addCreditTransfer}
-                    refresh={this._getCreditTransfers}
-                />
+                    <AddCreditTransferModal
+                        open={this.state.openAddCreditTransferModal}
+                        close={() => this.setState({ openAddCreditTransferModal: false })}
+                        addCreditTransfer={this.props.addCreditTransfer}
+                        refresh={this._getCreditTransfers}
+                        successNotification={() => this.showNotification('tr')}
+                        errorNotification={() => this.showNotification('tc')}
+                    />
 
-                {/* <EditCreditTransferModal
-                    open={this.props.openAddCreditTransferModal}
-                    close={() => this.props.showAddCreditTransferModal(false)}
-                    addCreditTransfer={this.props.addCreditTransfer}
-                    refresh={this._getCreditTransfers}
-                /> */
+                    <EditCreditTransferModal
+                        open={this.state.openEditCreditTransferModal}
+                        close={() => this.setState({ openEditCreditTransferModal: false })}
+                        credit_transfer_to_edit={this.props.credit_transfer_to_edit}
+                        editCreditTransfer={this.props.editCreditTransfer}
+                        refresh={this._getCreditTransfers}
+                        successNotification={() => this.showNotification('tr')}
+                        errorNotification={() => this.showNotification('tc')}
+                    />
 
-                /* <DeleteCreditTransferModal
-                    open={this.props.openAddJackpotModal}
-                    close={() => this.props.showAddJackpotModal(false)}
-                    addJackpot={this.props.addJackpot}
-                    refresh={this._getJackpots}
-                /> */}
-            </Grid>
+                    {/* <DeleteCreditTransferModal
+                        open={this.props.openAddJackpotModal}
+                        close={() => this.props.showAddJackpotModal(false)}
+                        addJackpot={this.props.addJackpot}
+                        refresh={this._getJackpots}
+                    /> */}
+                </Grid>
+
+                <Grid container justify='center'>
+                    <ItemGrid xs={12} sm={12} md={10} lg={8}>
+                        <Grid container>
+                            <ItemGrid xs={12} sm={12} md={4}>
+                                <Snackbar
+                                    place="tr"
+                                    color="success"
+                                    icon={AddAlert}
+                                    message={this.notificationMessage('success')}
+                                    open={this.state.tr}
+                                    closeNotification={() => this.setState({'tr': false})}
+                                    close
+                                />
+                            </ItemGrid>
+                        </Grid>
+                    </ItemGrid>
+                </Grid>
+
+                <Grid container justify='center'>
+                    <ItemGrid xs={12} sm={12} md={10} lg={8}>
+                        <Grid container>
+                            <ItemGrid xs={12} sm={12} md={4}>
+                                <Snackbar
+                                    place="tc"
+                                    color="danger"
+                                    icon={AddAlert}
+                                    message={this.notificationMessage('error')}
+                                    open={this.state.tc}
+                                    closeNotification={() => this.setState({'tc': false})}
+                                    close
+                                />
+                            </ItemGrid>
+                        </Grid>
+                    </ItemGrid>
+                </Grid>
+            </div>
         );
     }
 }
@@ -156,10 +230,11 @@ const styles = {
 };
 
 const mapStateToProps = state => {
-    const { credit_transfers } = state.creditTransfers;
-    return { credit_transfers };
+    const { credit_transfers, credit_transfer_to_edit } = state.creditTransfers;
+    
+    return { credit_transfers, credit_transfer_to_edit };
 };
 
 export default connect(mapStateToProps, {
-    getCreditTransferByDate, addCreditTransfer,
+    getCreditTransferByDate, addCreditTransfer, editCreditTransfer
 })(CreditTransfer);

@@ -1,6 +1,8 @@
 import {
     GET_ALL_CREDIT_TRANSFERS_SUCCESS, GET_ALL_CREDIT_TRANSFERS_FAIL,
     ADD_CREDIT_TRANSFER_SUCCESS, ADD_CREDIT_TRANSFER_FAIL,
+    EDIT_CREDIT_TRANSFER_SUCCESS, EDIT_CREDIT_TRANSFER_FAIL,
+    CREDIT_TRANSFER_TO_EDIT,
 } from './types';
 import CreditTransfer from '../services/CreditTransfer';
 
@@ -33,8 +35,7 @@ export const getCreditTransferByDate = (from, to) => async dispatch => {
 };
 
 // Action creator for adding credit transfers to the system.
-export const addCreditTransfer = (data, refresh, clear) => async dispatch => {
-    console.log('this is the data ', data)
+export const addCreditTransfer = (data, refresh, clear, successNotification, errorNotification) => async dispatch => {
     try {
         const credit_transfer = await CreditTransfer.add(data);
 
@@ -44,9 +45,42 @@ export const addCreditTransfer = (data, refresh, clear) => async dispatch => {
             refresh && refresh();
 
             clear && clear();
+
+            successNotification && successNotification();
         }
     } catch (error) {
         dispatch({ type: ADD_CREDIT_TRANSFER_FAIL, payload: error });
+        errorNotification && errorNotification();
         console.log(error);
+    }
+};
+
+// Action creator for rendering the item to edit.
+export const renderCreditTransferToEdit = item => {
+    return {
+        type: CREDIT_TRANSFER_TO_EDIT,
+        payload: item,
+    };
+};
+
+// Action creator for editing credit transfers in the system.
+export const editCreditTransfer = (id, data, refresh, close, successNotification, errorNotification) => async dispatch => {
+    try {
+        const credit_transfer = await CreditTransfer.update(id, data);
+
+        if (credit_transfer) {
+            dispatch({ type: EDIT_CREDIT_TRANSFER_SUCCESS });
+
+            close && close();
+            
+            refresh && refresh();
+
+            successNotification && successNotification();
+        }
+    } catch (error) {
+        console.log(error);
+        dispatch({ type: EDIT_CREDIT_TRANSFER_FAIL });
+        
+        errorNotification && errorNotification();
     }
 };

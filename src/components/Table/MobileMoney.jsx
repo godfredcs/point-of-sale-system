@@ -55,7 +55,6 @@ class MobileMoneyTable extends Component {
                     </TableCell>
                     <TableCell className={classes.tableCell}>
                         <Button style={ styles.updateButton } onClick={ this._renderEdit.bind(this, prop) }>Edit</Button>
-                        <Button style={ styles.deleteButton } onClick={ deleteMobileMoney }>Delete</Button>
                     </TableCell>
                 </TableRow>
             );

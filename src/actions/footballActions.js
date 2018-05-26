@@ -57,7 +57,7 @@ export const showDeleteFootballModal = value => {
 };
 
 // Action creator for adding football to database.
-export const addFootball = (data, refresh, clear) => async dispatch => {
+export const addFootball = (data, refresh, clear, successNotification, errorNotification) => async dispatch => {
     try {
         let football = await Football.add(data);
 
@@ -67,9 +67,12 @@ export const addFootball = (data, refresh, clear) => async dispatch => {
             refresh && refresh();
     
             clear && clear();
+
+            successNotification && successNotification();
         }
     } catch (error) {
         dispatch({ type: ADD_FOOTBALL_FAIL });
+        errorNotification && errorNotification();
         console.log(error);
     }
 };

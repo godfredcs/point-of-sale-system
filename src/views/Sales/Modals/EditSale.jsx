@@ -1,39 +1,43 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { withStyles, Grid, Button, Modal } from 'material-ui';
 
-import { RegularCard, ItemGrid, CustomInput, CustomSelect } from 'components';
+import { RegularCard, ItemGrid, CustomInput } from 'components';
 
-class AddSale extends Component {
+class EditSale extends Component {
     state = {
-        item_index: '',
-        unit_quantity: 0.00,
-        whole_quantity: 0.00,
+        name: '',
+        unit_quantity: 0,
+        unit_price: 0,
+        whole_quantity: 0,
+        whole_price: 0,
+        total: 0,
     }
 
     calculate = type => {
-        if (!this.state.item_index && this.state.item_index !== 0) {
+        if (!this.props.sale_to_edit.id) {
             return () => 0.00;
         }
 
-        let item = this.props.items[this.state.item_index];
+        const { sale_to_edit } = this.props;
 
         return () => {
             switch(type) {
                 case "unit_price":
-                    return Number(item.unit_price);
+                    return Number(sale_to_edit.unit_price);
 
                 case "whole_price":
-                    return Number(item.whole_price);
+                    return Number(sale_to_edit.whole_price);
 
                 case "unit_amount":
-                    return (Number(this.state.unit_quantity) * Number(item.unit_price)).toFixed(2);
+                    return (Number(this.state.unit_quantity) * Number(sale_to_edit.unit_price)).toFixed(2);
                 
                 case "whole_amount":
-                    return (Number(this.state.whole_quantity) * Number(item.whole_price)).toFixed(2);
+                    return (Number(this.state.whole_quantity) * Number(sale_to_edit.whole_price)).toFixed(2);
 
                 case "total_amount":
-                    let unit_price = Number(this.state.unit_quantity) * Number(item.unit_price);
-                    let whole_price = Number(this.state.whole_quantity) * Number(item.whole_price);
+                    let unit_price = Number(this.state.unit_quantity) * Number(sale_to_edit.unit_price);
+                    let whole_price = Number(this.state.whole_quantity) * Number(sale_to_edit.whole_price);
 
                     return (unit_price + whole_price).toFixed(2);
 
@@ -104,13 +108,14 @@ class AddSale extends Component {
                                     <div>
                                         <Grid container>
                                             <ItemGrid xs={12} sm={12} md={12}>
-                                                <CustomSelect
-                                                    labelText="Item name"
-                                                    id="item-name"
+                                                <CustomInput
+                                                    disabled
+                                                    labelText="Item"
+                                                    id="item"
                                                     formControlProps={{ fullWidth: true }}
-                                                    onChange={event => this.setState({ item_index: event.target.value })}
-                                                    value={this.state.item_index}
-                                                    items={this.props.items}
+                                                    type="text"
+                                                    onChange={event => this.setState({ unit_quantity: event.target.value })}
+                                                    defaultValue={ this.state.unit_quantity }
                                                 />
                                             </ItemGrid>
                                         </Grid>
@@ -220,9 +225,15 @@ const styles = theme => ({
     },
 });
 
-const AddModalWrapped = withStyles(styles)(AddSale);
+const mapStateToProps = state => {
+    const { sale_to_edit } = state.sales;
 
-export default AddModalWrapped;
+    return { sale_to_edit };
+};
+
+const AddModalWrapped = withStyles(styles)(EditSale);
+
+export default connect(mapStateToProps)(AddModalWrapped);
 
 
 

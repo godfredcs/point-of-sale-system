@@ -1,18 +1,21 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Grid, Button } from 'material-ui';
+import { AddAlert } from 'material-ui-icons';
 
 import { getSalesByDate, addSale, getAllItems } from '../../actions';
 
-import { CustomDatepicker, CustomInput, RegularCard, SalesTable, ItemGrid } from 'components';
+import { CustomDatepicker, CustomInput, RegularCard, SalesTable, ItemGrid, Snackbar } from 'components';
 
 import AddSaleModal from './Modals/AddSale';
+import EditSaleModal from './Modals/EditSale';
 
 
 class Sales extends Component {
     state = {
+        notificationGroup: 'add',
         openAddSaleModal: false,
-        openUpdateSaleModal: false,
+        openEditSaleModal: false,
         openDeleteSaleModal: false,
         from: '2018-05-21',
         to: '2018-05-21',
@@ -64,68 +67,144 @@ class Sales extends Component {
         return `${year}-${month}-${day}`;
     };
 
+    showNotification(place) {
+        var x = [];
+        x[place] = true;
+        this.setState(x);
+
+        setTimeout(function() {
+            x[place] = false;
+            this.setState(x);
+        }.bind(this), 3000);
+    }
+
+    notificationMessage = type => {
+        if (type === 'success') {
+            if (this.state.notificationGroup === 'add') {
+                return 'Sale added successfully';
+            } else {
+                return 'Sale edited successfully';
+            }
+        } else if (type === 'error') {
+            if (this.state.notificationGroup === 'edit') {
+                return 'Error Sale could not be edited';
+            } else {
+                return 'Error Sale could not be added';
+            }
+        }
+    };
+
     render() {
         return (
-            <Grid container>
-                <ItemGrid xs={12} sm={12} md={12}>
-                    <RegularCard
-                        padIt
-                        cardTitle="Sales"
-                        cardSubtitle="List of sale entries in the system"
-                        button={
-                            <Button 
-                                style={ styles.addSaleButton } 
-                                onClick={() => this.setState({ openAddSaleModal: true })}>ADD SALE</Button>
-                        }
-                        total={
-                            <div>
-                                <CustomInput
-                                    disabled
-                                    labelText="Total"
-                                    id="total"
-                                    formControlProps={{ fullWidth: true }}
-                                    type="number"
-                                    value={this.total()}
-                                />
-                            </div>
-                        }
-                        date_picker={
-                            <div style={ styles.datepickers }>
-                                <div style={{ paddingRight: 10 }}>
-                                    <CustomDatepicker
-                                        label="From"
-                                        value={this.state.from}
-                                        onChange={this.from}
-                                    />
-                                </div>
+            <div>
+                <Grid container>
+                    <ItemGrid xs={12} sm={12} md={12}>
+                        <RegularCard
+                            padIt
+                            cardTitle="Sales"
+                            cardSubtitle="List of sale entries in the system"
+                            button={
+                                <Button 
+                                    style={ styles.addSaleButton } 
+                                    onClick={() => this.setState({ openAddSaleModal: true })}>ADD SALE</Button>
+                            }
+                            total={
                                 <div>
-                                    <CustomDatepicker
-                                        label="To"
-                                        value={this.state.to}
-                                        onChange={this.to}
+                                    <CustomInput
+                                        disabled
+                                        labelText="Total"
+                                        id="total"
+                                        formControlProps={{ fullWidth: true }}
+                                        type="number"
+                                        value={this.total()}
                                     />
                                 </div>
-                            </div>
-                        }
-                        content={
-                            <SalesTable
-                                tableHeaderColor="primary"
-                                tableHead={['No.', 'Name', 'Unit Price', 'Qty.', 'Whole Price', 'Qty.', 'Amount', 'Date Added', 'Date Updated', '']}
-                                tableData={this.props.sales}
-                                updateSale={() => this.setState({ openUpdateSaleModal: true })}
-                            />
-                        }
+                            }
+                            date_picker={
+                                <div style={ styles.datepickers }>
+                                    <div style={{ paddingRight: 10 }}>
+                                        <CustomDatepicker
+                                            label="From"
+                                            value={this.state.from}
+                                            onChange={this.from}
+                                        />
+                                    </div>
+                                    <div>
+                                        <CustomDatepicker
+                                            label="To"
+                                            value={this.state.to}
+                                            onChange={this.to}
+                                        />
+                                    </div>
+                                </div>
+                            }
+                            content={
+                                <SalesTable
+                                    tableHeaderColor="primary"
+                                    tableHead={['No.', 'Name', 'Unit Price', 'Qty.', 'Whole Price', 'Qty.', 'Amount', 'Date Added', 'Date Updated', '']}
+                                    tableData={this.props.sales}
+                                    editSale={() => this.setState({ openEditSaleModal: true })}
+                                />
+                            }
+                        />
+                    </ItemGrid>
+                    
+                    <AddSaleModal 
+                        open={this.state.openAddSaleModal}
+                        close={() => this.setState({ openAddSaleModal: false })}
+                        items={this.props.items}
+                        addSale={this.props.addSale}
+                        refreshSales={this._getSales}
+                        successNotification={() => this.showNotification('tr')}
+                        errorNotification={() => this.showNotification('tc')}
                     />
-                </ItemGrid>
-                
-                <AddSaleModal 
-                    open={this.state.openAddSaleModal}
-                    close={() => this.setState({ openAddSaleModal: false })}
-                    items={this.props.items}
-                    addSale={this.props.addSale}
-                    refreshSales={this._getSales}
-                />
-            </Grid>
+
+                    <EditSaleModal
+                        open={this.state.openEditSaleModal}
+                        close={() => this.setState({ openEditSaleModal: false })}
+                        editSale={this.props.editSale}
+                        refreshSales={this._getSales}
+                        successNotification={() => this.showNotification('tr')}
+                        errorNotification={() => this.showNotification('tc')}
+                    />
+                </Grid>
+
+                <Grid container justify='center'>
+                    <ItemGrid xs={12} sm={12} md={10} lg={8}>
+                        <Grid container>
+                            <ItemGrid xs={12} sm={12} md={4}>
+                                <Snackbar
+                                    place="tr"
+                                    color="success"
+                                    icon={AddAlert}
+                                    message={this.notificationMessage('success')}
+                                    open={this.state.tr}
+                                    closeNotification={() => this.setState({'tr': false})}
+                                    close
+                                />
+                            </ItemGrid>
+                        </Grid>
+                    </ItemGrid>
+                </Grid>
+
+                <Grid container justify='center'>
+                    <ItemGrid xs={12} sm={12} md={10} lg={8}>
+                        <Grid container>
+                            <ItemGrid xs={12} sm={12} md={4}>
+                                <Snackbar
+                                    place="tc"
+                                    color="danger"
+                                    icon={AddAlert}
+                                    message={this.notificationMessage('error')}
+                                    open={this.state.tc}
+                                    closeNotification={() => this.setState({'tc': false})}
+                                    close
+                                />
+                            </ItemGrid>
+                        </Grid>
+                    </ItemGrid>
+                </Grid>
+            </div>
         );
     }
 }

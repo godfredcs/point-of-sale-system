@@ -69,7 +69,7 @@ import SnackbarContent from './Snackbar/SnackbarContent.jsx';
 // // // Table
 // #############################
 
-import Table from './Table/Table.jsx';
+//import Table from './Table/Table.jsx';
 import ItemsTable from './Table/Items.jsx';
 import SalesTable from './Table/Sales.jsx';
 import MobileMoneyTable from './Table/MobileMoney.jsx';
@@ -121,7 +121,7 @@ export {
     //Snackbar
     Snackbar, SnackbarContent,
     // Table
-    Table, ItemsTable, SalesTable, MobileMoneyTable, JackpotTable, FootballTable, CreditTransferTable, UserProfileTable,
+    ItemsTable, SalesTable, MobileMoneyTable, JackpotTable, FootballTable, CreditTransferTable, UserProfileTable,
     // Tasks
     Tasks,
     // Typography

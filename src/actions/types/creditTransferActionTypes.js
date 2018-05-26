@@ -6,6 +6,8 @@ export const ADD_CREDIT_TRANSFER_SUCCESS = 'add_credit_transfer_success';
 
 export const ADD_CREDIT_TRANSFER_FAIL = 'add_credit_transfer_fail';
 
+export const CREDIT_TRANSFER_TO_EDIT = 'credit_transfer_to_edit';
+
 export const EDIT_CREDIT_TRANSFER_SUCCESS = 'edit_credit_transfer_success';
 
 export const EDIT_CREDIT_TRANSFER_FAIL = 'edit_credit_transfer_fail';
