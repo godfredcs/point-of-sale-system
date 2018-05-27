@@ -2,6 +2,8 @@ export const GET_ALL_FOOTBALLS_SUCCESS = 'get_all_footballs_success';
 
 export const GET_ALL_FOOTBALLS_FAIL = 'get_all_footballs_fail';
 
+export const GET_FOOTBALLS_TODAY = 'get_footballs_today';
+
 export const ADD_FOOTBALL_SUCCESS = 'add_football_success';
 
 export const ADD_FOOTBALL_FAIL = 'add_football_fail';

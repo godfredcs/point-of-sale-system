@@ -16,6 +16,7 @@ import EditCreditTransferModal from './Modals/EditCreditTransfer';
 
 class CreditTransfer extends Component {
     state = {
+        notificationGroup: 'add',
         openAddCreditTransferModal: false,
         openEditCreditTransferModal: false,
         from: '2018-05-21',
@@ -106,7 +107,7 @@ class CreditTransfer extends Component {
                             button={
                                 <Button 
                                     style={ styles.addTransactionButton } 
-                                    onClick={() => this.setState({ openAddCreditTransferModal: true })}>ADD CREDIT TRANSFER</Button>
+                                    onClick={() => this.setState({ openAddCreditTransferModal: true, notificationGroup: 'add' })}>ADD CREDIT TRANSFER</Button>
                             }
                             total={
                                 <div>

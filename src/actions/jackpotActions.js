@@ -1,5 +1,5 @@
 import { 
-    GET_ALL_JACKPOTS_SUCCESS, GET_ALL_JACKPOTS_FAIL, 
+    GET_ALL_JACKPOTS_SUCCESS, GET_JACKPOTS_TODAY, GET_ALL_JACKPOTS_FAIL, 
     ADD_JACKPOT_FAIL, ADD_JACKPOT_SUCCESS, 
     SHOW_ADD_JACKPOT_MODAL, SHOW_EDIT_JACKPOT_MODAL, SHOW_DELETE_JACKPOT_MODAL,
 } from './types';
@@ -21,12 +21,16 @@ export const getAllJackpots = () => async dispatch => {
 };
 
 // Action creator for getting jackpot entries according to specified dates in the system.
-export const getJackpotByDate = (from, to) => async dispatch => {
+export const getJackpotByDate = (from, to, today) => async dispatch => {
     try {
         let jackpots = await Jackpot.getByDate(new Date(from), new Date(`${to}T23:59:59`));
 
         if (jackpots) {
-            dispatch({ type: GET_ALL_JACKPOTS_SUCCESS, payload: jackpots });
+            if (today) {
+                dispatch({ type: GET_JACKPOTS_TODAY, payload: jackpots });
+            } else {
+                dispatch({ type: GET_ALL_JACKPOTS_SUCCESS, payload: jackpots });
+            }
         }
     } catch (error) {
         dispatch({ type: GET_ALL_JACKPOTS_FAIL, payload: error });

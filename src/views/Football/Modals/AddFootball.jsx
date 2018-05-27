@@ -6,8 +6,8 @@ import { RegularCard, ItemGrid, CustomInput } from 'components';
 class AddFootball extends Component {
     state = {
         name: '',
-        unit_charge: '',
-        number_of_people: '',
+        unit_charge: 0,
+        number_of_people: 0,
     };
 
     _setMatchName = event => {
@@ -36,6 +36,10 @@ class AddFootball extends Component {
         this.setState({ name: '', unit_charge: '', number_of_people: '' });
         this.props.close();
     };
+
+    amount = () => {
+        return (Number(this.state.unit_charge) * Number(this.state.number_of_people)).toFixed(2);
+    }
 
     getModalStyle() {
         const top = 50;
@@ -99,6 +103,18 @@ class AddFootball extends Component {
                                                     type="number"
                                                     onChange={ this._setNumberOfPeople }
                                                     defaultValue={ this.state.number_of_people }
+                                                />
+                                            </ItemGrid>
+                                        </Grid>
+                                        <Grid container>
+                                            <ItemGrid xs={12} sm={12} md={12}>
+                                                <CustomInput
+                                                    disabled
+                                                    labelText="Amount"
+                                                    id="amount"
+                                                    formControlProps={{ fullWidth: true }}
+                                                    type="number"
+                                                    value={ this.amount() }
                                                 />
                                             </ItemGrid>
                                         </Grid>

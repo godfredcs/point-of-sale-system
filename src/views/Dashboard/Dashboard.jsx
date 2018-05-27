@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withStyles, Grid } from 'material-ui';
 import {
-    ContentCopy, Store, InfoOutline, Warning, DateRange, LocalOffer, Update, ArrowUpward, AccessTime, Accessibility
+    ContentCopy, Store, InfoOutline, Warning, DateRange,
+    LocalOffer, Update, ArrowUpward, AccessTime, Accessibility
 } from 'material-ui-icons';
 import PropTypes from 'prop-types';
 // react plugin for creating charts
@@ -40,12 +41,12 @@ class Dashboard extends Component {
     };
 
     getRecordsByDate = () => {
-        this.setState({ from: this.dateNow(), to: this.dateNow() }, () => {
-            this.props.getSalesByDate(this.state.from, this.state.to);
-            this.props.getFootballByDate(this.state.from, this.state.to);
-            this.props.getJackpotByDate(this.state.from, this.state.to);
-            this.props.getMobileMoneyByDate(this.state.from, this.state.to);
-            this.props.getCreditTransferByDate(this.state.from, this.state.to);
+        this.setState({from: this.dateNow(), to: this.dateNow()}, () => {
+            this.props.getSalesByDate(this.state.from, this.state.to, "today");
+            this.props.getFootballByDate(this.state.from, this.state.to, "today");
+            this.props.getJackpotByDate(this.state.from, this.state.to, "today");
+            this.props.getMobileMoneyByDate(this.state.from, this.state.to, "today");
+            this.props.getCreditTransferByDate(this.state.from, this.state.to, "today");
         });
     };
 
@@ -71,13 +72,16 @@ class Dashboard extends Component {
         return this.props.user.role.name === 'super_admin';
     };
 
+    // Function for calculating totals.
     calculate = type => {
         let total = 0;
 
         switch(type) {
             case 'sales':
-                return () => {
-                    for (let sale of this.props.sales) {
+                return today => {
+                    let sales = today ? this.props.sales_today : this.props.sales;
+
+                    for (let sale of sales) {
                         total += Number(sale.amount);
                     }
 
@@ -85,8 +89,10 @@ class Dashboard extends Component {
                 };
 
             case 'footballs':
-                return () => {
-                    for (let football of this.props.footballs) {
+                return today => {
+                    let footballs = today ? this.props.footballs_today : this.props.footballs;
+                    console.log('the footballs ', footballs)
+                    for (let football of footballs) {
                         total += Number(football.amount);
                     }
 
@@ -94,8 +100,10 @@ class Dashboard extends Component {
                 };
 
             case 'jackpots':
-                return () => {
-                    for (let jackpot of this.props.jackpots) {
+                return today => {
+                    let jackpots = today ? this.props.jackpots_today : this.props.jackpots;
+                    
+                    for (let jackpot of jackpots) {
                         total += Number(jackpot.amount);
                     }
 
@@ -103,8 +111,10 @@ class Dashboard extends Component {
                 };
 
             case 'mobile_moneys':
-                return () => {
-                    for (let mobile_money of this.props.mobile_moneys) {
+                return today => {
+                    let mobile_moneys = today ? this.props.mobile_moneys_today : this.props.mobile_moneys;
+                    
+                    for (let mobile_money of mobile_moneys) {
                         total += Number(mobile_money.commission);
                     }
 
@@ -112,8 +122,10 @@ class Dashboard extends Component {
                 };
 
             case 'credit_transfers':
-                return () => {
-                    for (let credit_transfer of this.props.credit_transfers) {
+                return today => {
+                    let credit_transfers = today ? this.props.credit_transfers_today : this.props.credit_transfers;
+                    
+                    for (let credit_transfer of credit_transfers) {
                         total += Number(credit_transfer.amount);
                     }
 
@@ -155,7 +167,7 @@ class Dashboard extends Component {
                                         icon={Store}
                                         iconColor="green"
                                         title="Total Sales"
-                                        description={this.calculate('sales')()}
+                                        description={this.calculate('sales')('today')}
                                         statIcon={DateRange}
                                         statText="Sales in the system"
                                     />
@@ -165,7 +177,7 @@ class Dashboard extends Component {
                                         icon={InfoOutline}
                                         iconColor="red"
                                         title="Total Footballs"
-                                        description={this.calculate('footballs')()}
+                                        description={this.calculate('footballs')('today')}
                                         statIcon={LocalOffer}
                                         statText="All football entries"
                                     />
@@ -177,7 +189,7 @@ class Dashboard extends Component {
                                         icon={Accessibility}
                                         iconColor="blue"
                                         title="Total Jackpots"
-                                        description={this.calculate('jackpots')()}
+                                        description={this.calculate('jackpots')('today')}
                                         statIcon={Update}
                                         statText="All Jackpot entries"
                                     />
@@ -187,7 +199,7 @@ class Dashboard extends Component {
                                         icon={ContentCopy}
                                         iconColor="red"
                                         title="Total Mobile money"
-                                        description={this.calculate('mobile_moneys')()}
+                                        description={this.calculate('mobile_moneys')('today')}
                                         statIcon={Warning}
                                         statText="All mobile money commissions"
                                     />
@@ -197,7 +209,7 @@ class Dashboard extends Component {
                                         icon={Store}
                                         iconColor="blue"
                                         title="Total Credit Transfers"
-                                        description={this.calculate('credit_transfers')()}
+                                        description={this.calculate('credit_transfers')('today')}
                                         statIcon={DateRange}
                                         statText="Sales in the system"
                                     />
@@ -225,7 +237,7 @@ class Dashboard extends Component {
                             title="Daily Sales"
                             text={
                                 <span>
-                                    <span className={this.props.classes.successText}><ArrowUpward className={this.props.classes.upArrowCardCategory}/> 55%</span> increase in today sales.
+                                    <span className={this.props.classes.successText}><ArrowUpward className={this.props.classes.upArrowCardCategory} /> 55%</span> increase in today sales.
                                 </span>
                             }
                             statIcon={AccessTime}
@@ -267,15 +279,16 @@ const dashboardStyleWrapped = withStyles(dashboardStyle)(Dashboard);
 const mapStateToProps = state => {
     const { user } = state.users;
     const { items } = state.items;
-    const { sales } = state.sales;
-    const { footballs } = state.footballs;
-    const { jackpots } = state.jackpots;
-    const { mobile_moneys } = state.mobileMoneys;
-    const { credit_transfers } = state.creditTransfers;
+    const { sales, sales_today } = state.sales;
+    const { footballs, footballs_today } = state.footballs;
+    const { jackpots, jackpots_today } = state.jackpots;
+    const { mobile_moneys, mobile_moneys_today } = state.mobileMoneys;
+    const { credit_transfers, credit_transfers_today } = state.creditTransfers;
 
     return {
         user, 
         items, sales, footballs, jackpots, mobile_moneys, credit_transfers,
+        sales_today, footballs_today, jackpots_today, credit_transfers_today, mobile_moneys_today,
     };
 };
 

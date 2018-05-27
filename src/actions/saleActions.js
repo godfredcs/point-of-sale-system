@@ -1,4 +1,6 @@
-import { GET_ALL_SALES_SUCCESS, SALE_TO_EDIT } from './types';
+import { 
+    GET_ALL_SALES_SUCCESS, GET_SALES_TODAY, SALE_TO_EDIT
+} from './types';
 import Sale from '../services/Sale';
 
 export const getAllSales = () => async dispatch => {
@@ -13,12 +15,16 @@ export const getAllSales = () => async dispatch => {
     }
 };
 
-export const getSalesByDate = (from, to) => async dispatch => {
+export const getSalesByDate = (from, to, today) => async dispatch => {
     try {
         let sales = await Sale.getByDate(new Date(from), new Date(`${to}T23:59:59`));
 
         if (sales) {
-            dispatch({ type: GET_ALL_SALES_SUCCESS, payload: sales });
+            if (today) {
+                dispatch({ type: GET_SALES_TODAY, payload: sales });
+            } else {
+                dispatch({ type: GET_ALL_SALES_SUCCESS, payload: sales });
+            }
         }
     } catch(error) {
         console.log(error);

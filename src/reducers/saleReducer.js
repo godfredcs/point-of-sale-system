@@ -1,5 +1,5 @@
 import {
-    GET_ALL_SALES_SUCCESS, SALE_TO_EDIT, 
+    GET_ALL_SALES_SUCCESS, GET_SALES_TODAY, SALE_TO_EDIT, 
 } from '../actions/types';
 
 const INITIAL_STATE = {
@@ -19,6 +19,9 @@ export default (state = INITIAL_STATE, action) => {
     switch(action.type) {
         case GET_ALL_SALES_SUCCESS:
             return { ...state, sales: action.payload };
+
+        case GET_SALES_TODAY:
+            return { ...state, sales_today: action.payload };
 
         case SALE_TO_EDIT:
             console.log('this is the sale to edit ', action.payload);

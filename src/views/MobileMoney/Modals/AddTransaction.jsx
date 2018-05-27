@@ -46,7 +46,9 @@ class AddTransaction extends Component {
         const { name, type, phone, amount, commission } = this.state;
 
         if (name && type && Number(phone) && Number(amount) && Number(commission)) {
-            this.props.addMobileMoney({name, type, phone, amount, commission}, this.props.refresh, this._clear);
+            this.props.addMobileMoney({name, type, phone, amount, commission}, this.props.refresh, this._clear, this.props.successNotification, this.props.errorNotification);
+        } else {
+            this.props.errorNotification();
         }
     };
 

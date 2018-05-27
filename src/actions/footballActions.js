@@ -1,5 +1,5 @@
 import { 
-    GET_ALL_FOOTBALLS_SUCCESS, GET_ALL_FOOTBALLS_FAIL, 
+    GET_ALL_FOOTBALLS_SUCCESS, GET_ALL_FOOTBALLS_FAIL, GET_FOOTBALLS_TODAY,
     ADD_FOOTBALL_FAIL, ADD_FOOTBALL_SUCCESS, 
     SHOW_ADD_FOOTBALL_MODAL, SHOW_EDIT_FOOTBALL_MODAL, SHOW_DELETE_FOOTBALL_MODAL,
 } from './types';
@@ -21,13 +21,16 @@ export const getAllFootballs = () => async dispatch => {
 };
 
 // Action creator for getting footballs by date.
-export const getFootballByDate = (from, to) => async dispatch => {
+export const getFootballByDate = (from, to, today) => async dispatch => {
     try {
         let footballs = await Football.getByDate(new Date(from), new Date(`${to}T23:59:59`));
 
         if (footballs) {
-            dispatch({ type: GET_ALL_FOOTBALLS_SUCCESS, payload: footballs });
-            console.log('this is the array of footballs ', footballs);
+            if (today) {
+                dispatch({ type: GET_FOOTBALLS_TODAY, payload: footballs });
+            } else {
+                dispatch({ type: GET_ALL_FOOTBALLS_SUCCESS, payload: footballs });
+            }
         }
     } catch (error) {
         dispatch({ type: GET_ALL_FOOTBALLS_FAIL, payload: error });

@@ -1,5 +1,7 @@
 export const GET_ALL_JACKPOTS_SUCCESS = 'get_all_jackpots_success';
 
+export const GET_JACKPOTS_TODAY = 'get_jackpots_today';
+
 export const GET_ALL_JACKPOTS_FAIL = 'get_all_jackpots_fail';
 
 export const ADD_JACKPOT_SUCCESS = 'add_jackpot_success';

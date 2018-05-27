@@ -12,9 +12,9 @@ import AddFootballModal from './Modals/AddFootball';
 
 class Football extends Component {
      state = {
+        notificationGroup: 'add',
         openAddFootballModal: false,
         openEditFootballModal: false,
-        notificationGroup: 'add',
         from: '2018-05-21',
         to: '2018-05-21',
         tr: false,

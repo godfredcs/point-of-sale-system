@@ -2,6 +2,8 @@ export const GET_ALL_CREDIT_TRANSFERS_SUCCESS = 'get_all_credit_transfers_succes
 
 export const GET_ALL_CREDIT_TRANSFERS_FAIL = 'get_all_credit_transfers_fail';
 
+export const GET_CREDIT_TRANSFERS_TODAY = 'get_credit_transfers_today';
+
 export const ADD_CREDIT_TRANSFER_SUCCESS = 'add_credit_transfer_success';
 
 export const ADD_CREDIT_TRANSFER_FAIL = 'add_credit_transfer_fail';

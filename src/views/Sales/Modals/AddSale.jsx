@@ -43,6 +43,20 @@ class AddSale extends Component {
         }
     };
 
+    // Function for disabling quantity input if corresponding price is 0.
+    disableInput = type => {
+        if (this.state.item_index || this.state.item_index === 0) {
+    
+            let item = this.props.items[this.state.item_index];
+
+            if (Number(item[type]) !== 0) {
+                return false;
+            }
+        }
+
+        return true;
+    };
+
     // Function for adding sales to database.
     _addSale = () => {
         const { item_index, unit_quantity, whole_quantity } = this.state;
@@ -117,7 +131,7 @@ class AddSale extends Component {
                                         <Grid container>
                                             <ItemGrid xs={12} sm={4} md={4}>
                                                 <CustomInput
-                                                    disabled={this.state.item_index === ""}
+                                                    disabled={this.disableInput("unit_price")}
                                                     labelText="Unit quantity"
                                                     id="unit-quantity"
                                                     formControlProps={{ fullWidth: true }}
@@ -150,7 +164,7 @@ class AddSale extends Component {
                                         <Grid container>
                                             <ItemGrid xs={12} sm={4} md={4}>
                                                 <CustomInput
-                                                    disabled={this.state.item_index === ""}
+                                                    disabled={this.disableInput("whole_price")}
                                                     labelText="Whole quantity"
                                                     id="whole-quantity"
                                                     formControlProps={{ fullWidth: true }}

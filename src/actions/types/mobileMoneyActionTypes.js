@@ -2,6 +2,8 @@ export const GET_ALL_MOBILE_MONEYS_SUCCESS = 'get_all_mobile_moneys_success';
 
 export const GET_ALL_MOBILE_MONEYS_FAIL = 'get_all_mobile_moneys_fail';
 
+export const GET_MOBILE_MONEYS_TODAY = 'get_mobile_moneys_today';
+
 export const ADD_MOBILE_MONEY_SUCCESS = 'add_mobile_money_success';
 
 export const ADD_MOBILE_MONEY_FAIL = 'add_mobile_money_fail';
