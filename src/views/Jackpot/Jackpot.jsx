@@ -2,22 +2,20 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Grid, Button } from 'material-ui';
 
-import { 
-    getJackpotByDate, addJackpot,
-    showAddJackpotModal, showEditJackpotModal, 
-} from '../../actions';
+import { getJackpotByDate, addJackpot, } from '../../actions';
 
 import { CustomDatepicker, RegularCard, JackpotTable, ItemGrid, CustomInput } from 'components';
 
 import AddJackpotModal from './Modals/AddJackpot';
 import EditJackpotModal from './Modals/EditJackpot';
-import DeleteJackpotModal from './Modals/DeleteJackpot';
 
 
 class Jackpot extends Component {
     state = {
         from: '2018-05-21',
         to: '2018-05-21',
+        showAddJackpotModal: false,
+        showEditJackpotModal: false,
     };
 
     componentDidMount() {
@@ -74,7 +72,7 @@ class Jackpot extends Component {
                         button={
                             <Button 
                                 style={ styles.addTransactionButton } 
-                                onClick={() => this.props.showAddJackpotModal(true) }>ADD JACKPOT</Button>
+                                onClick={() => this.setState({ showAddJackpotModal: true })}>ADD JACKPOT</Button>
                         }
                         total={
                             <div>
@@ -84,7 +82,7 @@ class Jackpot extends Component {
                                     id="total-amount"
                                     formControlProps={{ fullWidth: true }}
                                     type="number"
-                                    value={this.total()}
+                                    value={ this.total() }
                                 />
                             </div>
                         }
@@ -111,29 +109,22 @@ class Jackpot extends Component {
                                 tableHeaderColor="primary"
                                 tableHead={['No.', 'Name', 'Amount', 'Date Added', 'Date Updated', '']}
                                 tableData={this.props.jackpots}
-                                updateTransaction={() => this.setState({ openUpdateSaleModal: true })}
+                                editTransaction={() => this.setState({ showEditJackpotModal: true })}
                             />
                         }
                     />
                 </ItemGrid>
                 
                 <AddJackpotModal
-                    open={this.props.openAddJackpotModal}
-                    close={() => this.props.showAddJackpotModal(false)}
+                    open={this.state.showAddJackpotModal}
+                    close={() => this.setState({ showAddJackpotModal: false })}
                     addJackpot={this.props.addJackpot}
                     refresh={this._getJackpots}
                 />
 
                 <EditJackpotModal
-                    open={this.props.openAddJackpotModal}
-                    close={() => this.props.showAddJackpotModal(false)}
-                    addJackpot={this.props.addJackpot}
-                    refresh={this._getJackpots}
-                />
-
-                <DeleteJackpotModal
-                    open={this.props.openAddJackpotModal}
-                    close={() => this.props.showAddJackpotModal(false)}
+                    open={this.state.showEditJackpotModal}
+                    close={() => this.setState({ showEditJackpotModal: false })}
                     addJackpot={this.props.addJackpot}
                     refresh={this._getJackpots}
                 />
@@ -156,10 +147,9 @@ const styles = {
 };
 
 const mapStateToProps = state => {
-    const { jackpots, openAddJackpotModal } = state.jackpots;
-    return { jackpots, openAddJackpotModal };
+    const { jackpots } = state.jackpots;
+
+    return { jackpots };
 };
 
-export default connect(mapStateToProps, {
-    getJackpotByDate, addJackpot, showAddJackpotModal, showEditJackpotModal,
-})(Jackpot);
+export default connect(mapStateToProps, { getJackpotByDate, addJackpot, })(Jackpot);

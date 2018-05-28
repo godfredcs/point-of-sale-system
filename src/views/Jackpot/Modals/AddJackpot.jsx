@@ -26,7 +26,7 @@ class AddJackpot extends Component {
     };
 
     getModalStyle() {
-        const top = 30;
+        const top = 50;
         const left = 50;
 
         return {

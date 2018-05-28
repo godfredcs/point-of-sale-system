@@ -219,12 +219,11 @@ class UserProfile extends Component {
                     <ItemGrid xs={12} sm={12} md={4}>
                         {
                             this.isSuperAdmin()
-                                ? <div style={ styles.centerItems }>
+                                && <div style={ styles.centerItems }>
                                     <Button color="primary" round onClick={() => this.props.openAddUserModal(true)}>
                                         Add User
                                     </Button>
                                 </div>
-                                : null
                         }
 
                         <ProfileCard
@@ -237,10 +236,11 @@ class UserProfile extends Component {
                         />
                     </ItemGrid>
                 </Grid>
-                <Grid>
+
+                <Grid container>
                     {
                         this.isSuperAdmin()
-                            ? <ItemGrid xs={12} sm={12} md={12}>
+                            && <ItemGrid xs={12} sm={12} md={8}>
                                 <RegularCard
                                     cardTitle="Users"
                                     cardSubtitle="List of users added to the system"
@@ -255,7 +255,6 @@ class UserProfile extends Component {
                                     }
                                 />
                             </ItemGrid>
-                            : null
                     }
                 </Grid>
 

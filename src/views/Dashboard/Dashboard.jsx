@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import { withStyles, Grid } from 'material-ui';
 import {
     ContentCopy, Store, InfoOutline, Warning, DateRange,
     LocalOffer, Update, ArrowUpward, AccessTime, Accessibility
 } from 'material-ui-icons';
-import PropTypes from 'prop-types';
 // react plugin for creating charts
 import ChartistGraph from 'react-chartist';
 
-import { StatsCard, ChartCard, ItemGrid } from 'components';
+import { StatsCard, ChartCard, ItemGrid, YesterdayRecordsTable, RegularCard, } from 'components';
 
 import { dailySalesChart, completedTasksChart } from 'variables/charts';
 
@@ -147,124 +147,165 @@ class Dashboard extends Component {
 
     render() {
         return (
-            <div>
+            <div> 
+                <Grid container>
+                    <ItemGrid xs={12} sm={6} md={4}>
+                        <StatsCard
+                            icon={ContentCopy}
+                            iconColor="orange"
+                            title="Items"
+                            description={this.props.items.length}
+                            statIcon={Warning}
+                            statText="Number of items in the system"
+                        />
+                    </ItemGrid>
+                    <ItemGrid xs={12} sm={6} md={4}>
+                        <StatsCard
+                            icon={Store}
+                            iconColor="green"
+                            title="Sales today"
+                            description={this.calculate('sales')('today')}
+                            statIcon={DateRange}
+                            statText="Sales recorded today"
+                        />
+                    </ItemGrid>
+                    <ItemGrid xs={12} sm={6} md={4}>
+                        <StatsCard
+                            icon={InfoOutline}
+                            iconColor="red"
+                            title="Footballs today"
+                            description={this.calculate('footballs')('today')}
+                            statIcon={LocalOffer}
+                            statText="footballs recorded today"
+                        />
+                    </ItemGrid>
+                </Grid>
+                <Grid container>
+                    <ItemGrid xs={12} sm={6} md={4}>
+                        <StatsCard
+                            icon={Accessibility}
+                            iconColor="blue"
+                            title="Jackpots today"
+                            description={this.calculate('jackpots')('today')}
+                            statIcon={Update}
+                            statText="Jackpots recorded today"
+                        />
+                    </ItemGrid>
+                    <ItemGrid xs={12} sm={6} md={4}>
+                        <StatsCard
+                            icon={ContentCopy}
+                            iconColor="red"
+                            title="Mobile moneys today"
+                            description={this.calculate('mobile_moneys')('today')}
+                            statIcon={Warning}
+                            statText="Commissions recorded today"
+                        />
+                    </ItemGrid>
+                    <ItemGrid xs={12} sm={6} md={4}>
+                        <StatsCard
+                            icon={Store}
+                            iconColor="blue"
+                            title="Credit Transfers today"
+                            description={this.calculate('credit_transfers')('today')}
+                            statIcon={DateRange}
+                            statText="Credit transfers recorded today"
+                        />
+                    </ItemGrid>
+                </Grid>
+                
                 {
                     this.isSuperAdmin()
-                        ? <div> 
+                        && <div>
                             <Grid container>
-                                <ItemGrid xs={12} sm={6} md={4}>
-                                    <StatsCard
-                                        icon={ContentCopy}
-                                        iconColor="orange"
-                                        title="Items"
-                                        description={this.props.items.length}
-                                        statIcon={Warning}
-                                        statText="Number of items in the system"
+                                <ItemGrid xs={12} sm={12} md={6}>
+                                    <ChartCard
+                                        chart={
+                                            <ChartistGraph
+                                                className="ct-chart"
+                                                data={dailySalesChart.data}
+                                                type="Line"
+                                                options={dailySalesChart.options}
+                                                listener={
+                                                    dailySalesChart.animation
+                                                }
+                                            />
+                                        }
+                                        chartColor="green"
+                                        title="Daily Sales"
+                                        text={
+                                            <span>
+                                                <span className={this.props.classes.successText}><ArrowUpward className={this.props.classes.upArrowCardCategory} /> 55%</span> increase in today sales.
+                                            </span>
+                                        }
+                                        statIcon={AccessTime}
+                                        statText="updated 4 minutes ago"
                                     />
                                 </ItemGrid>
-                                <ItemGrid xs={12} sm={6} md={4}>
-                                    <StatsCard
-                                        icon={Store}
-                                        iconColor="green"
-                                        title="Total Sales"
-                                        description={this.calculate('sales')('today')}
-                                        statIcon={DateRange}
-                                        statText="Sales in the system"
-                                    />
-                                </ItemGrid>
-                                <ItemGrid xs={12} sm={6} md={4}>
-                                    <StatsCard
-                                        icon={InfoOutline}
-                                        iconColor="red"
-                                        title="Total Footballs"
-                                        description={this.calculate('footballs')('today')}
-                                        statIcon={LocalOffer}
-                                        statText="All football entries"
+                                <ItemGrid xs={12} sm={12} md={6}>
+                                    <ChartCard
+                                        chart={
+                                            <ChartistGraph
+                                                className="ct-chart"
+                                                data={completedTasksChart.data}
+                                                type="Line"
+                                                options={completedTasksChart.options}
+                                                listener={
+                                                    completedTasksChart.animation
+                                                }
+                                            />
+                                        }
+                                        chartColor="red"
+                                        title="Completed Tasks"
+                                        text="Last Campaign Performance"
+                                        statIcon={AccessTime}
+                                        statText="campaign sent 2 days ago"
                                     />
                                 </ItemGrid>
                             </Grid>
+
                             <Grid container>
-                                <ItemGrid xs={12} sm={6} md={4}>
-                                    <StatsCard
-                                        icon={Accessibility}
-                                        iconColor="blue"
-                                        title="Total Jackpots"
-                                        description={this.calculate('jackpots')('today')}
-                                        statIcon={Update}
-                                        statText="All Jackpot entries"
+                                <ItemGrid xs={12} sm={4} md={4}>
+                                    <RegularCard
+                                        cardTitle="Yesterday's records"
+                                        cardSubtitle="List of jackpot entries in the system"
+                                        content={
+                                            <YesterdayRecordsTable
+                                                tableHeaderColor="info"
+                                                tableHead={['Category', 'Amount']}
+                                                tableData={this.props.jackpots}
+                                            />
+                                        }
                                     />
                                 </ItemGrid>
-                                <ItemGrid xs={12} sm={6} md={4}>
-                                    <StatsCard
-                                        icon={ContentCopy}
-                                        iconColor="red"
-                                        title="Total Mobile money"
-                                        description={this.calculate('mobile_moneys')('today')}
-                                        statIcon={Warning}
-                                        statText="All mobile money commissions"
+                                <ItemGrid xs={12} sm={4} md={4}>
+                                    <RegularCard
+                                        cardTitle="Todays's records"
+                                        cardSubtitle="List of jackpot entries in the system"
+                                        content={
+                                            <YesterdayRecordsTable
+                                                tableHeaderColor="info"
+                                                tableHead={['Category', 'Amount']}
+                                                tableData={this.props.jackpots}
+                                            />
+                                        }
                                     />
                                 </ItemGrid>
-                                <ItemGrid xs={12} sm={6} md={4}>
-                                    <StatsCard
-                                        icon={Store}
-                                        iconColor="blue"
-                                        title="Total Credit Transfers"
-                                        description={this.calculate('credit_transfers')('today')}
-                                        statIcon={DateRange}
-                                        statText="Sales in the system"
+                                <ItemGrid xs={12} sm={4} md={4}>
+                                    <RegularCard
+                                        cardTitle="Total records"
+                                        cardSubtitle="List of jackpot entries in the system"
+                                        content={
+                                            <YesterdayRecordsTable
+                                                tableHeaderColor="info"
+                                                tableHead={['Category', 'Amount']}
+                                                tableData={this.props.jackpots}
+                                            />
+                                        }
                                     />
                                 </ItemGrid>
                             </Grid>
                         </div>
-                        : null
                 }
-                
-                <Grid container>
-                    <ItemGrid xs={12} sm={12} md={6}>
-                        <ChartCard
-                            chart={
-                                <ChartistGraph
-                                    className="ct-chart"
-                                    data={dailySalesChart.data}
-                                    type="Line"
-                                    options={dailySalesChart.options}
-                                    listener={
-                                        dailySalesChart.animation
-                                    }
-                                />
-                            }
-                            chartColor="green"
-                            title="Daily Sales"
-                            text={
-                                <span>
-                                    <span className={this.props.classes.successText}><ArrowUpward className={this.props.classes.upArrowCardCategory} /> 55%</span> increase in today sales.
-                                </span>
-                            }
-                            statIcon={AccessTime}
-                            statText="updated 4 minutes ago"
-                        />
-                    </ItemGrid>
-                    <ItemGrid xs={12} sm={12} md={6}>
-                        <ChartCard
-                            chart={
-                                <ChartistGraph
-                                    className="ct-chart"
-                                    data={completedTasksChart.data}
-                                    type="Line"
-                                    options={completedTasksChart.options}
-                                    listener={
-                                        completedTasksChart.animation
-                                    }
-                                />
-                            }
-                            chartColor="red"
-                            title="Completed Tasks"
-                            text="Last Campaign Performance"
-                            statIcon={AccessTime}
-                            statText="campaign sent 2 days ago"
-                        />
-                    </ItemGrid>
-                </Grid>
             </div>
         );
     }

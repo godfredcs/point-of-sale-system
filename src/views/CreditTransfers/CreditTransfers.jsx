@@ -107,7 +107,8 @@ class CreditTransfer extends Component {
                             button={
                                 <Button 
                                     style={ styles.addTransactionButton } 
-                                    onClick={() => this.setState({ openAddCreditTransferModal: true, notificationGroup: 'add' })}>ADD CREDIT TRANSFER</Button>
+                                    onClick={() => this.setState({ openAddCreditTransferModal: true, notificationGroup: 'add' })}
+                                >ADD CREDIT TRANSFER</Button>
                             }
                             total={
                                 <div>
