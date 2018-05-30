@@ -7,6 +7,7 @@ import {
 const INITIAL_STATE = {
     jackpots: [],
     jackpots_today: [],
+    jackpots_yesterday: [],
     openAddJackpotModal: false,
     openEditJackpotModal: false,
     openDeleteJackpotModal: false,

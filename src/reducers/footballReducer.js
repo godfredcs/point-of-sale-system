@@ -7,6 +7,7 @@ import {
 const INITIAL_STATE = {
     footballs: [],
     footballs_today: [],
+    footballs_yesterday: [],
     openAddFootballModal: false,
     openEditFootballModal: false,
     openDeleteFootballModal: false,

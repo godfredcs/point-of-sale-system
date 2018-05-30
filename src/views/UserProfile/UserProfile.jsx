@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Grid } from 'material-ui';
 import { connect } from 'react-redux';
+import { Grid } from 'material-ui';
 
 import {
     ProfileCard, RegularCard, Button, CustomInput, ItemGrid, UserProfileTable

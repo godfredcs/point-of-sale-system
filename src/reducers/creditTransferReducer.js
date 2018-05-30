@@ -6,6 +6,7 @@ import {
 const INITIAL_STATE = {
     credit_transfers: [],
     credit_transfers_today: [],
+    credit_transfers_yesterday: [],
     credit_transfer_to_edit: {
         name: '',
         amount: '',

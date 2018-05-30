@@ -22,13 +22,15 @@ import {
 
 class Dashboard extends Component {
     state = {
-        from: '2018-05-21',
-        to: '2018-05-21',
+        yesterday_from: '2018-05-21',
+        yesterday_to: '2018-05-21',
+        today_from: '2018-05-21',
+        today_to: '2018-05-21',
     };
 
     componentDidMount() {
         this.getTotalRecords();
-        this.getRecordsByDate();
+        this.getRecordsToday();
     }
 
     getTotalRecords = () => {
@@ -40,21 +42,30 @@ class Dashboard extends Component {
         this.props.getAllCreditTransfers();
     };
 
-    getRecordsByDate = () => {
-        this.setState({from: this.dateNow(), to: this.dateNow()}, () => {
-            this.props.getSalesByDate(this.state.from, this.state.to, "today");
-            this.props.getFootballByDate(this.state.from, this.state.to, "today");
-            this.props.getJackpotByDate(this.state.from, this.state.to, "today");
-            this.props.getMobileMoneyByDate(this.state.from, this.state.to, "today");
-            this.props.getCreditTransferByDate(this.state.from, this.state.to, "today");
+    getRecordsYesterday = () => {
+
+    };
+
+    getRecordsToday = () => {
+        this.setState({today_from: this.getDate('today'), today_to: this.getDate('today')}, () => {
+            this.props.getSalesByDate(this.state.today_from, this.state.today_to, "today");
+            this.props.getFootballByDate(this.state.today_from, this.state.today_to, "today");
+            this.props.getJackpotByDate(this.state.today_from, this.state.today_to, "today");
+            this.props.getMobileMoneyByDate(this.state.today_from, this.state.today_to, "today");
+            this.props.getCreditTransferByDate(this.state.today_from, this.state.today_to, "today");
         });
     };
 
-    dateNow = () => {
-        let date = new Date(),
-            year = String(date.getFullYear()),
-            month = String(date.getMonth() + 1), // Month starts from 0 so add 1 to make up for the 0.
-            day = String(date.getDate());
+    getDate = type => {
+        let date = new Date();
+
+        let year = date.getFullYear();
+        let month = date.getMonth() + 1; // Month starts from 0 so add 1 to make up for the 0.
+        let day = date.getDate();
+
+        if (type === 'yesterday') {
+            day -= 1;
+        }
 
         if (month.length === 1) {
             month = `0${month}`;

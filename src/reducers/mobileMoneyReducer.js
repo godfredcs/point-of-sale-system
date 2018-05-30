@@ -8,6 +8,7 @@ import {
 const INITIAL_STATE = {
     mobile_moneys: [],
     mobile_moneys_today: [],
+    mobile_moneys_yesterday: [],
     openAddMobileMoneyModal: false,
     openEditMobileMoneyModal: false,
     openDeleteMobileMoneyModal: false,
