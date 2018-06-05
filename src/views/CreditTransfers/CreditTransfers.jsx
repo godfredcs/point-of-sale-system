@@ -94,6 +94,17 @@ class CreditTransfer extends Component {
             }
         }
     };
+
+    // Check if the user is super admin.
+    isSuperAdmin = () => {
+        return this.props.user.role.name === 'super_admin';
+    };
+
+    tableHead = () => {
+        return this.isSuperAdmin()
+            ? ['No.', 'Number', 'Amount', 'Date Added', 'Date Updated', '']
+            : ['No.', 'Number', 'Amount', 'Date Added', 'Date Updated'] 
+    };
     
     render() {
         return (
@@ -143,9 +154,9 @@ class CreditTransfer extends Component {
                             content={
                                 <CreditTransferTable
                                     tableHeaderColor="primary"
-                                    tableHead={['No.', 'Number', 'Amount', 'Date Added', 'Date Updated', '']}
+                                    tableHead={this.tableHead()}
                                     tableData={this.props.credit_transfers}
-                                    editCreditTransfer={() => { this.setState({ openEditCreditTransferModal: true }) }}
+                                    editCreditTransfer={() => { this.setState({ openEditCreditTransferModal: true, notificationGroup: 'edit' }) }}
                                 />
                             }
                         />
@@ -232,9 +243,10 @@ const styles = {
 };
 
 const mapStateToProps = state => {
+    const { user } = state.users;
     const { credit_transfers, credit_transfer_to_edit } = state.creditTransfers;
     
-    return { credit_transfers, credit_transfer_to_edit };
+    return { user, credit_transfers, credit_transfer_to_edit };
 };
 
 export default connect(mapStateToProps, {

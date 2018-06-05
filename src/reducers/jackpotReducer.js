@@ -1,5 +1,6 @@
 import { 
-    GET_ALL_JACKPOTS_SUCCESS, GET_JACKPOTS_TODAY, GET_ALL_JACKPOTS_FAIL,
+    GET_ALL_JACKPOTS_SUCCESS, GET_ALL_JACKPOTS_FAIL,
+    GET_JACKPOTS_TODAY_SUCCESS,
     ADD_JACKPOT_SUCCESS, ADD_JACKPOT_FAIL,
     SHOW_ADD_JACKPOT_MODAL, SHOW_EDIT_JACKPOT_MODAL, SHOW_DELETE_JACKPOT_MODAL,
 } from '../actions/types';
@@ -18,7 +19,7 @@ export default (state = INITIAL_STATE, action) => {
         case GET_ALL_JACKPOTS_SUCCESS:
             return { ...state, jackpots: action.payload };
 
-        case GET_JACKPOTS_TODAY:
+        case GET_JACKPOTS_TODAY_SUCCESS:
             return { ...state, jackpots_today: action.payload };
 
         case GET_ALL_JACKPOTS_FAIL:

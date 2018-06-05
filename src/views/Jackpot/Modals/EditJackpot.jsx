@@ -1,13 +1,18 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { withStyles, Grid, Button, Modal } from 'material-ui';
 
 import { RegularCard, ItemGrid, CustomInput } from 'components';
 
-class AddJackpot extends Component {
+class EditJackpot extends Component {
     state = {
         name: '',
         amount: '',
     };
+
+    componentDidMount() {
+
+    }
 
     _setName = event => {
         this.setState({ name: event.target.value });
@@ -17,7 +22,7 @@ class AddJackpot extends Component {
         this.setState({ amount: event.target.value });
     };
 
-    _addJackpot = () => {
+    _editJackpot = () => {
         const { name, amount } = this.state;
 
         if (name && Number(amount)) {
@@ -26,7 +31,7 @@ class AddJackpot extends Component {
     };
 
     getModalStyle() {
-        const top = 30;
+        const top = 50;
         const left = 50;
 
         return {
@@ -85,7 +90,7 @@ class AddJackpot extends Component {
                                     <Button 
                                         variant="raised" 
                                         style={{ backgroundColor: 'purple', color: 'white' }} 
-                                        onClick={this._addJackpot}>Add</Button>
+                                        onClick={this._editJackpot}>Edit</Button>
                                 }
                             />
                         </ItemGrid>
@@ -105,9 +110,9 @@ const styles = theme => ({
     },
 });
 
-const AddModalWrapped = withStyles(styles)(AddJackpot);
+const EditModalWrapped = withStyles(styles)(EditJackpot);
 
-export default AddModalWrapped;
+export default connect()(EditModalWrapped);
 
 
 

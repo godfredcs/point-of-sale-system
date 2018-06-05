@@ -20,7 +20,7 @@ class CustomTable extends React.Component {
 
     _renderTableData = () => {
         let number = 0;
-        const { classes, tableData, updateSale } = this.props;
+        const { classes, tableData, editJackpot } = this.props;
 
         return tableData.map((prop, key) => {
             return (
@@ -43,7 +43,7 @@ class CustomTable extends React.Component {
                     {
                         this.isSuperAdmin() && (
                             <TableCell className={classes.tableCell}>
-                                <Button style={ styles.updateButton } onClick={ updateSale }>Edit</Button>
+                                <Button style={ styles.updateButton } onClick={ editJackpot }>Edit</Button>
                                 <Button style={ styles.deleteButton }>Delete</Button>
                             </TableCell>
                         )

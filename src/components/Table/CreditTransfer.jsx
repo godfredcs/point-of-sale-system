@@ -13,6 +13,7 @@ class CreditTransferTable extends React.Component {
     isSuperAdmin = () => {
         return this.props.user.role.name === 'super_admin';
     };
+    
     _renderDate(value) {
         let date = Moment(value);
 

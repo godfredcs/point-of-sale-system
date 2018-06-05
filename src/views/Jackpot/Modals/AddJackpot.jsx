@@ -19,10 +19,18 @@ class AddJackpot extends Component {
 
     _addJackpot = () => {
         const { name, amount } = this.state;
+        const { refresh, successNotification, errorNotification } = this.props;
 
         if (name && Number(amount)) {
-            this.props.addJackpot({ name, amount }, this.props.refresh, this.setState({ name: '', amount: '' }));
+            this.props.addJackpot({ name, amount }, this.props.refresh, this.clear, successNotification, errorNotification);
+        } else {
+            errorNotification();
         }
+    };
+
+    clear = () => {
+        this.setState({ name: '', amount: '' });
+        this.props.close();
     };
 
     getModalStyle() {

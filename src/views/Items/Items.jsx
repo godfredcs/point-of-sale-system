@@ -15,7 +15,7 @@ import { getAllItems, addItem, showAddItemModal, showEditItemModal, showDeleteIt
 
 class Items extends Component {
     state = {
-        notificationGroup: '',
+        notificationGroup: 'add',
         tr: false,
         tc: false,
     };
