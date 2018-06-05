@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Grid, Button } from 'material-ui';
 import { AddAlert } from 'material-ui-icons';
 
-import { getFootballByDate, addFootball, showAddFootballModal } from '../../actions';
+import { getFootballByDate, addFootball } from '../../actions';
 
 import { CustomDatepicker, RegularCard, FootballTable, ItemGrid, CustomInput, Snackbar } from 'components';
 
@@ -215,5 +215,5 @@ const mapStateToProps = state => {
 };
 
 export default connect(mapStateToProps, {
-    getFootballByDate, addFootball, showAddFootballModal,
+    getFootballByDate, addFootball,
 })(Football);

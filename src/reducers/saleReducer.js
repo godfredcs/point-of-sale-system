@@ -1,5 +1,5 @@
 import {
-    GET_ALL_SALES_SUCCESS, GET_SALES_TODAY, GET_SALES_YESTERDAY,
+    GET_ALL_SALES_SUCCESS, GET_SALES_TODAY_SUCCESS, GET_SALES_YESTERDAY_SUCCESS,
     SALE_TO_EDIT, 
 } from '../actions/types';
 
@@ -22,11 +22,11 @@ export default (state = INITIAL_STATE, action) => {
         case GET_ALL_SALES_SUCCESS:
             return { ...state, sales: action.payload };
 
-        case GET_SALES_TODAY:
+        case GET_SALES_TODAY_SUCCESS:
             console.log('these sales are from today ', action.payload)
             return { ...state, sales_today: action.payload };
 
-        case GET_SALES_YESTERDAY:
+        case GET_SALES_YESTERDAY_SUCCESS:
             console.log('these sales are from yesterday ', action.payload);
             return { ...state, sales_yesterday: action.payload };
 

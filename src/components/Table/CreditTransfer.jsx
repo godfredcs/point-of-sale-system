@@ -27,7 +27,7 @@ class CreditTransferTable extends React.Component {
 
     _renderTableData = () => {
         let number = 0;
-        const { classes, tableData, editCreditTransfer } = this.props;
+        const { classes, tableData } = this.props;
 
         return tableData.map((prop, key) => {
             return (

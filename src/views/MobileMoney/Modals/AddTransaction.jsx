@@ -40,6 +40,7 @@ class AddTransaction extends Component {
             amount: '',
             commission: '',
         });
+        this.props.close();
     };
 
     _addMobileMoney = () => {

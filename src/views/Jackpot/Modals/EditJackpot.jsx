@@ -10,10 +10,6 @@ class EditJackpot extends Component {
         amount: '',
     };
 
-    componentDidMount() {
-
-    }
-
     _setName = event => {
         this.setState({ name: event.target.value });
     };
@@ -22,11 +18,20 @@ class EditJackpot extends Component {
         this.setState({ amount: event.target.value });
     };
 
-    _editJackpot = () => {
-        const { name, amount } = this.state;
+    _clear = () => {
+        this.setState({ name: '', amount: '' });
+        this.props.close();
+    };
+
+    _editJackpot = () => {        
+        let id = this.props.jackpot_to_edit.id,
+            name = this.state.name || this.props.jackpot_to_edit.name,
+            amount = this.state.amount || this.props.jackpot_to_edit.amount;
 
         if (name && Number(amount)) {
-            this.props.addJackpot({ name, amount }, this.props.refresh, this.setState({ name: '', amount: '' }));
+            this.props.editJackpot(id, { name, amount }, this.props.refresh, this._clear, this.props.successNotification, this.props.errorNotification);
+        } else {
+            this.props.errorNotification();
         }
     };
 
@@ -42,12 +47,12 @@ class EditJackpot extends Component {
     }
     
     render() {
-        const { classes, open, close } = this.props;
+        const { classes, open, close, jackpot_to_edit } = this.props;
 
         return (
             <Modal
-                aria-labelledby="Add Jackpot"
-                aria-describedby="Modal for adding jackpot"
+                aria-labelledby="Edit Jackpot"
+                aria-describedby="Modal for editing jackpot"
                 open={open}
                 onClose={close}
             >
@@ -55,8 +60,8 @@ class EditJackpot extends Component {
                     <Grid container>
                         <ItemGrid xs={12} sm={12} md={12}>
                             <RegularCard
-                                cardTitle="ADD JACKPOT"
-                                cardSubtitle="Fill the form below to add jackpot to the system"
+                                cardTitle="EDIT JACKPOT"
+                                cardSubtitle="Fill the form below to edit jackpot in the system"
                                 content={
                                     <div>
                                         <Grid container>
@@ -67,7 +72,7 @@ class EditJackpot extends Component {
                                                     formControlProps={{ fullWidth: true }}
                                                     type="text"
                                                     onChange={ this._setName }
-                                                    defaultValue={ this.state.name }
+                                                    defaultValue={ jackpot_to_edit.name }
                                                 />
                                             </ItemGrid>
                                         </Grid>
@@ -79,7 +84,7 @@ class EditJackpot extends Component {
                                                     formControlProps={{ fullWidth: true }}
                                                     type="number"
                                                     onChange={ this._setAmount }
-                                                    defaultValue={ this.state.amount }
+                                                    defaultValue={ jackpot_to_edit.amount }
                                                 />
                                             </ItemGrid>
                                         </Grid>
@@ -112,7 +117,12 @@ const styles = theme => ({
 
 const EditModalWrapped = withStyles(styles)(EditJackpot);
 
-export default connect()(EditModalWrapped);
+const mapStateToProps = state => {
+    const { jackpot_to_edit } = state.jackpots;
+    return { jackpot_to_edit };
+}
+
+export default connect(mapStateToProps)(EditModalWrapped);
 
 
 

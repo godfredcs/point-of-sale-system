@@ -3,10 +3,7 @@ import { connect } from 'react-redux';
 import { Grid, Button } from 'material-ui';
 import { AddAlert } from 'material-ui-icons';
 
-import { 
-    getMobileMoneyByDate, addMobileMoney, 
-    showAddMobileMoneyModal, showEditMobileMoneyModal,
-} from '../../actions';
+import { getMobileMoneyByDate, addMobileMoney } from '../../actions';
 
 import { CustomDatepicker, RegularCard, MobileMoneyTable, ItemGrid, CustomInput, Snackbar } from 'components';
 
@@ -17,6 +14,9 @@ import EditTransactionModal from './Modals/EditTransaction';
 class MobileMoney extends Component {
      state = {
         notificationGroup: 'add',
+        showAddMobileMoneyModal: false,
+        showEditMobileMoneyModal: false,
+        showDeleteMobileMoneyModal: false,
         from: '2018-05-21',
         to: '2018-05-21',
         tr: false,
@@ -25,7 +25,7 @@ class MobileMoney extends Component {
 
     componentDidMount() {
         // Set the dates (from and to) and pull corresponding sales from server.
-        this.setState({ from: this.dateNow(), to: this.dateNow() }, this._getMobileMoneys);
+        this.setState({from: this.dateNow(), to: this.dateNow()}, this._getMobileMoneys);
     }
 
     from = event => {
@@ -106,7 +106,7 @@ class MobileMoney extends Component {
                             button={
                                 <Button 
                                     style={ styles.addTransactionButton } 
-                                    onClick={() => this.props.showAddMobileMoneyModal(true)}>ADD TRANSACTION</Button>
+                                    onClick={() => this.setState({ showAddMobileMoneyModal: true, notificationGroup: 'add' })}>ADD TRANSACTION</Button>
                             }
                             total={
                                 <div>
@@ -143,7 +143,7 @@ class MobileMoney extends Component {
                                     tableHeaderColor="primary"
                                     tableHead={['No.', 'Name', 'Type', 'Phone', 'Amount', 'Commission', 'Date Added', 'Date Updated', '']}
                                     tableData={this.props.mobile_moneys}
-                                    editMobileMoney={() => this.props.showEditMobileMoneyModal(true)}
+                                    editMobileMoney={() => this.setState({ showEditMobileMoneyModal: true, notificationGroup: 'edit' })}
                                     deleteTransaction={() => console.log('we are trying to delete the transaction')}
                                 />
                             }
@@ -151,8 +151,8 @@ class MobileMoney extends Component {
                     </ItemGrid>
                 
                     <AddTransactionModal
-                        open={this.props.openAddMobileMoneyModal}
-                        close={() => this.props.showAddMobileMoneyModal(false)}
+                        open={this.state.showAddMobileMoneyModal}
+                        close={() => this.setState({ showAddMobileMoneyModal: false })}
                         addMobileMoney={this.props.addMobileMoney}
                         refresh={this._getMobileMoneys}
                         successNotification={() => this.showNotification('tr')}
@@ -160,8 +160,8 @@ class MobileMoney extends Component {
                     />
 
                     <EditTransactionModal
-                        open={this.props.openEditMobileMoneyModal}
-                        close={() => this.props.showEditMobileMoneyModal(false)}
+                        open={this.state.showEditMobileMoneyModal}
+                        close={() => this.setState({ showEditMobileMoneyModal: false })}
                         editMobileMoney={this.props.editMobileMoney}
                         refresh={this._getMobileMoneys}
                         successNotification={() => this.showNotification('tr')}
@@ -234,7 +234,4 @@ const mapStateToProps = state => {
     };
 };
 
-export default connect(mapStateToProps, {
-    getMobileMoneyByDate, addMobileMoney, 
-    showAddMobileMoneyModal, showEditMobileMoneyModal,
-})(MobileMoney);
+export default connect(mapStateToProps, { getMobileMoneyByDate, addMobileMoney })(MobileMoney);

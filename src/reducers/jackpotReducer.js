@@ -1,17 +1,19 @@
 import { 
     GET_ALL_JACKPOTS_SUCCESS, GET_ALL_JACKPOTS_FAIL,
     GET_JACKPOTS_TODAY_SUCCESS,
+    GET_JACKPOTS_YESTERDAY_SUCCESS,
     ADD_JACKPOT_SUCCESS, ADD_JACKPOT_FAIL,
-    SHOW_ADD_JACKPOT_MODAL, SHOW_EDIT_JACKPOT_MODAL, SHOW_DELETE_JACKPOT_MODAL,
+    RENDER_JACKPOT_TO_EDIT,
 } from '../actions/types';
 
 const INITIAL_STATE = {
     jackpots: [],
     jackpots_today: [],
     jackpots_yesterday: [],
-    openAddJackpotModal: false,
-    openEditJackpotModal: false,
-    openDeleteJackpotModal: false,
+    jackpot_to_edit: {
+        name: '',
+        amount: ''
+    },
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -19,26 +21,25 @@ export default (state = INITIAL_STATE, action) => {
         case GET_ALL_JACKPOTS_SUCCESS:
             return { ...state, jackpots: action.payload };
 
-        case GET_JACKPOTS_TODAY_SUCCESS:
-            return { ...state, jackpots_today: action.payload };
-
         case GET_ALL_JACKPOTS_FAIL:
             return { ...state };
 
-        case SHOW_ADD_JACKPOT_MODAL:
-            return { ...state, openAddJackpotModal: action.payload };
+        case GET_JACKPOTS_TODAY_SUCCESS:
+            console.log('these jackpots are from today ', action.payload)
+            return { ...state, jackpots_today: action.payload };
 
-        case SHOW_EDIT_JACKPOT_MODAL:
-            return { ...state, openEditJackpotModal: action.payload };
-
-        case SHOW_DELETE_JACKPOT_MODAL:
-            return { ...state, openDeleteJackpotModal: action.payload };
+        case GET_JACKPOTS_YESTERDAY_SUCCESS:
+            console.log('these jackpots are from yesterday ', action.payload)
+            return { ...state, jackpots_yesterday: action.payload };
 
         case ADD_JACKPOT_SUCCESS:
             return { ...state, openAddJackpotModal: false };
 
         case ADD_JACKPOT_FAIL:
             return { ...state };
+
+        case RENDER_JACKPOT_TO_EDIT:
+            return { ...state, jackpot_to_edit: action.payload };
     
         default:
             return state;

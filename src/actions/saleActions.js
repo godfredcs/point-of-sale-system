@@ -1,9 +1,10 @@
 import { 
-    GET_ALL_SALES_SUCCESS, GET_SALES_TODAY, GET_SALES_YESTERDAY,
+    GET_ALL_SALES_SUCCESS, GET_SALES_TODAY_SUCCESS, GET_SALES_YESTERDAY_SUCCESS,
     SALE_TO_EDIT
 } from './types';
 import Sale from '../services/Sale';
 
+// Action creator for getting all sales.
 export const getAllSales = () => async dispatch => {
     try {
         let sales = await Sale.getAll();
@@ -16,15 +17,16 @@ export const getAllSales = () => async dispatch => {
     }
 };
 
+// Action creator for getting sales according to date.
 export const getSalesByDate = (from, to, day) => async dispatch => {
     try {
         let sales = await Sale.getByDate(new Date(from), new Date(`${to}T23:59:59`));
 
         if (sales) {
             if (day === 'today') {
-                dispatch({ type: GET_SALES_TODAY, payload: sales });
+                dispatch({ type: GET_SALES_TODAY_SUCCESS, payload: sales });
             } else if (day === 'yesterday') {
-                dispatch({ type: GET_SALES_YESTERDAY, payload: sales });
+                dispatch({ type: GET_SALES_YESTERDAY_SUCCESS, payload: sales });
             } else {
                 dispatch({ type: GET_ALL_SALES_SUCCESS, payload: sales });
             }
@@ -34,6 +36,7 @@ export const getSalesByDate = (from, to, day) => async dispatch => {
     }
 };
 
+// Action creator for adding sales.
 export const addSale = (data, refreshSales, clear, successNotification, errorNotification) => async dispatch => {
     try {
         let sale = await Sale.add(data);
@@ -76,5 +79,3 @@ export const editSale = (id, data, refreshSales, clear, successNotification, err
         console.log(error);
     }
 };
-
-

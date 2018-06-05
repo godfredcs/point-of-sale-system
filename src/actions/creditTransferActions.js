@@ -1,5 +1,6 @@
 import {
-    GET_ALL_CREDIT_TRANSFERS_SUCCESS, GET_ALL_CREDIT_TRANSFERS_FAIL, GET_CREDIT_TRANSFERS_TODAY,
+    GET_ALL_CREDIT_TRANSFERS_SUCCESS, GET_ALL_CREDIT_TRANSFERS_FAIL,
+    GET_CREDIT_TRANSFERS_TODAY_SUCCESS, GET_CREDIT_TRANSFERS_YESTERDAY_SUCCESS,
     ADD_CREDIT_TRANSFER_SUCCESS, ADD_CREDIT_TRANSFER_FAIL,
     EDIT_CREDIT_TRANSFER_SUCCESS, EDIT_CREDIT_TRANSFER_FAIL,
     CREDIT_TRANSFER_TO_EDIT,
@@ -21,13 +22,15 @@ export const getAllCreditTransfers = () => async dispatch => {
 };
 
 // Action creator for getting credit transfers by date.
-export const getCreditTransferByDate = (from, to, today) => async dispatch => {
+export const getCreditTransferByDate = (from, to, day) => async dispatch => {
     try {
         let credit_transfers = await CreditTransfer.getByDate(new Date(from), new Date(`${to}T23:59:59`));
 
         if (credit_transfers) {
-            if (today) {
-                dispatch({ type: GET_CREDIT_TRANSFERS_TODAY, payload: credit_transfers });
+            if (day === 'today') {
+                dispatch({ type: GET_CREDIT_TRANSFERS_TODAY_SUCCESS, payload: credit_transfers });
+            } else if (day === 'yesterday') {
+                dispatch({ type: GET_CREDIT_TRANSFERS_YESTERDAY_SUCCESS, payload: credit_transfers });
             } else {
                 dispatch({ type: GET_ALL_CREDIT_TRANSFERS_SUCCESS, payload: credit_transfers });
             }

@@ -13,30 +13,16 @@ class CustomTable extends Component {
     }
 
     _renderTableData = () => {
-        let number = 0;
         const { classes, tableData, updateSale } = this.props;
 
         return tableData.map((prop, key) => {
             return (
                 <TableRow key={key}>
                     <TableCell className={classes.tableCell}>
-                            { ++number }
-                    </TableCell>
-                    <TableCell className={classes.tableCell}>
                         { prop.name }
                     </TableCell>
                     <TableCell className={classes.tableCell}>
-                        { `GHS ${prop.amount}` }
-                    </TableCell>
-                    <TableCell className={classes.tableCell}>
-                        { this._renderDate(prop.created_at) }
-                    </TableCell>
-                    <TableCell className={classes.tableCell}>
-                        { this._renderDate(prop.updated_at) }
-                    </TableCell>
-                    <TableCell className={classes.tableCell}>
-                        <Button style={ styles.updateButton } onClick={ updateSale }>Edit</Button>
-                        {/*<Button style={ styles.deleteButton }>Delete</Button>*/}
+                        { `GHS ${prop.total}` }
                     </TableCell>
                 </TableRow>
             );
@@ -91,7 +77,7 @@ CustomTable.propTypes = {
     classes: PropTypes.object.isRequired,
     tableHeaderColor: PropTypes.oneOf(['warning','primary','danger','success','info','rose','gray']),
     tableHead: PropTypes.arrayOf(PropTypes.string),
-    /* tableData: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)) */
+    tableData: PropTypes.arrayOf(PropTypes.object)
 };
 
 const styles = {

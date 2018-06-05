@@ -11,11 +11,14 @@ import { RegularCard, ItemsTable, ItemGrid, Snackbar } from 'components';
 
 import Loader from '../../Loader';
 
-import { getAllItems, addItem, showAddItemModal, showEditItemModal, showDeleteItemModal } from '../../actions';
+import { getAllItems, addItem } from '../../actions';
 
 class Items extends Component {
     state = {
         notificationGroup: 'add',
+        showAddItemModal: false,
+        showEditItemModal: false,
+        showDeleteItemModal: false,
         tr: false,
         tc: false,
     };
@@ -29,20 +32,10 @@ class Items extends Component {
         return this.props.user.role.name === 'super_admin';
     };
 
-    _showAddItemModal = () => {
-        this.setState({ notificationGroup: 'add'}, () => {
-            this.props.showAddItemModal(this.props.openAddItemModal);
-        })
-    };
-
-    _showEditItemModal = () => {
-        this.setState({ notificationGroup: 'edit'}, () => {
-            this.props.showEditItemModal(this.props.openEditItemModal);
-        })
-    };
-
-    _showDeleteItemModal = () => {
-        this.props.showDeleteItemModal(this.props.openDeleteItemModal);
+    tableHead = () => {
+        return this.isSuperAdmin()
+            ? ['No.','Name','Unit Price', 'Whole Price', 'Date Added','Date Updated', '']
+            : ['No.','Name','Unit Price', 'Whole Price', 'Date Added','Date Updated']
     };
 
     showNotification(place) {
@@ -85,15 +78,15 @@ class Items extends Component {
                                 this.isSuperAdmin() && (
                                     <Button
                                         style={ styles.addItemButton }
-                                        onClick={ this._showAddItemModal }>ADD ITEM</Button>
+                                        onClick={() => this.setState({ showAddItemModal: true, notificationGroup: 'add' })}>ADD ITEM</Button>
                                 )
                             }
                             content={
                                 <ItemsTable
                                     tableHeaderColor="primary"
-                                    tableHead={['No.','Name','Unit Price', 'Whole Price', 'Date Added','Date Updated', '']}
+                                    tableHead={this.tableHead()}
                                     tableData={this.props.items}
-                                    editItem={this._showEditItemModal}
+                                    editItem={() => this.setState({ showEditItemModal: true, notificationGroup: 'edit' })}
                                 />
                             }
                         />
@@ -136,18 +129,18 @@ class Items extends Component {
                     </ItemGrid>
                 </Grid>
                 
-                <AddItemModal 
-                    open={this.props.openAddItemModal}
-                    close={this._showAddItemModal}
+                <AddItemModal
+                    open={this.state.showAddItemModal}
+                    close={() => this.setState({ showAddItemModal: false })}
                     addItem={this.props.addItem}
                     refresh={this.props.getAllItems}
                     successNotification={() => this.showNotification('tr')}
                     errorNotification={() => this.showNotification('tc')}
                 />
 
-                <EditItemModal 
-                    open={this.props.openEditItemModal}
-                    close={this._showEditItemModal}
+                <EditItemModal
+                    open={this.state.showEditItemModal}
+                    close={() => this.setState({ showEditItemModal: false })}
                     refresh={this.props.getAllItems}
                     successNotification={() => this.showNotification('tr')}
                     errorNotification={() => this.showNotification('tc')}
@@ -161,9 +154,9 @@ class Items extends Component {
 
 const mapStateToProps = state => {
     const { user } = state.users;
-    const { items, show_item_loader, openAddItemModal, openEditItemModal, openDeleteItemModal } = state.items;
+    const { items, show_item_loader } = state.items;
 
-    return { user, items, show_item_loader, openAddItemModal, openEditItemModal, openDeleteItemModal };
+    return { user, items, show_item_loader };
 };
 
 const styles = {
@@ -173,6 +166,4 @@ const styles = {
     },
 };
 
-export default connect(mapStateToProps, { 
-    getAllItems, addItem, showAddItemModal, showEditItemModal, showDeleteItemModal, 
-})(Items);
+export default connect(mapStateToProps, { getAllItems, addItem })(Items);

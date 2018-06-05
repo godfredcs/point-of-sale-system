@@ -22,7 +22,7 @@ class AddJackpot extends Component {
         const { refresh, successNotification, errorNotification } = this.props;
 
         if (name && Number(amount)) {
-            this.props.addJackpot({ name, amount }, this.props.refresh, this.clear, successNotification, errorNotification);
+            this.props.addJackpot({ name, amount }, refresh, this.clear, successNotification, errorNotification);
         } else {
             errorNotification();
         }

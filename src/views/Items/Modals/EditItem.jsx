@@ -45,11 +45,16 @@ class EditItem extends Component {
             whole_price = this.state.whole_price || this.props.edit_item.whole_price;
 
         if (id && name && Number(unit_price) && (Number(whole_price) || Number(whole_price) === 0)) {
-            this.props.editItem(id, {name, unit_price, whole_price}, this.props.refresh, this.props.successNotification, this.props.errorNotification);
+            this.props.editItem(id, {name, unit_price, whole_price}, this.clearAndRefresh, this.props.successNotification, this.props.errorNotification);
         } else {
             this.props.errorNotification();
         }
     };
+
+    clearAndRefresh = () => {
+        this.props.close();
+        this.props.refresh();
+    }
     
     render() {
         const { classes, open, close, edit_item } = this.props;

@@ -77,7 +77,7 @@ import JackpotTable from './Table/Jackpot.jsx';
 import FootballTable from './Table/Football.jsx';
 import CreditTransferTable from './Table/CreditTransfer.jsx';
 import UserProfileTable from './Table/UserProfile';
-import YesterdayRecordsTable from './Table/YesterdayRecords';
+import RecordsTable from './Table/Records';
 
 // ##############################
 // // // Tasks
@@ -123,7 +123,7 @@ export {
     Snackbar, SnackbarContent,
     // Table
     Table, ItemsTable, SalesTable, MobileMoneyTable, JackpotTable, FootballTable, CreditTransferTable, UserProfileTable, 
-    YesterdayRecordsTable,
+    RecordsTable,
     // Tasks
     Tasks,
     // Typography

@@ -3,7 +3,7 @@ import {
     GET_JACKPOTS_TODAY_SUCCESS, GET_JACKPOTS_TODAY_FAIL,
     GET_JACKPOTS_YESTERDAY_SUCCESS, GET_JACKPOTS_YESTERDAY_FAIL, 
     ADD_JACKPOT_SUCCESS, ADD_JACKPOT_FAIL, EDIT_JACKPOT_SUCCESS, EDIT_JACKPOT_FAIL,
-    SHOW_ADD_JACKPOT_MODAL, SHOW_EDIT_JACKPOT_MODAL, SHOW_DELETE_JACKPOT_MODAL,
+    RENDER_JACKPOT_TO_EDIT,
 } from './types';
 
 import Jackpot from '../services/Jackpot';
@@ -23,13 +23,15 @@ export const getAllJackpots = () => async dispatch => {
 };
 
 // Action creator for getting jackpot entries according to specified dates in the system.
-export const getJackpotByDate = (from, to, today) => async dispatch => {
+export const getJackpotByDate = (from, to, day) => async dispatch => {
     try {
         let jackpots = await Jackpot.getByDate(new Date(from), new Date(`${to}T23:59:59`));
 
         if (jackpots) {
-            if (today) {
+            if (day === 'today') {
                 dispatch({ type: GET_JACKPOTS_TODAY_SUCCESS, payload: jackpots });
+            } else if (day === 'yesterday') {
+                dispatch({ type: GET_JACKPOTS_YESTERDAY_SUCCESS, payload: jackpots });
             } else {
                 dispatch({ type: GET_ALL_JACKPOTS_SUCCESS, payload: jackpots });
             }
@@ -38,27 +40,6 @@ export const getJackpotByDate = (from, to, today) => async dispatch => {
         dispatch({ type: GET_ALL_JACKPOTS_FAIL, payload: error });
         console.log(error);
     }
-};
-
-export const showAddJackpotModal = value => {
-    return {
-        type: SHOW_ADD_JACKPOT_MODAL,
-        payload: value,
-    };
-};
-
-export const showEditJackpotModal = value => {
-    return {
-        type: SHOW_EDIT_JACKPOT_MODAL,
-        payload: !value,
-    };
-};
-
-export const showDeleteJackpotModal = value => {
-    return {
-        type: SHOW_DELETE_JACKPOT_MODAL,
-        payload: !value,
-    };
 };
 
 // Action creator for adding jackpot transaction to the system.
@@ -84,7 +65,7 @@ export const addJackpot = (data, refresh, clear, successNotification, errorNotif
 };
 
 // Action creator for editing jackpot transactions to the system.
-export const editJackpot = (id, data, refresh) => async dispatch => {
+export const editJackpot = (id, data, refresh, clear, successNotification, errorNotification) => async dispatch => {
     try {
         let jackpot = await Jackpot.update(id, data);
 
@@ -92,9 +73,21 @@ export const editJackpot = (id, data, refresh) => async dispatch => {
             dispatch({ type: EDIT_JACKPOT_SUCCESS });
 
             refresh && refresh();
+
+            clear && clear();
+
+            successNotification && successNotification();
         }
-        console.log('so you are trying to edit huh');
     } catch(error) {
+        errorNotification && errorNotification();
         console.log(error);
     }
+};
+
+// Action creator for rendering a jackpot to edit in the system.
+export const renderJackpotToEdit = payload => {
+    return {
+        type: RENDER_JACKPOT_TO_EDIT,
+        payload,
+    };
 };

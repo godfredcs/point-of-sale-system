@@ -6,6 +6,8 @@ import Moment from 'moment';
 
 import { tableStyle } from 'variables/styles';
 
+import { renderJackpotToEdit } from '../../actions';
+
 class CustomTable extends React.Component {
     // Check if the user is super admin.
     isSuperAdmin = () => {
@@ -18,9 +20,14 @@ class CustomTable extends React.Component {
         return date.isValid() ? date.format('ddd Do MMMM, YYYY hh:mm:ss:A') : value;
     }
 
+    _renderToEdit = prop => {
+        this.props.renderJackpotToEdit(prop);
+        this.props.editJackpot();
+    }
+
     _renderTableData = () => {
         let number = 0;
-        const { classes, tableData, editJackpot } = this.props;
+        const { classes, tableData } = this.props;
 
         return tableData.map((prop, key) => {
             return (
@@ -43,7 +50,7 @@ class CustomTable extends React.Component {
                     {
                         this.isSuperAdmin() && (
                             <TableCell className={classes.tableCell}>
-                                <Button style={ styles.updateButton } onClick={ editJackpot }>Edit</Button>
+                                <Button style={ styles.updateButton } onClick={() => this._renderToEdit(prop)}>Edit</Button>
                                 <Button style={ styles.deleteButton }>Delete</Button>
                             </TableCell>
                         )
@@ -121,4 +128,4 @@ const mapStateToProps = state => {
     return { user };
 };
 
-export default connect(mapStateToProps)(wrappedTable);
+export default connect(mapStateToProps, { renderJackpotToEdit })(wrappedTable);

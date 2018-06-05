@@ -79,15 +79,15 @@ class Jackpot extends Component {
     notificationMessage = type => {
         if (type === 'success') {
             if (this.state.notificationGroup === 'add') {
-                return 'Credit transfer added successfully';
+                return 'Jackpot added successfully';
             } else {
-                return 'Credit transfer edited successfully';
+                return 'Jackpot edited successfully';
             }
         } else if (type === 'error') {
             if (this.state.notificationGroup === 'edit') {
-                return 'Error Credit transfer could not be edited';
+                return 'Error Jackpot could not be edited';
             } else {
-                return 'Error Credit transfer could not be added';
+                return 'Error Jackpot could not be added';
             }
         }
     };
@@ -171,7 +171,7 @@ class Jackpot extends Component {
                 <EditJackpotModal
                     open={this.state.showEditJackpotModal}
                     close={() => this.setState({ showEditJackpotModal: false })}
-                    addJackpot={this.props.editJackpot}
+                    editJackpot={this.props.editJackpot}
                     refresh={this._getJackpots}
                     successNotification={() => this.showNotification('tr')}
                     errorNotification={() => this.showNotification('tc')}
@@ -193,9 +193,9 @@ class Jackpot extends Component {
                             </ItemGrid>
                         </Grid>
                     </ItemGrid>
-                    </Grid>
+                </Grid>
 
-                    <Grid container justify='center'>
+                <Grid container justify='center'>
                     <ItemGrid xs={12} sm={12} md={10} lg={8}>
                         <Grid container>
                             <ItemGrid xs={12} sm={12} md={4}>

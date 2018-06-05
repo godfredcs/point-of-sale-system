@@ -9,7 +9,7 @@ import {
 // react plugin for creating charts
 import ChartistGraph from 'react-chartist';
 
-import { StatsCard, ChartCard, ItemGrid, YesterdayRecordsTable, RegularCard, } from 'components';
+import { StatsCard, ChartCard, ItemGrid, RecordsTable, RegularCard, } from 'components';
 
 import { dailySalesChart, completedTasksChart } from 'variables/charts';
 
@@ -31,6 +31,7 @@ class Dashboard extends Component {
     componentDidMount() {
         this.getTotalRecords();
         this.getRecordsToday();
+        this.getRecordsYesterday();
     }
 
     getTotalRecords = () => {
@@ -43,17 +44,19 @@ class Dashboard extends Component {
     };
 
     getRecordsYesterday = () => {
-
+        this.getRecords(this.getDate('yesterday'), 'yesterday');
     };
 
     getRecordsToday = () => {
-        this.setState({today_from: this.getDate('today'), today_to: this.getDate('today')}, () => {
-            this.props.getSalesByDate(this.state.today_from, this.state.today_to, "today");
-            this.props.getFootballByDate(this.state.today_from, this.state.today_to, "today");
-            this.props.getJackpotByDate(this.state.today_from, this.state.today_to, "today");
-            this.props.getMobileMoneyByDate(this.state.today_from, this.state.today_to, "today");
-            this.props.getCreditTransferByDate(this.state.today_from, this.state.today_to, "today");
-        });
+        this.getRecords(this.getDate(), 'today');
+    };
+
+    getRecords = (date, day) => {
+        this.props.getSalesByDate(date, date, day);
+        this.props.getFootballByDate(date, date, day);
+        this.props.getJackpotByDate(date, date, day);
+        this.props.getMobileMoneyByDate(date, date, day);
+        this.props.getCreditTransferByDate(date, date, day);
     };
 
     getDate = type => {
@@ -63,9 +66,15 @@ class Dashboard extends Component {
         let month = date.getMonth() + 1; // Month starts from 0 so add 1 to make up for the 0.
         let day = date.getDate();
 
-        if (type === 'yesterday') {
-            day -= 1;
+        if (type) {
+            if (type === 'yesterday') {
+                day -= 1;
+            }
         }
+
+        year = String(year);
+        month = String(month);
+        day = String(day);
 
         if (month.length === 1) {
             month = `0${month}`;
@@ -89,8 +98,14 @@ class Dashboard extends Component {
 
         switch(type) {
             case 'sales':
-                return today => {
-                    let sales = today ? this.props.sales_today : this.props.sales;
+                return day => {
+                    let sales = this.props.sales;
+
+                    if (day === 'today') {
+                        sales = this.props.sales_today;
+                    } else if (day === 'yesterday') {
+                        sales = this.props.sales_yesterday;
+                    }
 
                     for (let sale of sales) {
                         total += Number(sale.amount);
@@ -100,9 +115,15 @@ class Dashboard extends Component {
                 };
 
             case 'footballs':
-                return today => {
-                    let footballs = today ? this.props.footballs_today : this.props.footballs;
-                    console.log('the footballs ', footballs)
+                return day => {
+                    let footballs = this.props.footballs;
+
+                    if (day === 'today') {
+                        footballs = this.props.footballs_today;
+                    } else if (day === 'yesterday') {
+                        footballs = this.props.footballs_yesterday;
+                    }
+
                     for (let football of footballs) {
                         total += Number(football.amount);
                     }
@@ -111,19 +132,31 @@ class Dashboard extends Component {
                 };
 
             case 'jackpots':
-                return today => {
-                    let jackpots = today ? this.props.jackpots_today : this.props.jackpots;
-                    
+                return day => {
+                    let jackpots = this.props.jackpots;
+
+                    if (day === 'today') {
+                        jackpots = this.props.jackpots_today;
+                    } else if (day === 'yesterday') {
+                        jackpots = this.props.jackpots_yesterday;
+                    }
+
                     for (let jackpot of jackpots) {
                         total += Number(jackpot.amount);
                     }
-
+                    
                     return total.toFixed(2);
                 };
 
             case 'mobile_moneys':
-                return today => {
-                    let mobile_moneys = today ? this.props.mobile_moneys_today : this.props.mobile_moneys;
+                return day => {
+                    let mobile_moneys = this.props.mobile_moneys;
+
+                    if (day === 'today') {
+                        mobile_moneys = this.props.mobile_moneys_today;
+                    } else if (day === 'yesterday') {
+                        mobile_moneys = this.props.mobile_moneys_yesterday;
+                    }
                     
                     for (let mobile_money of mobile_moneys) {
                         total += Number(mobile_money.commission);
@@ -133,8 +166,14 @@ class Dashboard extends Component {
                 };
 
             case 'credit_transfers':
-                return today => {
-                    let credit_transfers = today ? this.props.credit_transfers_today : this.props.credit_transfers;
+                return day => {
+                    let credit_transfers = this.props.credit_transfers;
+
+                    if (day === 'today') {
+                        credit_transfers = this.props.credit_transfers_today;
+                    } else if (day === 'yesterday') {
+                        credit_transfers = this.props.credit_transfers_yesterday;
+                    }
                     
                     for (let credit_transfer of credit_transfers) {
                         total += Number(credit_transfer.amount);
@@ -146,6 +185,37 @@ class Dashboard extends Component {
             default:
                 return () => total.toFixed(2);
         }
+    };
+
+    records = day => {
+        let records = [],
+            sales = this.props.sales,
+            footballs = this.props.footballs,
+            jackpots = this.props.jackpots,
+            mobile_moneys = this.props.mobile_moneys,
+            credit_transfers = this.props.credit_transfers;
+
+        if (day === 'today') {
+            sales = this.props.sales_today;
+            footballs = this.props.footballs_today;
+            jackpots = this.props.jackpots_today;
+            mobile_moneys = this.props.mobile_moneys_today;
+            credit_transfers = this.props.credit_transfers_today;
+        } else if (day === 'yesterday') {  
+            sales = this.props.sales_yesterday;
+            footballs = this.props.footballs_yesterday;
+            jackpots = this.props.jackpots_yesterday;
+            mobile_moneys = this.props.mobile_moneys_yesterday;
+            credit_transfers = this.props.credit_transfers_today;
+        }
+
+        records.push({name: 'Sales', total: this.calculate('sales')(day)});
+        records.push({name: 'Footballs', total: this.calculate('footballs')(day)});
+        records.push({name: 'Jackpots', total: this.calculate('jackpots')(day)});
+        records.push({name: 'Mobile moneys', total: this.calculate('mobile_moneys')(day)});
+        records.push({name: 'Credit Transfers', total: this.calculate('credit_transfers')(day)});
+        console.log('these are the records ', records)
+        return records;
     };
 
     handleChange = (event, value) => {
@@ -175,7 +245,7 @@ class Dashboard extends Component {
                             icon={Store}
                             iconColor="green"
                             title="Sales today"
-                            description={this.calculate('sales')('today')}
+                            description={`GHS ${this.calculate('sales')('today')}`}
                             statIcon={DateRange}
                             statText="Sales recorded today"
                         />
@@ -185,7 +255,7 @@ class Dashboard extends Component {
                             icon={InfoOutline}
                             iconColor="red"
                             title="Footballs today"
-                            description={this.calculate('footballs')('today')}
+                            description={`GHS ${this.calculate('footballs')('today')}`}
                             statIcon={LocalOffer}
                             statText="footballs recorded today"
                         />
@@ -197,7 +267,7 @@ class Dashboard extends Component {
                             icon={Accessibility}
                             iconColor="blue"
                             title="Jackpots today"
-                            description={this.calculate('jackpots')('today')}
+                            description={`GHS ${this.calculate('jackpots')('today')}`}
                             statIcon={Update}
                             statText="Jackpots recorded today"
                         />
@@ -207,7 +277,7 @@ class Dashboard extends Component {
                             icon={ContentCopy}
                             iconColor="red"
                             title="Mobile moneys today"
-                            description={this.calculate('mobile_moneys')('today')}
+                            description={`GHS ${this.calculate('mobile_moneys')('today')}`}
                             statIcon={Warning}
                             statText="Commissions recorded today"
                         />
@@ -217,7 +287,7 @@ class Dashboard extends Component {
                             icon={Store}
                             iconColor="blue"
                             title="Credit Transfers today"
-                            description={this.calculate('credit_transfers')('today')}
+                            description={`GHS ${this.calculate('credit_transfers')('today')}`}
                             statIcon={DateRange}
                             statText="Credit transfers recorded today"
                         />
@@ -225,8 +295,8 @@ class Dashboard extends Component {
                 </Grid>
                 
                 {
-                    this.isSuperAdmin()
-                        && <div>
+                    this.isSuperAdmin() && (
+                        <div>
                             <Grid container>
                                 <ItemGrid xs={12} sm={12} md={6}>
                                     <ChartCard
@@ -278,12 +348,12 @@ class Dashboard extends Component {
                                 <ItemGrid xs={12} sm={4} md={4}>
                                     <RegularCard
                                         cardTitle="Yesterday's records"
-                                        cardSubtitle="List of jackpot entries in the system"
+                                        cardSubtitle="Records for transactions for yesterday"
                                         content={
-                                            <YesterdayRecordsTable
+                                            <RecordsTable
                                                 tableHeaderColor="info"
                                                 tableHead={['Category', 'Amount']}
-                                                tableData={this.props.jackpots}
+                                                tableData={this.records('yesterday')}
                                             />
                                         }
                                     />
@@ -291,12 +361,12 @@ class Dashboard extends Component {
                                 <ItemGrid xs={12} sm={4} md={4}>
                                     <RegularCard
                                         cardTitle="Todays's records"
-                                        cardSubtitle="List of jackpot entries in the system"
+                                        cardSubtitle="Records of transactions for today"
                                         content={
-                                            <YesterdayRecordsTable
+                                            <RecordsTable
                                                 tableHeaderColor="info"
                                                 tableHead={['Category', 'Amount']}
-                                                tableData={this.props.jackpots}
+                                                tableData={this.records('today')}
                                             />
                                         }
                                     />
@@ -304,18 +374,19 @@ class Dashboard extends Component {
                                 <ItemGrid xs={12} sm={4} md={4}>
                                     <RegularCard
                                         cardTitle="Total records"
-                                        cardSubtitle="List of jackpot entries in the system"
+                                        cardSubtitle="Total records of transactions in the system"
                                         content={
-                                            <YesterdayRecordsTable
+                                            <RecordsTable
                                                 tableHeaderColor="info"
                                                 tableHead={['Category', 'Amount']}
-                                                tableData={this.props.jackpots}
+                                                tableData={this.records()}
                                             />
                                         }
                                     />
                                 </ItemGrid>
                             </Grid>
                         </div>
+                    )
                 }
             </div>
         );
@@ -331,16 +402,17 @@ const dashboardStyleWrapped = withStyles(dashboardStyle)(Dashboard);
 const mapStateToProps = state => {
     const { user } = state.users;
     const { items } = state.items;
-    const { sales, sales_today } = state.sales;
-    const { footballs, footballs_today } = state.footballs;
-    const { jackpots, jackpots_today } = state.jackpots;
-    const { mobile_moneys, mobile_moneys_today } = state.mobileMoneys;
-    const { credit_transfers, credit_transfers_today } = state.creditTransfers;
+    const { sales, sales_today, sales_yesterday } = state.sales;
+    const { footballs, footballs_today, footballs_yesterday } = state.footballs;
+    const { jackpots, jackpots_today, jackpots_yesterday } = state.jackpots;
+    const { mobile_moneys, mobile_moneys_today, mobile_moneys_yesterday } = state.mobileMoneys;
+    const { credit_transfers, credit_transfers_today, credit_transfers_yesterday } = state.creditTransfers;
 
     return {
         user, 
         items, sales, footballs, jackpots, mobile_moneys, credit_transfers,
         sales_today, footballs_today, jackpots_today, credit_transfers_today, mobile_moneys_today,
+        sales_yesterday, footballs_yesterday, jackpots_yesterday, mobile_moneys_yesterday, credit_transfers_yesterday,
     };
 };
 

@@ -1,16 +1,13 @@
 import { 
-    GET_ALL_FOOTBALLS_SUCCESS, GET_ALL_FOOTBALLS_FAIL, GET_FOOTBALLS_TODAY,
+    GET_ALL_FOOTBALLS_SUCCESS, GET_ALL_FOOTBALLS_FAIL,
+    GET_FOOTBALLS_TODAY_SUCCESS, GET_FOOTBALLS_YESTERDAY_SUCCESS,
     ADD_FOOTBALL_SUCCESS, ADD_FOOTBALL_FAIL,
-    SHOW_ADD_FOOTBALL_MODAL, SHOW_EDIT_FOOTBALL_MODAL, SHOW_DELETE_FOOTBALL_MODAL,
 } from '../actions/types';
 
 const INITIAL_STATE = {
     footballs: [],
     footballs_today: [],
     footballs_yesterday: [],
-    openAddFootballModal: false,
-    openEditFootballModal: false,
-    openDeleteFootballModal: false,
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -21,20 +18,14 @@ export default (state = INITIAL_STATE, action) => {
         case GET_ALL_FOOTBALLS_FAIL:
             return { ...state };
 
-        case GET_FOOTBALLS_TODAY:
+        case GET_FOOTBALLS_TODAY_SUCCESS:
             return { ...state, footballs_today: action.payload };
 
-        case SHOW_ADD_FOOTBALL_MODAL:
-            return { ...state, openAddFootballModal: action.payload };
-
-        case SHOW_EDIT_FOOTBALL_MODAL:
-            return { ...state, openEditFootballModal: action.payload };
-
-        case SHOW_DELETE_FOOTBALL_MODAL:
-            return { ...state, openDeleteFootballModal: action.payload };
+        case GET_FOOTBALLS_YESTERDAY_SUCCESS:
+            return { ...state, footballs_yesterday: action.payload };
 
         case ADD_FOOTBALL_SUCCESS:
-            return { ...state, openAddFootballModal: false };
+            return { ...state };
 
         case ADD_FOOTBALL_FAIL:
             return { ...state };

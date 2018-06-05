@@ -1,7 +1,6 @@
 import { 
     GET_ALL_ITEMS_SUCCESS, ITEM_ADD_SUCCESS,
-    SHOW_ITEM_LOADER, REMOVE_ITEM_LOADER, 
-    SHOW_ADD_ITEM_MODAL, SHOW_EDIT_ITEM_MODAL, SHOW_DELETE_ITEM_MODAL,
+    SHOW_ITEM_LOADER, REMOVE_ITEM_LOADER,
     ITEM_TO_EDIT, ITEM_EDIT_SUCCESS,
 } from './types';
 import Item from '../services/Item';
@@ -21,30 +20,6 @@ export const getAllItems = () => async dispatch => {
         dispatch({ type: REMOVE_ITEM_LOADER });
         console.log(error);
     }
-};
-
-// Action creator for toggling AddItemModal --<
-export const showAddItemModal = value => {
-    return {
-        type: SHOW_ADD_ITEM_MODAL,
-        payload: !value,
-    };
-};
-
-// Action creator for toggling EditItemModal --<
-export const showEditItemModal = value => {
-    return {
-        type: SHOW_EDIT_ITEM_MODAL,
-        payload: !value,
-    };
-};
-
-// Action creator for toggling DeleteItemModal --<
-export const showDeleteItemModal = value => {
-    return {
-        type: SHOW_DELETE_ITEM_MODAL,
-        payload: !value,
-    };
 };
 
 // Action creator for adding item --<
@@ -81,7 +56,7 @@ export const renderToEdit = item => {
     };
 };
 
-export const editItem = (id, data, refreshItemsList, successNotification, errorNotification) => async dispatch => {
+export const editItem = (id, data, clearAndRefresh, successNotification, errorNotification) => async dispatch => {
     dispatch({ type: SHOW_ITEM_LOADER });
 
     try {
@@ -93,7 +68,7 @@ export const editItem = (id, data, refreshItemsList, successNotification, errorN
             
             successNotification && successNotification();
 
-            refreshItemsList && refreshItemsList();
+            clearAndRefresh && clearAndRefresh();
         }
     } catch(error) {
         dispatch({ type: REMOVE_ITEM_LOADER });

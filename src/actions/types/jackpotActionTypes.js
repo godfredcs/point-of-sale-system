@@ -21,9 +21,4 @@ export const EDIT_JACKPOT_FAIL = 'edit_jackpot_fail';
 export const DELETE_JACKPOT_SUCCESS = 'delete_jackpot_success';
 export const DELETE_JACKPOT_FAIL = 'delete_jackpot_fail';
 
-
-export const SHOW_ADD_JACKPOT_MODAL = 'show_add_jackpot_modal';
-
-export const SHOW_EDIT_JACKPOT_MODAL = 'show_edit_jackpot_modal';
-
-export const SHOW_DELETE_JACKPOT_MODAL = 'show_delete_jackpot_modal';
+export const RENDER_JACKPOT_TO_EDIT = 'render_jackpot_to_edit';
