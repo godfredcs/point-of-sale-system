@@ -23,15 +23,12 @@ export default (state = INITIAL_STATE, action) => {
             return { ...state, sales: action.payload };
 
         case GET_SALES_TODAY_SUCCESS:
-            console.log('these sales are from today ', action.payload)
             return { ...state, sales_today: action.payload };
 
         case GET_SALES_YESTERDAY_SUCCESS:
-            console.log('these sales are from yesterday ', action.payload);
             return { ...state, sales_yesterday: action.payload };
 
         case SALE_TO_EDIT:
-            console.log('this is the sale to edit ', action.payload);
             return { ...state, sale_to_edit: action.payload };
 
         default:

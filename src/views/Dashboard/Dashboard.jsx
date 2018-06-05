@@ -214,7 +214,7 @@ class Dashboard extends Component {
         records.push({name: 'Jackpots', total: this.calculate('jackpots')(day)});
         records.push({name: 'Mobile moneys', total: this.calculate('mobile_moneys')(day)});
         records.push({name: 'Credit Transfers', total: this.calculate('credit_transfers')(day)});
-        console.log('these are the records ', records)
+
         return records;
     };
 

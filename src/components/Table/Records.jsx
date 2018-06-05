@@ -13,7 +13,7 @@ class CustomTable extends Component {
     }
 
     _renderTableData = () => {
-        const { classes, tableData, updateSale } = this.props;
+        const { classes, tableData } = this.props;
 
         return tableData.map((prop, key) => {
             return (
@@ -29,6 +29,27 @@ class CustomTable extends Component {
         })
     };
 
+    _renderTotal = () => {
+        const { classes, tableData } = this.props;
+
+        let total = 0;
+
+        for (let prop of tableData) {
+            total += Number(prop.total);
+        }
+
+        return (
+            <TableRow>
+                <TableCell className={classes.tableCell}>
+                    <strong>Total</strong>
+                </TableCell>
+                <TableCell className={classes.tableCell}>
+                    <strong>{ `GHS ${total.toFixed(2)}` }</strong>
+                </TableCell>
+            </TableRow>
+        )
+    }
+
     render() {
         const { classes, tableHead, tableData, tableHeaderColor } = this.props;
         
@@ -36,32 +57,32 @@ class CustomTable extends Component {
             <div className={classes.tableResponsive}>
                 <Table className={classes.table}>
                     {
-                        tableHead !== undefined 
-                            ? (
-                                <TableHead className={classes[tableHeaderColor+"TableHeader"]}>
-                                    <TableRow>
-                                        {
-                                            tableHead.map((prop, key) => {
-                                                return (
-                                                    <TableCell
-                                                        className={classes.tableCell + " " + classes.tableHeadCell}
-                                                        key={key}>
-                                                        {prop}
-                                                    </TableCell>
-                                                );
-                                            })
-                                        }
-                                    </TableRow>
-                                </TableHead>
-                            )
-                            : null
+                        tableHead !== undefined && (
+                            <TableHead className={classes[tableHeaderColor+"TableHeader"]}>
+                                <TableRow>
+                                    {
+                                        tableHead.map((prop, key) => {
+                                            return (
+                                                <TableCell
+                                                    className={classes.tableCell + " " + classes.tableHeadCell}
+                                                    key={key}>
+                                                    {prop}
+                                                </TableCell>
+                                            );
+                                        })
+                                    }
+                                </TableRow>
+                            </TableHead>
+                        )
                     }
 
                     {
-                        tableData &&
+                        tableData && (
                             <TableBody>
                                 { this._renderTableData() }
+                                { this._renderTotal() }
                             </TableBody>
+                        )
                     }
                 </Table>
             </div>
