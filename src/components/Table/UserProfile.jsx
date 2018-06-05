@@ -65,38 +65,35 @@ class ItemsTable extends Component {
 
     render(){
         const { classes, tableHead, tableData, tableHeaderColor } = this.props;
+
         return (
             <div className={classes.tableResponsive}>
                 <Table className={classes.table}>
                     {
-                        tableHead !== undefined 
-                            ? (
-                                <TableHead className={classes[tableHeaderColor+"TableHeader"]}>
-                                    <TableRow>
-                                        {
-                                            tableHead.map((prop, key) => {
-                                                return (
-                                                    <TableCell
-                                                        className={classes.tableCell + " " + classes.tableHeadCell}
-                                                        key={key}>
-                                                        {prop}
-                                                    </TableCell>
-                                                );
-                                            })
-                                        }
-                                    </TableRow>
-                                </TableHead>
-                            )
-                            : null
+                        tableHead !== undefined && (
+                            <TableHead className={classes[tableHeaderColor+"TableHeader"]}>
+                                <TableRow>
+                                    {
+                                        tableHead.map((prop, key) => {
+                                            return (
+                                                <TableCell
+                                                    className={classes.tableCell + " " + classes.tableHeadCell}
+                                                    key={key}>
+                                                    {prop}
+                                                </TableCell>
+                                            );
+                                        })
+                                    }
+                                </TableRow>
+                            </TableHead>
+                        )
                     }
                     {
-                        tableData.length
-                            ? (
-                                <TableBody>
-                                    { this._renderTableData() }
-                                </TableBody>
-                            )
-                            : null
+                        tableData.length && (
+                            <TableBody>
+                                { this._renderTableData() }
+                            </TableBody>
+                        )
                     }
                 </Table>
             </div>
@@ -112,7 +109,7 @@ ItemsTable.propTypes = {
     classes: PropTypes.object.isRequired,
     tableHeaderColor: PropTypes.oneOf(['warning','primary','danger','success','info','rose','gray']),
     tableHead: PropTypes.arrayOf(PropTypes.string), 
-    /*tableData: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)) */
+    tableData: PropTypes.arrayOf(PropTypes.object)
 };
 
 const styles = {

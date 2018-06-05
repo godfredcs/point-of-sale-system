@@ -9,6 +9,11 @@ import { tableStyle } from 'variables/styles';
 import { renderToEdit } from '../../actions';
 
 class ItemsTable extends Component {
+    // Check if the user is super admin.
+    isSuperAdmin = () => {
+        return this.props.user.role.name === 'super_admin';
+    };
+
     _renderDate(value) {
         let date = Moment(value);
 
@@ -45,12 +50,14 @@ class ItemsTable extends Component {
                     <TableCell className={classes.tableCell}>
                         { this._renderDate(prop.updated_at) }
                     </TableCell>
-                    <TableCell className={classes.tableCell}>
-                        <Button style={ styles.updateButton } onClick={this._renderEdit.bind(this, prop)}>Edit</Button>
-                        {
-                            // <Button style={ styles.deleteButton }>Delete</Button>
-                        }
-                    </TableCell>
+                    {
+                        this.isSuperAdmin() && (
+                            <TableCell className={classes.tableCell}>
+                                <Button style={ styles.updateButton } onClick={this._renderEdit.bind(this, prop)}>Edit</Button>
+                                <Button style={ styles.deleteButton }>Delete</Button>
+                            </TableCell>
+                        )
+                    }
                 </TableRow>
             )
         })
@@ -105,7 +112,7 @@ ItemsTable.propTypes = {
     classes: PropTypes.object.isRequired,
     tableHeaderColor: PropTypes.oneOf(['warning','primary','danger','success','info','rose','gray']),
     tableHead: PropTypes.arrayOf(PropTypes.string), 
-    /*tableData: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)) */
+    tableData: PropTypes.arrayOf(PropTypes.object)
 };
 
 const styles = {
@@ -119,6 +126,11 @@ const styles = {
     }
 };
 
+const mapStateToProps = state => {
+    const { user } = state.users;
+    return { user };
+};
+
 const WrappedItemsTable = withStyles(tableStyle)(ItemsTable);
 
-export default connect(null, { renderToEdit })(WrappedItemsTable);
+export default connect(mapStateToProps, { renderToEdit })(WrappedItemsTable);

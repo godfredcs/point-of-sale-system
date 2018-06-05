@@ -9,6 +9,11 @@ import { renderSaleToEdit } from '../../actions';
 import { tableStyle } from 'variables/styles';
 
 class SaleTable extends React.Component {
+    // Check if the user is super admin.
+    isSuperAdmin = () => {
+        return this.props.user.role.name === 'super_admin';
+    };
+
     _renderDate(value) {
         let date = Moment(value);
 
@@ -54,9 +59,14 @@ class SaleTable extends React.Component {
                     <TableCell className={classes.tableCell}>
                         { this._renderDate(prop.updated_at) }
                     </TableCell>
-                    <TableCell className={classes.tableCell}>
-                        <Button style={ styles.updateButton } onClick={() => this._editSale(prop)}>Edit</Button>
-                    </TableCell>
+                    {
+                        this.isSuperAdmin() && (
+                            <TableCell className={classes.tableCell}>
+                                <Button style={ styles.updateButton } onClick={() => this._editSale(prop)}>Edit</Button>
+                                <Button style={ styles.deleteButton }>Delete</Button>
+                            </TableCell>
+                        )
+                    }
                 </TableRow>
             );
         })
@@ -120,9 +130,10 @@ const styles = {
 };
 
 const mapStateToProps = state => {
+    const { user } = state.users;
     const { sale_to_edit } = state.sales;
 
-    return { sale_to_edit };
+    return { user, sale_to_edit };
 };
 
 const WrappedTable = withStyles(tableStyle)(SaleTable);

@@ -160,44 +160,45 @@ class UserProfile extends Component {
 
                                     <div>
                                         {
-                                            this.state.willChangePassword
-                                            ? <div>
-                                                <Grid container>
-                                                    <ItemGrid xs={12} sm={12} md={12}>
-                                                        <CustomInput
-                                                            type="password" 
-                                                            labelText="Old Password"
-                                                            id="oldPassword"
-                                                            formControlProps={{ fullWidth: true }}
-                                                            value={this.state.old_password}
-                                                            onChange={event => this.setState({ old_password: event.target.value })}
-                                                        />
-                                                    </ItemGrid>
-                                                </Grid>
-                                                <Grid container>
-                                                    <ItemGrid xs={12} sm={12} md={6}>
-                                                        <CustomInput
-                                                            type="password" 
-                                                            labelText="New Password"
-                                                            id="newPassword"
-                                                            formControlProps={{ fullWidth: true }}
-                                                            value={this.state.new_password}
-                                                            onChange={event => this.setState({ new_password: event.target.value })}
-                                                        />
-                                                    </ItemGrid>
-                                                    <ItemGrid xs={12} sm={12} md={6}>
-                                                        <CustomInput
-                                                            type="password"
-                                                            labelText="Confirm New Password"
-                                                            id="confirmNewPassword"
-                                                            formControlProps={{ fullWidth: true }}
-                                                            value={this.state.confirm_new_password}
-                                                            onChange={event => this.setState({ confirm_new_password: event.target.value })}
-                                                        />
-                                                    </ItemGrid>
-                                                </Grid>
-                                            </div>
-                                            : null
+                                            this.state.willChangePassword && (
+                                                <div>
+                                                    <Grid container>
+                                                        <ItemGrid xs={12} sm={12} md={12}>
+                                                            <CustomInput
+                                                                type="password" 
+                                                                labelText="Old Password"
+                                                                id="oldPassword"
+                                                                formControlProps={{ fullWidth: true }}
+                                                                value={this.state.old_password}
+                                                                onChange={event => this.setState({ old_password: event.target.value })}
+                                                            />
+                                                        </ItemGrid>
+                                                    </Grid>
+
+                                                    <Grid container>
+                                                        <ItemGrid xs={12} sm={12} md={6}>
+                                                            <CustomInput
+                                                                type="password" 
+                                                                labelText="New Password"
+                                                                id="newPassword"
+                                                                formControlProps={{ fullWidth: true }}
+                                                                value={this.state.new_password}
+                                                                onChange={event => this.setState({ new_password: event.target.value })}
+                                                            />
+                                                        </ItemGrid>
+                                                        <ItemGrid xs={12} sm={12} md={6}>
+                                                            <CustomInput
+                                                                type="password"
+                                                                labelText="Confirm New Password"
+                                                                id="confirmNewPassword"
+                                                                formControlProps={{ fullWidth: true }}
+                                                                value={this.state.confirm_new_password}
+                                                                onChange={event => this.setState({ confirm_new_password: event.target.value })}
+                                                            />
+                                                        </ItemGrid>
+                                                    </Grid>
+                                                </div>
+                                            )
                                         }
                                     </div>                                 
                                 </div>
@@ -218,12 +219,13 @@ class UserProfile extends Component {
                     </ItemGrid>
                     <ItemGrid xs={12} sm={12} md={4}>
                         {
-                            this.isSuperAdmin()
-                                && <div style={ styles.centerItems }>
+                            this.isSuperAdmin() && (
+                                <div style={ styles.centerItems }>
                                     <Button color="primary" round onClick={() => this.props.openAddUserModal(true)}>
                                         Add User
                                     </Button>
                                 </div>
+                            )
                         }
 
                         <ProfileCard
@@ -239,8 +241,8 @@ class UserProfile extends Component {
 
                 <Grid container>
                     {
-                        this.isSuperAdmin()
-                            && <ItemGrid xs={12} sm={12} md={8}>
+                        this.isSuperAdmin() && (
+                            <ItemGrid xs={12} sm={12} md={8}>
                                 <RegularCard
                                     cardTitle="Users"
                                     cardSubtitle="List of users added to the system"
@@ -255,6 +257,7 @@ class UserProfile extends Component {
                                     }
                                 />
                             </ItemGrid>
+                        )
                     }
                 </Grid>
 
@@ -286,8 +289,10 @@ const styles = {
 
 const mapStateToProps = state => {
     const { users, user, open_add_user_modal } = state.users;
+    
     return { users, user, open_add_user_modal };
 };
 
 export default connect(mapStateToProps, {
-    getUsers, addUser, updateUser, deleteUser, openAddUserModal, logout })(UserProfile);
+    getUsers, addUser, updateUser, deleteUser, openAddUserModal, logout
+})(UserProfile);

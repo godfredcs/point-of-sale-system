@@ -8,7 +8,7 @@ import {
 
 const INITIAL_STATE = {
     user: null,
-    users: null,
+    users: [],
     email: '',
     password: '',
     isLoggedIn: false,

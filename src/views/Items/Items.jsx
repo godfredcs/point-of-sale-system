@@ -24,6 +24,11 @@ class Items extends Component {
         this.props.getAllItems();
     }
 
+    // Check if the user is super admin.
+    isSuperAdmin = () => {
+        return this.props.user.role.name === 'super_admin';
+    };
+
     _showAddItemModal = () => {
         this.setState({ notificationGroup: 'add'}, () => {
             this.props.showAddItemModal(this.props.openAddItemModal);
@@ -76,10 +81,12 @@ class Items extends Component {
                             padIt
                             cardTitle="Items"
                             cardSubtitle="This is a list of all items in the system"
-                            button={
-                                <Button
-                                    style={ styles.addItemButton }
-                                    onClick={ this._showAddItemModal }>ADD ITEM</Button>
+                            button={ 
+                                this.isSuperAdmin() && (
+                                    <Button
+                                        style={ styles.addItemButton }
+                                        onClick={ this._showAddItemModal }>ADD ITEM</Button>
+                                )
                             }
                             content={
                                 <ItemsTable
@@ -153,8 +160,10 @@ class Items extends Component {
 }
 
 const mapStateToProps = state => {
+    const { user } = state.users;
     const { items, show_item_loader, openAddItemModal, openEditItemModal, openDeleteItemModal } = state.items;
-    return { items, show_item_loader, openAddItemModal, openEditItemModal, openDeleteItemModal };
+
+    return { user, items, show_item_loader, openAddItemModal, openEditItemModal, openDeleteItemModal };
 };
 
 const styles = {

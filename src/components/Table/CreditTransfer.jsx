@@ -9,6 +9,10 @@ import { renderCreditTransferToEdit } from '../../actions';
 import { tableStyle } from 'variables/styles';
 
 class CreditTransferTable extends React.Component {
+    // Check if the user is super admin.
+    isSuperAdmin = () => {
+        return this.props.user.role.name === 'super_admin';
+    };
     _renderDate(value) {
         let date = Moment(value);
 
@@ -42,10 +46,14 @@ class CreditTransferTable extends React.Component {
                     <TableCell className={classes.tableCell}>
                         { this._renderDate(prop.updated_at) }
                     </TableCell>
-                    <TableCell className={classes.tableCell}>
-                        <Button style={ styles.updateButton } onClick={() => this._renderEdit(prop)}>edit</Button>
-                        {/*<Button style={ styles.deleteButton }>Delete</Button>*/}
-                    </TableCell>
+                    {
+                        this.isSuperAdmin() && (
+                            <TableCell className={classes.tableCell}>
+                                <Button style={ styles.updateButton } onClick={() => this._renderEdit(prop)}>edit</Button>
+                                <Button style={ styles.deleteButton }>Delete</Button>
+                            </TableCell>
+                        )
+                    }
                 </TableRow>
             );
         })
@@ -57,8 +65,7 @@ class CreditTransferTable extends React.Component {
             <div className={classes.tableResponsive}>
                 <Table className={classes.table}>
                     {
-                        tableHead !== undefined 
-                        ? (
+                        tableHead !== undefined && (
                             <TableHead className={classes[tableHeaderColor+"TableHeader"]}>
                                 <TableRow>
                                     {
@@ -75,14 +82,14 @@ class CreditTransferTable extends React.Component {
                                 </TableRow>
                             </TableHead>
                         )
-                        : null
                     }
 
                     {
-                        tableData &&
+                        tableData && (
                             <TableBody>
                                 { this._renderTableData() }
                             </TableBody>
+                        )
                     }
                 </Table>
             </div>
@@ -98,7 +105,7 @@ CreditTransferTable.propTypes = {
     classes: PropTypes.object.isRequired,
     tableHeaderColor: PropTypes.oneOf(['warning','primary','danger','success','info','rose','gray']),
     tableHead: PropTypes.arrayOf(PropTypes.string),
-    /* tableData: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)) */
+    tableData: PropTypes.arrayOf(PropTypes.object)
 };
 
 const styles = {
@@ -113,9 +120,10 @@ const styles = {
 };
 
 const mapStateToProps = state => {
+    const { user } = state.users;
     const { credit_transfer_to_edit } = state.creditTransfers;
 
-    return { credit_transfer_to_edit };
+    return { user, credit_transfer_to_edit };
 };
 
 const WrappedCreditTransferTable = withStyles(tableStyle)(CreditTransferTable)

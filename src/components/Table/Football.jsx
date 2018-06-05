@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { withStyles, Table, TableHead, TableRow, TableBody, TableCell, Button } from 'material-ui';
 import PropTypes from 'prop-types';
 import Moment from 'moment';
@@ -6,6 +7,11 @@ import Moment from 'moment';
 import { tableStyle } from 'variables/styles';
 
 class FootballTable extends React.Component {
+    // Check if the user is super admin.
+    isSuperAdmin = () => {
+        return this.props.user.role.name === 'super_admin';
+    };
+
     _renderDate(value) {
         let date = Moment(value);
 
@@ -40,12 +46,14 @@ class FootballTable extends React.Component {
                     <TableCell className={classes.tableCell}>
                         { this._renderDate(prop.updated_at) }
                     </TableCell>
-                    <TableCell className={classes.tableCell}>
-                        <Button style={ styles.updateButton } onClick={ updateSale }>Edit</Button>
-                        {
-                            // <Button style={ styles.deleteButton }>Delete</Button>
-                        }
-                    </TableCell>
+                    {
+                        this.isSuperAdmin() && (
+                            <TableCell className={classes.tableCell}>
+                                <Button style={ styles.updateButton } onClick={ updateSale }>Edit</Button>
+                                <Button style={ styles.deleteButton }>Delete</Button>
+                            </TableCell>
+                        )
+                    }
                 </TableRow>
             );
         })
@@ -112,4 +120,11 @@ const styles = {
     }
 };
 
-export default withStyles(tableStyle)(FootballTable);
+const wrappedTable = withStyles(tableStyle)(FootballTable);
+
+const mapStateToProps = state => {
+    const { user } = state.users;
+    return { user };
+};
+
+export default connect(mapStateToProps)(wrappedTable);

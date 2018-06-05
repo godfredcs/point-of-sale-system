@@ -9,6 +9,11 @@ import { renderToEdit } from '../../actions';
 import { tableStyle } from 'variables/styles';
 
 class MobileMoneyTable extends Component {
+    // Check if the user is super admin.
+    isSuperAdmin = () => {
+        return this.props.user.role.name === 'super_admin';
+    };
+
     _renderDate(value) {
         let date = Moment(value);
 
@@ -53,9 +58,14 @@ class MobileMoneyTable extends Component {
                     <TableCell className={classes.tableCell}>
                         { this._renderDate(prop.updated_at) }
                     </TableCell>
-                    <TableCell className={classes.tableCell}>
-                        <Button style={ styles.updateButton } onClick={ this._renderEdit.bind(this, prop) }>Edit</Button>
-                    </TableCell>
+                    {
+                        this.isSuperAdmin() && (
+                            <TableCell className={classes.tableCell}>
+                                <Button style={ styles.updateButton } onClick={ this._renderEdit.bind(this, prop) }>Edit</Button>
+                                <Button style={ styles.deleteButton }>Delete</Button>
+                            </TableCell>
+                        )
+                    }
                 </TableRow>
             );
         })
@@ -67,32 +77,31 @@ class MobileMoneyTable extends Component {
             <div className={classes.tableResponsive}>
                 <Table className={classes.table}>
                     {
-                        tableHead !== undefined 
-                            ? (
-                                <TableHead className={classes[tableHeaderColor+"TableHeader"]}>
-                                    <TableRow>
-                                        {
-                                            tableHead.map((prop, key) => {
-                                                return (
-                                                    <TableCell
-                                                        className={classes.tableCell + " " + classes.tableHeadCell}
-                                                        key={key}>
-                                                        {prop}
-                                                    </TableCell>
-                                                );
-                                            })
-                                        }
-                                    </TableRow>
-                                </TableHead>
-                            )
-                            : null
+                        tableHead !== undefined && (
+                            <TableHead className={classes[tableHeaderColor+"TableHeader"]}>
+                                <TableRow>
+                                    {
+                                        tableHead.map((prop, key) => {
+                                            return (
+                                                <TableCell
+                                                    className={classes.tableCell + " " + classes.tableHeadCell}
+                                                    key={key}>
+                                                    {prop}
+                                                </TableCell>
+                                            );
+                                        })
+                                    }
+                                </TableRow>
+                            </TableHead>
+                        )
                     }
 
                     {
-                        tableData &&
+                        tableData && (
                             <TableBody>
                                 { this._renderTableData() }
                             </TableBody>
+                        )
                     }
                 </Table>
             </div>
@@ -124,4 +133,9 @@ const styles = {
 
 const WrappedTable = withStyles(tableStyle)(MobileMoneyTable);
 
-export default connect(null, { renderToEdit })(WrappedTable);
+const mapStateToProps = state => {
+    const { user } = state.users;
+    return { user };
+};
+
+export default connect(mapStateToProps, { renderToEdit })(WrappedTable);
