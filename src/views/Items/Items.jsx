@@ -5,7 +5,7 @@ import { AddAlert } from 'material-ui-icons';
 
 import AddItemModal from './Modals/AddItem';
 import EditItemModal from './Modals/EditItem';
-//import DeleteItemModal from './Modals/DeleteItem';
+import UpdateItemModal from './Modals/UpdateItem';
 
 import { RegularCard, ItemsTable, ItemGrid, Snackbar } from 'components';
 
@@ -18,12 +18,12 @@ class Items extends Component {
         notificationGroup: 'add',
         showAddItemModal: false,
         showEditItemModal: false,
-        showDeleteItemModal: false,
+        showUpdateItemModal: false,
         tr: false,
         tc: false,
     };
 
-    componentWillMount() {
+    componentDidMount() {
         this.props.getAllItems();
     }
 
@@ -34,8 +34,8 @@ class Items extends Component {
 
     tableHead = () => {
         return this.isSuperAdmin()
-            ? ['No.','Name','Unit Price', 'Whole Price', 'Date Added','Date Updated', '']
-            : ['No.','Name','Unit Price', 'Whole Price', 'Date Added','Date Updated']
+            ? ['No.','Name','Unit Price', 'Whole Price', 'Quantity Added', 'Quantity Remaining', 'Date Added','Date Updated', '']
+            : ['No.','Name','Unit Price', 'Whole Price', 'Quantity Added', 'Quantity Remaining', 'Date Added','Date Updated']
     };
 
     showNotification(place) {
@@ -53,14 +53,18 @@ class Items extends Component {
         if (type === 'success') {
             if (this.state.notificationGroup === 'add') {
                 return 'Item added successfully';
-            } else {
+            } else if (this.state.notificationGroup === 'edit') {
                 return 'Item edited successfully';
+            } else {
+                return 'Item updated successfully';
             }
         } else if (type === 'error') {
             if (this.state.notificationGroup === 'edit') {
                 return 'Error Item could not be edited';
-            } else {
+            } else if (this.state.notificationGroup === 'add') {
                 return 'Error Item could not be added';
+            } else {
+                return 'Error Item could not be updated';
             }
         }
     };
@@ -87,6 +91,7 @@ class Items extends Component {
                                     tableHead={this.tableHead()}
                                     tableData={this.props.items}
                                     editItem={() => this.setState({ showEditItemModal: true, notificationGroup: 'edit' })}
+                                    updateItem={() => this.setState({ showUpdateItemModal: true, notificationGroup: 'update' })}
                                 />
                             }
                         />
@@ -146,6 +151,14 @@ class Items extends Component {
                     errorNotification={() => this.showNotification('tc')}
                 />
 
+                <UpdateItemModal
+                    open={this.state.showUpdateItemModal}
+                    close={() => this.setState({ showUpdateItemModal: false })}
+                    refresh={this.props.getAllItems}
+                    successNotification={() => this.showNotification('tr')}
+                    errorNotification={() => this.showNotification('tc')}
+                />
+
                 <Loader open={this.props.show_item_loader} />
             </div>
         );
@@ -162,7 +175,7 @@ const mapStateToProps = state => {
 const styles = {
     addItemButton: {
         color: 'white',
-        backgroundColor: 'purple',
+        backgroundColor: 'purple'
     },
 };
 

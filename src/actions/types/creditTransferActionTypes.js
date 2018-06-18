@@ -5,6 +5,8 @@ export const GET_CREDIT_TRANSFERS_TODAY_SUCCESS = 'get_credit_transfers_today_su
 
 export const GET_CREDIT_TRANSFERS_YESTERDAY_SUCCESS = 'get_credit_transfers_yesterday_success';
 
+export const GET_CREDIT_TRANSFERS_LONG_SUCCESS = 'get_credit_transfers_long_success';
+
 export const ADD_CREDIT_TRANSFER_SUCCESS = 'add_credit_transfer_success';
 export const ADD_CREDIT_TRANSFER_FAIL = 'add_credit_transfer_fail';
 

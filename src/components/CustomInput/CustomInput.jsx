@@ -9,7 +9,7 @@ class CustomInput extends React.Component {
 	render() {
 		const { 
 			classes, formControlProps, labelText, id, labelProps, inputProps, error, success, 
-			onChange, value, defaultValue, type="text", disabled, min, max,
+			onChange, value, defaultValue, type="text", disabled, min, max, autoFocus
 		} = this.props;
 
 		return (
@@ -39,6 +39,7 @@ class CustomInput extends React.Component {
 					disabled={disabled}
 					min={min}
 					max={max}
+					autoFocus={autoFocus}
 				/>
 				{
 					error 

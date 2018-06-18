@@ -157,6 +157,7 @@ class CreditTransfer extends Component {
                                     tableHead={this.tableHead()}
                                     tableData={this.props.credit_transfers}
                                     editCreditTransfer={() => { this.setState({ openEditCreditTransferModal: true, notificationGroup: 'edit' }) }}
+                                    getCreditTransfers={this._getCreditTransfers}
                                 />
                             }
                         />
@@ -180,13 +181,6 @@ class CreditTransfer extends Component {
                         successNotification={() => this.showNotification('tr')}
                         errorNotification={() => this.showNotification('tc')}
                     />
-
-                    {/* <DeleteCreditTransferModal
-                        open={this.props.openAddJackpotModal}
-                        close={() => this.props.showAddJackpotModal(false)}
-                        addJackpot={this.props.addJackpot}
-                        refresh={this._getJackpots}
-                    /> */}
                 </Grid>
 
                 <Grid container justify='center'>

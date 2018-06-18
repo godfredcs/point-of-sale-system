@@ -1,6 +1,6 @@
 import { 
     GET_ALL_MOBILE_MONEYS_SUCCESS, GET_ALL_MOBILE_MONEYS_FAIL,
-    GET_MOBILE_MONEYS_TODAY_SUCCESS, GET_MOBILE_MONEYS_YESTERDAY_SUCCESS,
+    GET_MOBILE_MONEYS_TODAY_SUCCESS, GET_MOBILE_MONEYS_YESTERDAY_SUCCESS, GET_MOBILE_MONEYS_LONG_SUCCESS,
     ADD_MOBILE_MONEY_FAIL, ADD_MOBILE_MONEY_SUCCESS,
     TRANSACTION_TO_EDIT,
 } from './types';
@@ -29,6 +29,8 @@ export const getMobileMoneyByDate = (from, to, day) => async dispatch => {
                 dispatch({ type: GET_MOBILE_MONEYS_TODAY_SUCCESS, payload: mobile_moneys });
             } else if (day === 'yesterday') {
                 dispatch({ type: GET_MOBILE_MONEYS_YESTERDAY_SUCCESS, payload: mobile_moneys });
+            } else if (day === 'long') {
+                dispatch({ type: GET_MOBILE_MONEYS_LONG_SUCCESS, payload: mobile_moneys });
             } else {
                 dispatch({ type: GET_ALL_MOBILE_MONEYS_SUCCESS, payload: mobile_moneys });
             }

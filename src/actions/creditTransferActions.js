@@ -1,6 +1,6 @@
 import {
     GET_ALL_CREDIT_TRANSFERS_SUCCESS, GET_ALL_CREDIT_TRANSFERS_FAIL,
-    GET_CREDIT_TRANSFERS_TODAY_SUCCESS, GET_CREDIT_TRANSFERS_YESTERDAY_SUCCESS,
+    GET_CREDIT_TRANSFERS_TODAY_SUCCESS, GET_CREDIT_TRANSFERS_YESTERDAY_SUCCESS, GET_CREDIT_TRANSFERS_LONG_SUCCESS,
     ADD_CREDIT_TRANSFER_SUCCESS, ADD_CREDIT_TRANSFER_FAIL,
     EDIT_CREDIT_TRANSFER_SUCCESS, EDIT_CREDIT_TRANSFER_FAIL,
     CREDIT_TRANSFER_TO_EDIT,
@@ -31,6 +31,8 @@ export const getCreditTransferByDate = (from, to, day) => async dispatch => {
                 dispatch({ type: GET_CREDIT_TRANSFERS_TODAY_SUCCESS, payload: credit_transfers });
             } else if (day === 'yesterday') {
                 dispatch({ type: GET_CREDIT_TRANSFERS_YESTERDAY_SUCCESS, payload: credit_transfers });
+            } else if (day === 'long') {
+                dispatch({ type: GET_CREDIT_TRANSFERS_LONG_SUCCESS, payload: credit_transfers });
             } else {
                 dispatch({ type: GET_ALL_CREDIT_TRANSFERS_SUCCESS, payload: credit_transfers });
             }
@@ -89,5 +91,17 @@ export const editCreditTransfer = (id, data, refresh, close, successNotification
         dispatch({ type: EDIT_CREDIT_TRANSFER_FAIL });
         
         errorNotification && errorNotification();
+    }
+};
+
+export const deleteCreditTransfer = (id, refresh) => async dispatch => {
+    try {
+        const deleted_credit_transfer = await CreditTransfer.delete(id);
+
+        if (deleted_credit_transfer) {
+            refresh && refresh();
+        }
+    } catch (error) {
+        console.log(error);
     }
 };

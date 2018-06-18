@@ -9,6 +9,7 @@ export const GET_JACKPOTS_TODAY_FAIL = 'get_jackpots_today_fail';
 export const GET_JACKPOTS_YESTERDAY_SUCCESS = 'get_jackpots_yesterday_success';
 export const GET_JACKPOTS_YESTERDAY_FAIL = 'get_jackpots_yesterday_fail';
 
+export const GET_JACKPOTS_LONG_SUCCESS = 'get_jackpots_long_success';
 
 export const ADD_JACKPOT_SUCCESS = 'add_jackpot_success';
 export const ADD_JACKPOT_FAIL = 'add_jackpot_fail';

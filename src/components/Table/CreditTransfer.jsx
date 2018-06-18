@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { withStyles, Table, TableHead, TableRow, TableBody, TableCell, Button } from 'material-ui';
 import Moment from 'moment';
 
-import { renderCreditTransferToEdit } from '../../actions';
+import { renderCreditTransferToEdit, deleteCreditTransfer } from '../../actions';
 
 import { tableStyle } from 'variables/styles';
 
@@ -23,6 +23,12 @@ class CreditTransferTable extends React.Component {
     _renderEdit = prop => {
         this.props.renderCreditTransferToEdit(prop);
         this.props.editCreditTransfer();
+    };
+
+    deleteCreditTransfer = id => {
+        if (window.confirm("Are you sure you want to delete this credit transfer?")) {
+            this.props.deleteCreditTransfer(id, this.props.getCreditTransfers);
+        }
     };
 
     _renderTableData = () => {
@@ -51,7 +57,7 @@ class CreditTransferTable extends React.Component {
                         this.isSuperAdmin() && (
                             <TableCell className={classes.tableCell}>
                                 <Button style={ styles.updateButton } onClick={() => this._renderEdit(prop)}>edit</Button>
-                                <Button style={ styles.deleteButton }>Delete</Button>
+                                <Button style={ styles.deleteButton } onClick={() => this.deleteCreditTransfer(prop.id)} >Delete</Button>
                             </TableCell>
                         )
                     }
@@ -129,4 +135,4 @@ const mapStateToProps = state => {
 
 const WrappedCreditTransferTable = withStyles(tableStyle)(CreditTransferTable)
 
-export default connect(mapStateToProps, { renderCreditTransferToEdit })(WrappedCreditTransferTable);
+export default connect(mapStateToProps, { renderCreditTransferToEdit, deleteCreditTransfer })(WrappedCreditTransferTable);

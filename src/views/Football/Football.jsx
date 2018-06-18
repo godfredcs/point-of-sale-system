@@ -3,11 +3,12 @@ import { connect } from 'react-redux';
 import { Grid, Button } from 'material-ui';
 import { AddAlert } from 'material-ui-icons';
 
-import { getFootballByDate, addFootball } from '../../actions';
+import { getFootballByDate, addFootball, editFootball } from '../../actions';
 
 import { CustomDatepicker, RegularCard, FootballTable, ItemGrid, CustomInput, Snackbar } from 'components';
 
 import AddFootballModal from './Modals/AddFootball';
+import EditFootballModal from './Modals/EditFootball';
 
 
 class Football extends Component {
@@ -140,7 +141,8 @@ class Football extends Component {
                                     tableHeaderColor="primary"
                                     tableHead={['No.', 'Match', 'Unit Charge', 'Number of People', 'Amount', 'Date Added', 'Date Updated', '']}
                                     tableData={this.props.footballs}
-                                    updateTransaction={() => this.setState({ openUpdateSaleModal: true })}
+                                    editFootball={() => this.setState({ openEditFootballModal: true, notificationGroup: 'edit' })}
+                                    getFootballs={this._getFootball}
                                 />
                             }
                         />
@@ -150,6 +152,15 @@ class Football extends Component {
                         open={this.state.openAddFootballModal}
                         close={() => this.setState({ openAddFootballModal: false })}
                         addFootball={this.props.addFootball}
+                        refresh={this._getFootball}
+                        successNotification={() => this.showNotification('tr')}
+                        errorNotification={() => this.showNotification('tc')}
+                    />
+
+                    <EditFootballModal
+                        open={this.state.openEditFootballModal}
+                        close={() => this.setState({ openEditFootballModal: false })}
+                        editFootball={this.props.editFootball}
                         refresh={this._getFootball}
                         successNotification={() => this.showNotification('tr')}
                         errorNotification={() => this.showNotification('tc')}
@@ -215,5 +226,5 @@ const mapStateToProps = state => {
 };
 
 export default connect(mapStateToProps, {
-    getFootballByDate, addFootball,
+    getFootballByDate, addFootball, editFootball
 })(Football);

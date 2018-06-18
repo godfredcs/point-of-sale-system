@@ -8,6 +8,7 @@ class AddItem extends Component {
         name: '',
         unit_price: '',
         whole_price: '',
+        quantity: ''
     };
 
     _setItemName = event => {
@@ -22,18 +23,22 @@ class AddItem extends Component {
         this.setState({ whole_price: event.target.value });
     }
 
-    _addItem = () => {
-        const { name, unit_price, whole_price } = this.state;
+    _setQuantity = event => {
+        this.setState({ quantity: event.target.value });
+    }
 
-        if (name && Number(unit_price) && (Number(whole_price) || Number(whole_price) === 0)) {
-            this.props.addItem({name, unit_price, whole_price}, this.props.refresh, this._resetInput, this.props.successNotification, this.props.errorNotification);
+    _addItem = () => {
+        const { name, unit_price, whole_price, quantity } = this.state;
+
+        if (name && Number(unit_price) && (Number(whole_price) || Number(whole_price) === 0) && Number(quantity)) {
+            this.props.addItem({name, unit_price, whole_price, quantity}, this.props.refresh, this._resetInput, this.props.successNotification, this.props.errorNotification);
         } else {
             this.props.errorNotification();
         }
     };
 
     _resetInput = () => {
-        this.setState({ name: '', unit_price: '', whole_price: ''});
+        this.setState({ name: '', unit_price: '', whole_price: '', quantity: '' }, this.props.close);
     };
 
     getModalStyle() {
@@ -83,7 +88,7 @@ class AddItem extends Component {
                                                     labelText="Unit price"
                                                     id="unit-price"
                                                     formControlProps={{ fullWidth: true }}
-                                                    type="text"
+                                                    type="number"
                                                     onChange={ this._setUnitPrice }
                                                     defaultValue={ this.state.unit_price }
                                                 />
@@ -95,9 +100,21 @@ class AddItem extends Component {
                                                     labelText="Whole price"
                                                     id="whole-price"
                                                     formControlProps={{ fullWidth: true }}
-                                                    type="text"
+                                                    type="number"
                                                     onChange={ this._setWholePrice }
                                                     defaultValue={ this.state.whole_price }
+                                                />
+                                            </ItemGrid>
+                                        </Grid>
+                                        <Grid container>
+                                            <ItemGrid xs={12} sm={12} md={12}>
+                                                <CustomInput
+                                                    labelText="Quantity"
+                                                    id="quantity"
+                                                    formControlProps={{ fullWidth: true }}
+                                                    type="number"
+                                                    onChange={ this._setQuantity }
+                                                    defaultValue={ this.state.quantity }
                                                 />
                                             </ItemGrid>
                                         </Grid>

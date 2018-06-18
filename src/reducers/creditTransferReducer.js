@@ -1,6 +1,6 @@
 import {
     GET_ALL_CREDIT_TRANSFERS_SUCCESS, GET_ALL_CREDIT_TRANSFERS_FAIL,
-    GET_CREDIT_TRANSFERS_TODAY_SUCCESS, GET_CREDIT_TRANSFERS_YESTERDAY_SUCCESS,
+    GET_CREDIT_TRANSFERS_TODAY_SUCCESS, GET_CREDIT_TRANSFERS_YESTERDAY_SUCCESS, GET_CREDIT_TRANSFERS_LONG_SUCCESS,
     CREDIT_TRANSFER_TO_EDIT,
 } from '../actions/types';
 
@@ -9,6 +9,7 @@ const INITIAL_STATE = {
     credit_transfers: [],
     credit_transfers_today: [],
     credit_transfers_yesterday: [],
+    credit_transfers_long: [],
     credit_transfer_to_edit: {
         name: '',
         amount: '',
@@ -28,6 +29,9 @@ export default (state = INITIAL_STATE, action) => {
 
         case GET_CREDIT_TRANSFERS_YESTERDAY_SUCCESS:
             return { ...state, credit_transfers_yesterday: action.payload };
+
+        case GET_CREDIT_TRANSFERS_LONG_SUCCESS:
+            return { ...state, credit_transfers_long: action.payload };
 
         case CREDIT_TRANSFER_TO_EDIT:
             return { ...state, credit_transfer_to_edit: action.payload };

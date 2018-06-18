@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withStyles, Table, TableHead, TableRow, TableBody, TableCell, Button } from 'material-ui';
 import PropTypes from 'prop-types';
@@ -6,9 +6,9 @@ import Moment from 'moment';
 
 import { tableStyle } from 'variables/styles';
 
-import { renderJackpotToEdit, deleteJackpot } from '../../actions';
+import { renderToEdit } from '../../actions';
 
-class CustomTable extends React.Component {
+class ItemsTable extends Component {
     // Check if the user is super admin.
     isSuperAdmin = () => {
         return this.props.user.role.name === 'super_admin';
@@ -20,60 +20,50 @@ class CustomTable extends React.Component {
         return date.isValid() ? date.format('ddd Do MMMM, YYYY hh:mm:ss:A') : value;
     }
 
-    _renderToEdit = prop => {
-        this.props.renderJackpotToEdit(prop);
-        this.props.editJackpot();
+    _renderUpdate(prop) {
+        this.props.renderToEdit(prop);
+        this.props.updateItem();
     }
-
-    deleteJackpot = id => {
-        if (window.confirm("Are you sure you want to delete this Jackpot transaction?")) {
-            this.props.deleteJackpot(id, this.props.getJackpots);
-        }
-    };
 
     _renderTableData = () => {
         let number = 0;
-        const { classes, tableData } = this.props;
+        const { tableData, classes } = this.props;
 
         return tableData.map((prop, key) => {
             return (
                 <TableRow key={key}>
                     <TableCell className={classes.tableCell}>
-                            { ++number }
+                        { ++number }
                     </TableCell>
                     <TableCell className={classes.tableCell}>
                         { prop.name }
                     </TableCell>
                     <TableCell className={classes.tableCell}>
-                        { `GHS ${prop.amount}` }
+                        { prop.quantity_added }
                     </TableCell>
                     <TableCell className={classes.tableCell}>
-                        { this._renderDate(prop.created_at) }
-                    </TableCell>
-                    <TableCell className={classes.tableCell}>
-                        { this._renderDate(prop.updated_at) }
+                        { prop.quantity_remaining }
                     </TableCell>
                     {
                         this.isSuperAdmin() && (
                             <TableCell className={classes.tableCell}>
-                                <Button style={ styles.updateButton } onClick={() => this._renderToEdit(prop)}>Edit</Button>
-                                <Button style={ styles.deleteButton } onClick={() => this.deleteJackpot(prop.id)} >Delete</Button>
+                                <Button style={ styles.updateButton } onClick={this._renderUpdate.bind(this, prop)}>Update Quantity</Button>
                             </TableCell>
                         )
                     }
                 </TableRow>
-            );
+            )
         })
-    };
+    }
 
-    render() {
+    render(){
         const { classes, tableHead, tableData, tableHeaderColor } = this.props;
-        
         return (
             <div className={classes.tableResponsive}>
                 <Table className={classes.table}>
                     {
-                        tableHead !== undefined && (
+                        tableHead !== undefined 
+                        ? (
                             <TableHead className={classes[tableHeaderColor+"TableHeader"]}>
                                 <TableRow>
                                     {
@@ -90,14 +80,16 @@ class CustomTable extends React.Component {
                                 </TableRow>
                             </TableHead>
                         )
+                        : null
                     }
-
                     {
-                        tableData && (
+                        tableData.length
+                        ? (
                             <TableBody>
                                 { this._renderTableData() }
                             </TableBody>
                         )
+                        : null
                     }
                 </Table>
             </div>
@@ -105,14 +97,14 @@ class CustomTable extends React.Component {
     }
 }
 
-CustomTable.defaultProps = {
-    tableHeaderColor: 'gray'
+ItemsTable.defaultProps = {
+    tableHeaderColor: 'gray',
 }
 
-CustomTable.propTypes = {
+ItemsTable.propTypes = {
     classes: PropTypes.object.isRequired,
     tableHeaderColor: PropTypes.oneOf(['warning','primary','danger','success','info','rose','gray']),
-    tableHead: PropTypes.arrayOf(PropTypes.string),
+    tableHead: PropTypes.arrayOf(PropTypes.string), 
     tableData: PropTypes.arrayOf(PropTypes.object)
 };
 
@@ -127,11 +119,11 @@ const styles = {
     }
 };
 
-const wrappedTable = withStyles(tableStyle)(CustomTable);
-
 const mapStateToProps = state => {
     const { user } = state.users;
     return { user };
 };
 
-export default connect(mapStateToProps, { renderJackpotToEdit, deleteJackpot })(wrappedTable);
+const WrappedItemsTable = withStyles(tableStyle)(ItemsTable);
+
+export default connect(mapStateToProps, { renderToEdit })(WrappedItemsTable);

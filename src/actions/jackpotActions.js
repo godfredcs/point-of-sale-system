@@ -1,8 +1,8 @@
 import { 
     GET_ALL_JACKPOTS_SUCCESS, GET_ALL_JACKPOTS_FAIL,
-    GET_JACKPOTS_TODAY_SUCCESS, GET_JACKPOTS_TODAY_FAIL,
-    GET_JACKPOTS_YESTERDAY_SUCCESS, GET_JACKPOTS_YESTERDAY_FAIL, 
-    ADD_JACKPOT_SUCCESS, ADD_JACKPOT_FAIL, EDIT_JACKPOT_SUCCESS, EDIT_JACKPOT_FAIL,
+    GET_JACKPOTS_TODAY_SUCCESS,
+    GET_JACKPOTS_YESTERDAY_SUCCESS, GET_JACKPOTS_LONG_SUCCESS,
+    ADD_JACKPOT_SUCCESS, ADD_JACKPOT_FAIL, EDIT_JACKPOT_SUCCESS,
     RENDER_JACKPOT_TO_EDIT,
 } from './types';
 
@@ -32,6 +32,8 @@ export const getJackpotByDate = (from, to, day) => async dispatch => {
                 dispatch({ type: GET_JACKPOTS_TODAY_SUCCESS, payload: jackpots });
             } else if (day === 'yesterday') {
                 dispatch({ type: GET_JACKPOTS_YESTERDAY_SUCCESS, payload: jackpots });
+            } else if (day === 'long') {
+                dispatch({ type: GET_JACKPOTS_LONG_SUCCESS, payload: jackpots });
             } else {
                 dispatch({ type: GET_ALL_JACKPOTS_SUCCESS, payload: jackpots });
             }
@@ -90,4 +92,16 @@ export const renderJackpotToEdit = payload => {
         type: RENDER_JACKPOT_TO_EDIT,
         payload,
     };
+};
+
+export const deleteJackpot = (id, refresh) => async dispatch => {
+    try {
+        const deleted_jackpot = await Jackpot.delete(id);
+
+        if (deleted_jackpot) {
+            refresh && refresh();
+        }
+    } catch (error) {
+        console.log(error);
+    }
 };

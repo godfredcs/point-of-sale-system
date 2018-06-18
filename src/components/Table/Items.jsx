@@ -25,6 +25,11 @@ class ItemsTable extends Component {
         this.props.editItem();
     }
 
+    _renderUpdate(prop) {
+        this.props.renderToEdit(prop);
+        this.props.updateItem();
+    }
+
     _renderTableData = () => {
         let number = 0;
         const { tableData, classes } = this.props;
@@ -45,6 +50,12 @@ class ItemsTable extends Component {
                         { prop.whole_price }
                     </TableCell>
                     <TableCell className={classes.tableCell}>
+                        { prop.quantity_added }
+                    </TableCell>
+                    <TableCell className={classes.tableCell}>
+                        { prop.quantity_remaining }
+                    </TableCell>
+                    <TableCell className={classes.tableCell}>
                         { this._renderDate(prop.created_at) }
                     </TableCell>
                     <TableCell className={classes.tableCell}>
@@ -54,7 +65,7 @@ class ItemsTable extends Component {
                         this.isSuperAdmin() && (
                             <TableCell className={classes.tableCell}>
                                 <Button style={ styles.updateButton } onClick={this._renderEdit.bind(this, prop)}>Edit</Button>
-                                <Button style={ styles.deleteButton }>Delete</Button>
+                                <Button style={ styles.deleteButton } onClick={this._renderUpdate.bind(this, prop)} >Update</Button>
                             </TableCell>
                         )
                     }

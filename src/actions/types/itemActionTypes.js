@@ -9,3 +9,5 @@ export const REMOVE_ITEM_LOADER = 'remove_item_loader';
 export const ITEM_TO_EDIT = 'item_to_edit';
 
 export const ITEM_EDIT_SUCCESS = 'item_edit_success';
+
+export const GET_FINISHING_ITEMS = 'get_finishing_items';

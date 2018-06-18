@@ -1,7 +1,7 @@
 import { 
     GET_ALL_FOOTBALLS_SUCCESS, GET_ALL_FOOTBALLS_FAIL,
-    GET_FOOTBALLS_TODAY_SUCCESS, GET_FOOTBALLS_YESTERDAY_SUCCESS,
-    ADD_FOOTBALL_FAIL, ADD_FOOTBALL_SUCCESS,
+    GET_FOOTBALLS_TODAY_SUCCESS, GET_FOOTBALLS_YESTERDAY_SUCCESS, GET_FOOTBALLS_LONG_SUCCESS,
+    ADD_FOOTBALL_FAIL, ADD_FOOTBALL_SUCCESS, RENDER_FOOTBALL_TO_EDIT,
 } from './types';
 
 import Football from '../services/Football';
@@ -30,6 +30,8 @@ export const getFootballByDate = (from, to, day) => async dispatch => {
                 dispatch({ type: GET_FOOTBALLS_TODAY_SUCCESS, payload: footballs });
             }else if (day === 'yesterday') {
                 dispatch({ type: GET_FOOTBALLS_YESTERDAY_SUCCESS, payload: footballs });
+            } else if (day === 'long') {
+                dispatch({ type: GET_FOOTBALLS_LONG_SUCCESS, payload: footballs });
             } else {
                 dispatch({ type: GET_ALL_FOOTBALLS_SUCCESS, payload: footballs });
             }
@@ -57,6 +59,43 @@ export const addFootball = (data, refresh, clear, successNotification, errorNoti
     } catch (error) {
         dispatch({ type: ADD_FOOTBALL_FAIL });
         errorNotification && errorNotification();
+        console.log(error);
+    }
+};
+
+// Action creator for rendering the football to edit.
+export const renderFootballToEdit = payload => ({
+    type: RENDER_FOOTBALL_TO_EDIT,
+    payload
+});
+
+// Action creator for editing football transaction in the system.
+export const editFootball = (id, data, refresh, clear, successNotification, errorNotification) => async dispatch => {
+    try {
+        let football = await Football.update(id, data);
+
+        if (football) {
+            refresh && refresh();
+
+            clear && clear();
+
+            successNotification && successNotification();
+        }
+    } catch (error) {
+        errorNotification && errorNotification();
+        console.log(error);
+    }
+};
+
+// Action creator for deleting football transaction from the system.
+export const deleteFootball = (id, refresh) => async dispatch => {
+    try {
+        const deleted_football = await Football.delete(id);
+
+        if (deleted_football) {
+            refresh && refresh();
+        }
+    } catch (error) {
         console.log(error);
     }
 };

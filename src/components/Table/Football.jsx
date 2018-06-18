@@ -6,6 +6,8 @@ import Moment from 'moment';
 
 import { tableStyle } from 'variables/styles';
 
+import { deleteFootball, renderFootballToEdit } from '../../actions';
+
 class FootballTable extends React.Component {
     // Check if the user is super admin.
     isSuperAdmin = () => {
@@ -18,9 +20,20 @@ class FootballTable extends React.Component {
         return date.isValid() ? date.format('ddd Do MMMM, YYYY hh:mm:ss:A') : value;
     }
 
+    _renderToEdit = prop => {
+        this.props.renderFootballToEdit(prop);
+        this.props.editFootball();
+    };
+
+    deleteFootball = id => {
+        if (window.confirm("Are you sure you want to delete this football transaction?")) {
+            this.props.deleteFootball(id, this.props.getFootballs);
+        }
+    };
+
     _renderTableData = () => {
         let number = 0;
-        const { classes, tableData, updateSale } = this.props;
+        const { classes, tableData } = this.props;
 
         return tableData.map((prop, key) => {
             return (
@@ -49,8 +62,8 @@ class FootballTable extends React.Component {
                     {
                         this.isSuperAdmin() && (
                             <TableCell className={classes.tableCell}>
-                                <Button style={ styles.updateButton } onClick={ updateSale }>Edit</Button>
-                                <Button style={ styles.deleteButton }>Delete</Button>
+                                <Button style={ styles.updateButton } onClick={() => this._renderToEdit(prop)}>Edit</Button>
+                                <Button style={ styles.deleteButton } onClick={() => this.deleteFootball(prop.id)} >Delete</Button>
                             </TableCell>
                         )
                     }
@@ -127,4 +140,4 @@ const mapStateToProps = state => {
     return { user };
 };
 
-export default connect(mapStateToProps)(wrappedTable);
+export default connect(mapStateToProps, { deleteFootball, renderFootballToEdit })(wrappedTable);

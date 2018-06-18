@@ -1,5 +1,6 @@
 import { 
-    GET_ALL_SALES_SUCCESS, GET_SALES_TODAY_SUCCESS, GET_SALES_YESTERDAY_SUCCESS,
+    GET_ALL_SALES_SUCCESS,
+    GET_SALES_TODAY_SUCCESS, GET_SALES_YESTERDAY_SUCCESS, GET_SALES_LONG_SUCCESS,
     SALE_TO_EDIT
 } from './types';
 import Sale from '../services/Sale';
@@ -27,6 +28,8 @@ export const getSalesByDate = (from, to, day) => async dispatch => {
                 dispatch({ type: GET_SALES_TODAY_SUCCESS, payload: sales });
             } else if (day === 'yesterday') {
                 dispatch({ type: GET_SALES_YESTERDAY_SUCCESS, payload: sales });
+            } else if (day === 'long') {
+                dispatch({ type: GET_SALES_LONG_SUCCESS, payload: sales });
             } else {
                 dispatch({ type: GET_ALL_SALES_SUCCESS, payload: sales });
             }

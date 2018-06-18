@@ -1,7 +1,7 @@
 import { 
     GET_ALL_ITEMS_SUCCESS, ITEM_ADD_SUCCESS,
     SHOW_ITEM_LOADER, REMOVE_ITEM_LOADER,
-    ITEM_TO_EDIT, ITEM_EDIT_SUCCESS,
+    ITEM_TO_EDIT, ITEM_EDIT_SUCCESS, GET_FINISHING_ITEMS
 } from './types';
 import Item from '../services/Item';
 
@@ -23,11 +23,11 @@ export const getAllItems = () => async dispatch => {
 };
 
 // Action creator for adding item --<
-export const addItem = ({ name, unit_price, whole_price }, refreshItemsList, clear, successNotification, errorNotification) => async dispatch => {
+export const addItem = (data, refreshItemsList, clear, successNotification, errorNotification) => async dispatch => {
     dispatch({ type: SHOW_ITEM_LOADER });
 
     try {
-        const item = await Item.add({ name, unit_price, whole_price });
+        const item = await Item.add(data);
 
         if (item) {
             dispatch({ type: ITEM_ADD_SUCCESS });
@@ -72,25 +72,22 @@ export const editItem = (id, data, clearAndRefresh, successNotification, errorNo
         }
     } catch(error) {
         dispatch({ type: REMOVE_ITEM_LOADER });
-
         errorNotification && errorNotification();
     }
 };
 
 
+export const getFinishingItems = minimum => async dispatch => {
+    dispatch({ type: SHOW_ITEM_LOADER });
 
+    try {
+        const item = await Item.find(minimum);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        if (item) {
+            dispatch({ type: GET_FINISHING_ITEMS, payload: item });
+        }
+    } catch(error) {
+        dispatch({ type: REMOVE_ITEM_LOADER });
+        console.log('finishing items ', error)
+    }
+}; 

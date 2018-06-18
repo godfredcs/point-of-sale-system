@@ -153,6 +153,8 @@ class Jackpot extends Component {
                                     tableHead={this.tableHead()}
                                     tableData={this.props.jackpots}
                                     editJackpot={() => this.setState({ showEditJackpotModal: true, notificationGroup: 'edit' })}
+                                    deleteJackpot={() => this.setState({ notificationGroup: 'delete' })}
+                                    getJackpots={this._getJackpots}
                                 />
                             }
                         />

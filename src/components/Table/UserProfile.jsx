@@ -49,15 +49,15 @@ class ItemsTable extends Component {
                     <TableCell className={classes.tableCell}>
                         { this._renderDate(prop.updated_at) }
                     </TableCell>
-                    {
-                        prop.role.name !== "super_admin"
-                            ? <TableCell className={classes.tableCell}>
-                                <Button 
+                    <TableCell className={classes.tableCell}>
+                        {
+                            prop.role.name !== "super_admin"
+                                ? <Button 
                                     style={ styles.deleteButton }
                                     onClick={ () => this.deleteUser(prop.id) }>Delete</Button>
-                            </TableCell>
-                            : null
-                    }
+                                : ''
+                        }
+                    </TableCell>
                 </TableRow>
             )
         })

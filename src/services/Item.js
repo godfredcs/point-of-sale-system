@@ -6,6 +6,11 @@ export default {
                     .then(response => Promise.resolve(response.data))
                     .catch(error => Promise.reject(error.response.data));
     },
+    find(minimum){
+        return axios.get('items/find', { params: { minimum } })
+                    .then(response => Promise.resolve(response.data))
+                    .catch(error => Promise.reject(error.response.data));
+    },
     add(item) {
         return axios.post('items', item)
                     .then(response => Promise.resolve(response.data))
