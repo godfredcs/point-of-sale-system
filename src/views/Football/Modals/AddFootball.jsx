@@ -6,8 +6,8 @@ import { RegularCard, ItemGrid, CustomInput } from 'components';
 class AddFootball extends Component {
     state = {
         name: '',
-        unit_charge: 0,
-        number_of_people: 0,
+        unit_charge: '',
+        number_of_people: ''
     };
 
     _setMatchName = event => {
@@ -73,6 +73,7 @@ class AddFootball extends Component {
                                         <Grid container>
                                             <ItemGrid xs={12} sm={12} md={12}>
                                                 <CustomInput
+                                                    autoFocus
                                                     labelText="Match name"
                                                     id="match-name"
                                                     formControlProps={{ fullWidth: true }}

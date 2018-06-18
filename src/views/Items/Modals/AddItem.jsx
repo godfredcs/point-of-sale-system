@@ -73,6 +73,7 @@ class AddItem extends Component {
                                         <Grid container>
                                             <ItemGrid xs={12} sm={12} md={12}>
                                                 <CustomInput
+                                                    autoFocus
                                                     labelText="Item name"
                                                     id="item-name"
                                                     formControlProps={{ fullWidth: true }}
