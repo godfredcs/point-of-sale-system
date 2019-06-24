@@ -1,6 +1,12 @@
 import { axios } from './index';
 
 export default {
+    getRoles() {
+        return axios.get('roles')
+            .then(response => Promise.resolve(response.data))
+            .catch(error => Promise.reject(error.response.data));
+    },
+
     getUsers() {
         return axios.get('users')
                     .then(response => Promise.resolve(response.data))

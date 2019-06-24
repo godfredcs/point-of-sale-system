@@ -34,8 +34,8 @@ class Items extends Component {
 
     tableHead = () => {
         return this.isSuperAdmin()
-            ? ['No.','Name','Unit Price', 'Whole Price', 'Quantity Added', 'Quantity Remaining', 'Date Added','Date Updated', '']
-            : ['No.','Name','Unit Price', 'Whole Price', 'Quantity Added', 'Quantity Remaining', 'Date Added','Date Updated']
+            ? ['No.','Name','Unit Price', 'Quantity', 'Date Added','Date Updated', '']
+            : ['No.','Name','Unit Price', 'Quantity', 'Date Added','Date Updated']
     };
 
     showNotification(place) {
@@ -78,7 +78,7 @@ class Items extends Component {
                             padIt
                             cardTitle="Items"
                             cardSubtitle="This is a list of all items in the system"
-                            button={ 
+                            button={
                                 this.isSuperAdmin() && (
                                     <Button
                                         style={ styles.addItemButton }
@@ -133,7 +133,7 @@ class Items extends Component {
                         </Grid>
                     </ItemGrid>
                 </Grid>
-                
+
                 <AddItemModal
                     open={this.state.showAddItemModal}
                     close={() => this.setState({ showAddItemModal: false })}

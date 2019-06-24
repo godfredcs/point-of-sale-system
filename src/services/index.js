@@ -1,8 +1,10 @@
 import Axios from 'axios';
 
+const WIFI = `192.168.8.107`;
+
 // Setup the baseURL or api endpoint
 export const axios = Axios.create({
-    baseURL: 'http://localhost:3001',
+    baseURL: `http://${WIFI}:5000`,
     headers: {
         'X-Requested-With': 'XMLHttpRequest'
     }

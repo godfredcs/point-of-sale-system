@@ -14,6 +14,10 @@ export const USER_UPDATE_SUCCESS = 'user_update_success';
 
 export const USER_UPDATE_FAIL = 'user_update_fail';
 
+export const GET_ROLES_SUCCESS = 'get_roles_success';
+
+export const GET_ROLES_FAIL = 'get_roles_fail';
+
 
 export const OPEN_ADD_USER_MODAL = 'open_add_user_modal';
 

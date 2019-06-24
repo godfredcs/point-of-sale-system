@@ -60,6 +60,12 @@ class Authenticate extends Component {
     render() {
         return (
             <div>
+                {
+                    this.props.login_error
+                    ? <p style={{textAlign: 'center', fontWeight: 'bold', color: '#F00'}}>{this.props.login_error}</p>
+                    : null
+                }
+
                 <Grid container justify="center" alignItems="center" style={styles.container}>
                     <ItemGrid xs={12} sm={4} md={4}>
                         <RegularCard
@@ -94,9 +100,11 @@ class Authenticate extends Component {
                                     </Grid>
                                 </div>
                             }
-                            
+
                             footer={
-                                <Button color="primary" onClick={this._onClick}>Log in</Button>
+                                <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center'}}>
+                                    <Button color="primary" onClick={this._onClick}>Log in</Button>
+                                </div>
                             }
                         />
                     </ItemGrid>
@@ -149,9 +157,8 @@ const styles = {
 };
 
 const mapStateToProps = state => {
-    const { email, password } = state.users;
-
-    return { email, password }; 
+    const { email, password, login_error } = state.users;
+    return { email, password, login_error };
 }
 
 export default connect(mapStateToProps, { emailChanged, passwordChanged, login })(Authenticate);

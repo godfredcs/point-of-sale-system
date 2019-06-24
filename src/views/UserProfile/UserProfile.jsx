@@ -8,23 +8,23 @@ import {
 
 import AddUserModal from './Modals/AddUser';
 
-import { getUsers, addUser, updateUser, deleteUser, openAddUserModal, logout } from '../../actions';
-
+import { getUsers, getRoles, addUser, updateUser, deleteUser, openAddUserModal, logout } from '../../actions';
+import { Helpers } from '../../globals';
 import avatar from 'assets/img/faces/marc.jpg';
 
 class UserProfile extends Component {
-    state = { 
-        willChangePassword: false,
-        firstname: '',
+    state = {
         lastname: '',
+        firstname: '',
         old_password: '',
         new_password: '',
         confirm_new_password: '',
+        willChangePassword: false
     };
 
     componentDidMount() {
         this.getUsers();
-        
+
         if (this.props.user) {
             const { firstname, lastname } = this.props.user;
 
@@ -56,13 +56,14 @@ class UserProfile extends Component {
     };
 
     // Check if the user is super admin.
-    isSuperAdmin = () => {
-        return this.props.user.role.name === 'super_admin';
+    isAdmin = () => {
+        return Helpers.isAdmin(this.props.user.role.name);
     };
 
     // Get all users in the system.
     getUsers = () => {
-        if (this.isSuperAdmin()) {
+        if (this.isAdmin()) {
+            this.props.getRoles();
             this.props.getUsers();
         }
     };
@@ -83,7 +84,7 @@ class UserProfile extends Component {
             if (!old_password || !new_password || !confirm_new_password) {
                 return;
             }
-            
+
             if (new_password === confirm_new_password) {
                 update_details.old_password = old_password;
                 update_details.password = new_password;
@@ -165,7 +166,7 @@ class UserProfile extends Component {
                                                     <Grid container>
                                                         <ItemGrid xs={12} sm={12} md={12}>
                                                             <CustomInput
-                                                                type="password" 
+                                                                type="password"
                                                                 labelText="Old Password"
                                                                 id="oldPassword"
                                                                 formControlProps={{ fullWidth: true }}
@@ -178,7 +179,7 @@ class UserProfile extends Component {
                                                     <Grid container>
                                                         <ItemGrid xs={12} sm={12} md={6}>
                                                             <CustomInput
-                                                                type="password" 
+                                                                type="password"
                                                                 labelText="New Password"
                                                                 id="newPassword"
                                                                 formControlProps={{ fullWidth: true }}
@@ -200,10 +201,10 @@ class UserProfile extends Component {
                                                 </div>
                                             )
                                         }
-                                    </div>                                 
+                                    </div>
                                 </div>
                             }
-                            
+
                             footer={
                                 <div style={ styles.footerButtons }>
                                     <Button color="primary" onClick={ this.updateProfile }>
@@ -219,7 +220,7 @@ class UserProfile extends Component {
                     </ItemGrid>
                     <ItemGrid xs={12} sm={12} md={4}>
                         {
-                            this.isSuperAdmin() && (
+                            this.isAdmin() && (
                                 <div style={ styles.centerItems }>
                                     <Button color="primary" round onClick={() => this.props.openAddUserModal(true)}>
                                         Add User
@@ -241,13 +242,13 @@ class UserProfile extends Component {
 
                 <Grid container>
                     {
-                        this.isSuperAdmin() && (
+                        this.isAdmin() && (
                             <ItemGrid xs={12} sm={12} md={8}>
                                 <RegularCard
                                     cardTitle="Users"
                                     cardSubtitle="List of users added to the system"
                                     content={
-                                        <UserProfileTable 
+                                        <UserProfileTable
                                             tableHeaderColor="primary"
                                             tableHead={['No.','Firstname','Lastname', 'Email', 'Role', 'Date Added','Date Updated', '']}
                                             tableData={this.props.users}
@@ -261,11 +262,12 @@ class UserProfile extends Component {
                     }
                 </Grid>
 
-                <AddUserModal 
-                    open={this.props.open_add_user_modal}
-                    close={() => this.props.openAddUserModal(false)}
+                <AddUserModal
+                    roles={this.props.roles}
                     addUser={this.props.addUser}
                     refresh={this.props.getUsers}
+                    open={this.props.open_add_user_modal}
+                    close={() => this.props.openAddUserModal(false)}
                 />
             </div>
         );
@@ -288,11 +290,11 @@ const styles = {
 };
 
 const mapStateToProps = state => {
-    const { users, user, open_add_user_modal } = state.users;
-    
-    return { users, user, open_add_user_modal };
+    const { roles, users, user, open_add_user_modal } = state.users;
+
+    return { roles, users, user, open_add_user_modal };
 };
 
 export default connect(mapStateToProps, {
-    getUsers, addUser, updateUser, deleteUser, openAddUserModal, logout
+    getUsers, getRoles, addUser, updateUser, deleteUser, openAddUserModal, logout
 })(UserProfile);

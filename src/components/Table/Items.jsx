@@ -47,13 +47,7 @@ class ItemsTable extends Component {
                         { prop.unit_price }
                     </TableCell>
                     <TableCell className={classes.tableCell}>
-                        { prop.whole_price }
-                    </TableCell>
-                    <TableCell className={classes.tableCell}>
-                        { prop.quantity_added }
-                    </TableCell>
-                    <TableCell className={classes.tableCell}>
-                        { prop.quantity_remaining }
+                        {prop.quantity}
                     </TableCell>
                     <TableCell className={classes.tableCell}>
                         { this._renderDate(prop.created_at) }
@@ -80,7 +74,7 @@ class ItemsTable extends Component {
             <div className={classes.tableResponsive}>
                 <Table className={classes.table}>
                     {
-                        tableHead !== undefined 
+                        tableHead !== undefined
                         ? (
                             <TableHead className={classes[tableHeaderColor+"TableHeader"]}>
                                 <TableRow>
@@ -122,7 +116,7 @@ ItemsTable.defaultProps = {
 ItemsTable.propTypes = {
     classes: PropTypes.object.isRequired,
     tableHeaderColor: PropTypes.oneOf(['warning','primary','danger','success','info','rose','gray']),
-    tableHead: PropTypes.arrayOf(PropTypes.string), 
+    tableHead: PropTypes.arrayOf(PropTypes.string),
     tableData: PropTypes.arrayOf(PropTypes.object)
 };
 

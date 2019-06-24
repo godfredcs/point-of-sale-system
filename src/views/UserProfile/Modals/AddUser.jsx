@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import { withStyles, Grid, Button, Modal } from 'material-ui';
 
-import { RegularCard, ItemGrid, CustomInput } from 'components';
+import { RegularCard, ItemGrid, CustomInput, CustomSelect } from 'components';
 
 class AddItem extends Component {
     state = {
-        firstname: '',
-        lastname: '',
         email: '',
-        password: 'testing',
-        role_id: 2,
+        role_id: '',
+        lastname: '',
+        firstname: '',
+        password: 'testing'
     };
 
     _setFirstname = event => {
@@ -36,9 +36,19 @@ class AddItem extends Component {
     _addUser = () => {
         const { firstname, lastname, email, password, role_id } = this.state;
 
-        if (firstname && lastname && email && password && role_id) {
-            this.props.addUser({ firstname, lastname, email, password, role_id }, this.props.refresh, this.resetInput);
+        if (!role_id) {
+            return alert('Please select a role');
         }
+
+        if (!firstname || !lastname) {
+            return alert('Please provide firstname and lastname');
+        }
+
+        if (!password || !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)) {
+            return alert('Please provide email and password');
+        }
+
+        this.props.addUser({ firstname, lastname, email, password, role_id }, this.props.refresh, this.resetInput);
     };
 
     getModalStyle() {
@@ -51,7 +61,7 @@ class AddItem extends Component {
             transform: `translate(-${top}%, -${left}%)`,
         };
     }
-    
+
     render() {
         const { classes, open, close } = this.props;
 
@@ -70,6 +80,18 @@ class AddItem extends Component {
                                 cardSubtitle="Fill the form below to add user to the system"
                                 content={
                                     <div>
+                                        <Grid container>
+                                            <ItemGrid xs={12} sm={12} md={12}>
+                                                <CustomSelect
+                                                    id="role"
+                                                    labelText="Role"
+                                                    items={this.props.roles}
+                                                    value={this.state.role_id}
+                                                    formControlProps={{ fullWidth: true }}
+                                                    onChange={event => this.setState({ role_id: event.target.value })}
+                                                />
+                                            </ItemGrid>
+                                        </Grid>
                                         <Grid container>
                                             <ItemGrid xs={12} sm={12} md={12}>
                                                 <CustomInput
@@ -109,23 +131,32 @@ class AddItem extends Component {
                                         <Grid container>
                                             <ItemGrid xs={12} sm={12} md={12}>
                                                 <CustomInput
-                                                    labelText="Password"
-                                                    id="password"
-                                                    formControlProps={{ fullWidth: true }}
                                                     type="text"
+                                                    id="password"
+                                                    labelText="Password"
                                                     onChange={ this._setPassword }
                                                     defaultValue={ this.state.password }
+                                                    formControlProps={{ fullWidth: true }}
                                                 />
                                             </ItemGrid>
                                         </Grid>
                                     </div>
                                 }
-                                
+
                                 footer={
-                                    <Button 
-                                        variant="raised" 
-                                        style={{ backgroundColor: 'purple', color: 'white' }} 
-                                        onClick={this._addUser}>Add</Button>
+                                    <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+                                        <Button
+                                            variant="raised"
+                                            onClick={close}
+                                            style={{ backgroundColor: 'orange', color: 'white' }}
+                                        >Cancel</Button>
+
+                                        <Button
+                                            variant="raised"
+                                            onClick={this._addUser}
+                                            style={{ backgroundColor: 'purple', color: 'white' }}
+                                        >Add</Button>
+                                    </div>
                                 }
                             />
                         </ItemGrid>

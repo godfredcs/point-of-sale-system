@@ -1,17 +1,20 @@
 import {
     EMAIL_CHANGED, PASSWORD_CHANGED,
     GET_USERS_SUCCESS,
+    GET_ROLES_SUCCESS, GET_ROLES_FAIL,
     LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT_SUCCESS,
     USER_UPDATE_SUCCESS, USER_UPDATE_FAIL,
     OPEN_ADD_USER_MODAL, OPEN_EDIT_USER_MODAL, OPEN_DELETE_USER_MODAL,
 } from '../actions/types';
 
 const INITIAL_STATE = {
-    user: null,
     users: [],
+    roles: [],
     email: '',
+    user: null,
     password: '',
     isLoggedIn: false,
+    login_error: '',
     show_item_loader: false,
     open_add_user_modal: false,
     open_edit_user_modal: false,
@@ -26,6 +29,9 @@ export default (state = INITIAL_STATE, action) => {
         case PASSWORD_CHANGED:
             return { ...state, password: action.payload };
 
+        case GET_ROLES_SUCCESS:
+            return { ...state, roles: action.payload };
+
         case GET_USERS_SUCCESS:
             return { ...state, users: action.payload };
 
@@ -33,10 +39,10 @@ export default (state = INITIAL_STATE, action) => {
             return { ...state, isLoggedIn: true, user: action.payload };
 
         case LOGIN_FAIL:
-            return { ...state, isLoggedIn: false, user: null };
+            return { ...state, isLoggedIn: false, user: null, login_error: action.payload };
 
         case LOGOUT_SUCCESS:
-            return { ...state, isLoggedIn: false, user: null };
+            return { ...state, isLoggedIn: false, user: null, login_error: '' };
 
         case USER_UPDATE_SUCCESS:
             return { ...state, user: action.payload };
